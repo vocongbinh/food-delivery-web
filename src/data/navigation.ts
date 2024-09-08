@@ -318,95 +318,50 @@ const OTHER_PAGE_CHILD: NavItemType[] = [
   },
 ];
 
-export const NAVIGATION_DEMO_2: NavItemType[] = [
+export const 
+NAVIGATION_DEMO_2: NavItemType[] = [
   {
     id: randomId(),
-    href: "/",
-    name: "Homes",
-    type: "dropdown",
-    children: [
-      { id: randomId(), href: "/", name: "Home page 1" },
-      { id: randomId(), href: "/home-2", name: "Home page 2" },
-      { id: randomId(), href: "/home-3", name: "Home page 3" },
-      { id: randomId(), href: "/home-4", name: "Home page 4" },
-      { id: randomId(), href: "/home-6", name: "Home page 5" },
-      { id: randomId(), href: "/", name: "Header style 1", isNew: true },
-      { id: randomId(), href: "/home-2", name: "Header style 2", isNew: true },
-      { id: randomId(), href: "/home-3", name: "Header style 3" },
-    ],
+    href: "/" as Route,
+    name: "Home",
   },
-
   // single pages ----------------
   {
     id: randomId(),
-    href: "/single/demo-slug" as Route,
-    name: "Singles",
-    type: "dropdown",
-    children: [
-      {
-        id: randomId(),
-        href: "/single/demo-slug" as Route,
-        name: "Single page 1",
-      },
-      {
-        id: randomId(),
-        href: "/single-2/demo-slug" as Route,
-        name: "Single page 2",
-      },
-      {
-        id: randomId(),
-        href: "/single-3/demo-slug" as Route,
-        name: "Single page 3",
-      },
-      {
-        id: randomId(),
-        href: "/single-4/demo-slug" as Route,
-        name: "Single page 4",
-      },
-
-      {
-        id: randomId(),
-        href: "/single-audio/demo-slug" as Route,
-        name: "Single Audio",
-      },
-      {
-        id: randomId(),
-        href: "/single-video/demo-slug" as Route,
-        name: "Single Video",
-      },
-      {
-        id: randomId(),
-        href: "/single-gallery/demo-slug" as Route,
-        name: "Single Gallery",
-        isNew: true,
-      },
-    ],
-  },
-
-  //
-  {
-    id: randomId(),
-    href: "/archive/demo-slug" as Route,
-    name: "Beauty",
-  },
-
-  {
-    id: randomId(),
-    href: "/archive/demo-slug" as Route,
-    name: "Sport",
+    href: "/categories" as Route,
+    name: "Categories",
   },
   {
     id: randomId(),
-    href: "/search",
-    name: "Templates",
-    type: "megaMenu",
-    children: MEGAMENU_TEMPLATES,
+    href: "/news" as Route,
+    name: "News",
   },
   {
     id: randomId(),
-    href: "/search",
-    name: "Explore",
-    type: "dropdown",
-    children: OTHER_PAGE_CHILD,
+    href: "/ranking" as Route,
+    name: "Ranking",
   },
+  {
+    id: randomId(),
+    href: "/about" as Route,
+    name: "About Us",
+  },
+  // {
+  //   id: randomId(),
+  //   href: "/Use" as Route,
+  //   name: "use",
+  //   type: "dropdown",
+  //   children: [
+  //     {
+  //       id: randomId(),
+  //       href: "/nominators" as Route,
+  //       name: "Staking",
+  //     },
+  //     {
+  //       id: randomId(),
+  //       href: "/pay" as Route,
+  //       name: "TON App Pay",
+  //     },
+  //   ],
+  // },
 ];

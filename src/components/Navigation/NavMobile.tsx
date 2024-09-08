@@ -166,7 +166,7 @@ const NavMobile: React.FC<NavMobileProps> = ({
     <div className="overflow-y-auto w-full h-screen py-2 transition transform shadow-lg ring-1 dark:ring-neutral-700 bg-white dark:bg-neutral-900 divide-y-2 divide-neutral-100 dark:divide-neutral-800">
       <div className="py-6 px-5">
         <Logo />
-        <div className="flex flex-col mt-5 text-slate-600 dark:text-slate-300 text-sm">
+        {/* <div className="flex flex-col mt-5 text-slate-600 dark:text-slate-300 text-sm">
           <span>
             Discover the most outstanding articles on all topics of life. Write
             your stories and share them
@@ -178,7 +178,7 @@ const NavMobile: React.FC<NavMobileProps> = ({
               <SwitchDarkMode className="bg-neutral-100 dark:bg-neutral-800" />
             </span>
           </div>
-        </div>
+        </div> */}
         <span className="absolute end-2 top-2 p-1">
           <ButtonClose onClick={onClickClose} />
         </span>
@@ -188,7 +188,7 @@ const NavMobile: React.FC<NavMobileProps> = ({
       <ul className="flex flex-col py-6 px-2 space-y-1 rtl:space-x-reverse">
         {data.map(_renderItem)}
       </ul>
-      <div className="flex items-center justify-between py-6 px-5 space-x-2 rtl:space-x-reverse">
+      {/* <div className="flex items-center justify-between py-6 px-5 space-x-2 rtl:space-x-reverse">
         <ButtonPrimary className="!px-10 relative">
           Buy this template
           <a
@@ -198,7 +198,7 @@ const NavMobile: React.FC<NavMobileProps> = ({
             className="absolute inset-0"
           ></a>
         </ButtonPrimary>
-      </div>
+      </div> */}
     </div>
   );
 };

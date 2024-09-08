@@ -2,6 +2,8 @@ import {
   SocialType,
   SOCIALS_DATA,
 } from "@/components/SocialsShare/SocialsShare";
+import { getStrapiMedia } from "@/utils/apiHelpers";
+import Image from "next/image";
 import React, { FC } from "react";
 
 export interface SocialsListProps {
@@ -32,7 +34,7 @@ const SocialsList: FC<SocialsListProps> = ({
           rel="noopener noreferrer"
           title={item.name}
         >
-          <div dangerouslySetInnerHTML={{ __html: item.icon || "" }}></div>
+          <Image src={getStrapiMedia(item.icon) || ""} width={22} height={22} alt=""/>
         </a>
       ))}
     </nav>

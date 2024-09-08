@@ -6,8 +6,18 @@ import { Fragment } from "react";
 import Avatar from "@/components/Avatar/Avatar";
 import SwitchDarkMode2 from "@/components/SwitchDarkMode/SwitchDarkMode2";
 import Link from "next/link";
-
+import { signOut, useSession } from "next-auth/react";
+import { useCustomQuery } from "@/hooks/useCustomQuery";
+import { getStrapiMedia } from "@/utils/apiHelpers";
+import { User } from "@/data/types";
 export default function AvatarDropdown() {
+const isBrowser = typeof window !== "undefined" && typeof localStorage !== "undefined";
+  const { data } = useCustomQuery<User>({
+    key: "users/me",opts: {
+      enabled: isBrowser ? (localStorage.getItem("token") ? true : false) : false
+    }
+  });
+  const user = data as User;
   return (
     <div className="AvatarDropdown ">
       <Popover className="relative">
@@ -50,20 +60,18 @@ export default function AvatarDropdown() {
               <Popover.Panel className="absolute z-10 w-screen max-w-[260px] px-4 mt-3.5 -end-2 sm:end-0 sm:px-0">
                 <div className="overflow-hidden rounded-3xl shadow-lg ring-1 ring-black ring-opacity-5">
                   <div className="relative grid grid-cols-1 gap-6 bg-white dark:bg-neutral-800 py-7 px-6">
-                    <div className="flex items-center">
-                      <Avatar imgUrl={avatarImgs[7]} sizeClass="w-12 h-12" />
+                    {user && <div className="flex items-center">
+                      <Avatar imgUrl={getStrapiMedia(user.avatar.url) || ""} sizeClass="w-12 h-12" />
 
                       <div className="flex-grow ms-3">
-                        <h4 className="font-semibold">Eden Smith</h4>
-                        <p className="text-xs mt-0.5">Los Angeles, CA</p>
+                        <h4 className="font-semibold">{user.username}</h4>
                       </div>
-                    </div>
-
+                    </div>}
                     <div className="w-full border-b border-neutral-200 dark:border-neutral-700" />
 
                     {/* ------------------ 1 --------------------- */}
                     <Link
-                      href={"/author/demo-slug"}
+                      href={"/settings"}
                       className="flex items-center p-2 -m-3 transition duration-150 ease-in-out rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-700 focus:outline-none focus-visible:ring focus-visible:ring-orange-500 focus-visible:ring-opacity-50"
                       onClick={() => close()}
                     >
@@ -98,7 +106,7 @@ export default function AvatarDropdown() {
 
                     {/* ------------------ 2 --------------------- */}
                     <Link
-                      href={"/dashboard/posts"}
+                      href={"/my_posts/create"}
                       className="flex items-center p-2 -m-3 transition duration-150 ease-in-out rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-700 focus:outline-none focus-visible:ring focus-visible:ring-orange-500 focus-visible:ring-opacity-50"
                       onClick={() => close()}
                     >
@@ -152,7 +160,9 @@ export default function AvatarDropdown() {
                     <Link
                       href={"/author/demo-slug"}
                       className="flex items-center p-2 -m-3 transition duration-150 ease-in-out rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-700 focus:outline-none focus-visible:ring focus-visible:ring-orange-500 focus-visible:ring-opacity-50"
-                      onClick={() => close()}
+                      onClick={() => {
+                        close();
+                      }}
                     >
                       <div className="flex items-center justify-center flex-shrink-0 text-neutral-500 dark:text-neutral-300">
                         <svg
@@ -285,7 +295,11 @@ export default function AvatarDropdown() {
                     <Link
                       href={"/#"}
                       className="flex items-center p-2 -m-3 transition duration-150 ease-in-out rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-700 focus:outline-none focus-visible:ring focus-visible:ring-orange-500 focus-visible:ring-opacity-50"
-                      onClick={() => close()}
+                      onClick={() => {
+                        localStorage.removeItem("token");
+                        signOut({ callbackUrl: "/" });
+                        close()
+                      }}
                     >
                       <div className="flex items-center justify-center flex-shrink-0 text-neutral-500 dark:text-neutral-300">
                         <svg

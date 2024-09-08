@@ -101,7 +101,7 @@ const SingleContent: FC<SingleContentProps> = ({}) => {
           <h3 className="text-xl font-semibold text-neutral-800 dark:text-neutral-200">
             Responses (10)
           </h3>
-          <SingleCommentForm />
+          {/* <SingleCommentForm /> */}
         </div>
 
         {/* COMMENTS LIST */}

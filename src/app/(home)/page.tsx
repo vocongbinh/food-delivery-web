@@ -1,45 +1,84 @@
+
 import React from "react";
-import SectionLargeSlider from "@/app/(home)/SectionLargeSlider";
-import BackgroundSection from "@/components/BackgroundSection/BackgroundSection";
-import SectionSliderNewAuthors from "@/components/SectionSliderNewAthors/SectionSliderNewAuthors";
 import {
   DEMO_POSTS,
   DEMO_POSTS_AUDIO,
   DEMO_POSTS_GALLERY,
   DEMO_POSTS_VIDEO,
+
 } from "@/data/posts";
-import { DEMO_CATEGORIES } from "@/data/taxonomies";
-import { DEMO_AUTHORS } from "@/data/authors";
-import SectionSliderNewCategories from "@/components/SectionSliderNewCategories/SectionSliderNewCategories";
-import SectionSliderPosts from "@/components/Sections/SectionSliderPosts";
-import SectionMagazine1 from "@/components/Sections/SectionMagazine1";
+import { getPrefetchQuery, useCustomQuery } from "@/hooks/useCustomQuery";
+import { Blog, Category } from "@/data/types";
+
+import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
+import Home from "./home";
+import BackgroundSection from "@/components/BackgroundSection/BackgroundSection";
+import SectionBecomeAnAuthor from "@/components/SectionBecomeAnAuthor/SectionBecomeAnAuthor";
+import SectionGridAuthorBox from "@/components/SectionGridAuthorBox/SectionGridAuthorBox";
 import SectionAds from "@/components/Sections/SectionAds";
-import SectionMagazine7 from "@/components/Sections/SectionMagazine7";
 import SectionGridPosts from "@/components/Sections/SectionGridPosts";
+import SectionLatestPosts from "@/components/Sections/SectionLatestPosts";
+import SectionMagazine1 from "@/components/Sections/SectionMagazine1";
+import SectionMagazine2 from "@/components/Sections/SectionMagazine2";
+import SectionMagazine7 from "@/components/Sections/SectionMagazine7";
 import SectionMagazine8 from "@/components/Sections/SectionMagazine8";
 import SectionMagazine9 from "@/components/Sections/SectionMagazine9";
-import SectionGridAuthorBox from "@/components/SectionGridAuthorBox/SectionGridAuthorBox";
-import SectionBecomeAnAuthor from "@/components/SectionBecomeAnAuthor/SectionBecomeAnAuthor";
-import SectionSubscribe2 from "@/components/SectionSubscribe2/SectionSubscribe2";
+import SectionSliderPosts from "@/components/Sections/SectionSliderPosts";
 import SectionVideos from "@/components/Sections/SectionVideos";
-import SectionLatestPosts from "@/components/Sections/SectionLatestPosts";
-import SectionMagazine2 from "@/components/Sections/SectionMagazine2";
+import SectionSliderNewAuthors from "@/components/SectionSliderNewAthors/SectionSliderNewAuthors";
+import SectionSliderNewCategories from "@/components/SectionSliderNewCategories/SectionSliderNewCategories";
+import SectionSubscribe2 from "@/components/SectionSubscribe2/SectionSubscribe2";
+import { DEMO_AUTHORS } from "@/data/authors";
+import { DEMO_CATEGORIES } from "@/data/taxonomies";
+
+
 
 //
 const MAGAZINE1_POSTS = DEMO_POSTS.filter((_, i) => i >= 8 && i < 16);
 const MAGAZINE2_POSTS = DEMO_POSTS.filter((_, i) => i >= 0 && i < 7);
-//
 
-const PageHome = ({}) => {
+export default async function PageHome() {
+  const queryClient = new QueryClient();
+  try {
+
+    await Promise.all([
+      queryClient.prefetchQuery(getPrefetchQuery({ key: "blogs"})),
+      queryClient.prefetchQuery(getPrefetchQuery({
+        key: "categories", urlParamsObject: {
+          populate: {
+            applications: {
+              populate: {
+                logo: { fields: ["url"] }
+              }
+            }
+          }
+        }
+      })),
+      queryClient.prefetchQuery(getPrefetchQuery({
+        key: "advertisements", urlParamsObject: {
+          populate: {
+            featuredImage: { fields: ["url"] }
+          }
+        }
+      })),
+      queryClient.prefetchQuery(getPrefetchQuery({
+        key: "communities", urlParamsObject: {
+          populate: {
+            logo: { fields: ["url"] }
+          }
+        }
+      })),
+    ]);
+    console.log('All queries prefetched');
+  } catch (error) {
+    console.error('Error prefetching queries:', error);
+  }
   return (
-    <div className="nc-PageHome relative">
-      <div className="container relative">
-        <SectionLargeSlider
-          className="pt-10 pb-16 md:py-16 lg:pb-28 lg:pt-20"
-          posts={DEMO_POSTS?.filter((_, i) => i < 3)}
-        />
-
-        <div className="relative py-16">
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <div className="nc-PageHome relative">
+        <div className="container relative">
+          <Home />
+          <div className="relative py-16">
           <BackgroundSection />
           <SectionSliderNewAuthors
             heading="Newest authors"
@@ -47,6 +86,7 @@ const PageHome = ({}) => {
             authors={DEMO_AUTHORS.filter((_, i) => i < 10)}
           />
         </div>
+
 
         <SectionSliderNewCategories
           className="py-16 lg:py-28"
@@ -136,9 +176,11 @@ const PageHome = ({}) => {
         <SectionVideos className="py-16 lg:py-28" />
 
         <SectionLatestPosts className="pb-16 lg:pb-28" />
+        </div>
       </div>
-    </div>
+    </HydrationBoundary>
+
   );
 };
 
-export default PageHome;
+

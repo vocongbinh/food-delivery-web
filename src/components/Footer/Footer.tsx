@@ -1,63 +1,68 @@
+
 import React from "react";
 import Logo from "@/components/Logo/Logo";
 import SocialsList1 from "@/components/SocialsList1/SocialsList1";
 import { CustomLink } from "@/data/types";
 import MusicPlayer from "../MusicPlayer/MusicPlayer";
-
+import SocialsList from "../SocialsList/SocialsList";
+import { getPrefetchQuery, useCustomQuery } from "@/hooks/useCustomQuery";
+import { Global } from "@/data/singleTypes";
+import { SocialType } from "../SocialsShare/SocialsShare";
+import { QueryClient } from "@tanstack/react-query";
 export interface WidgetFooterMenu {
   id: string;
   title: string;
   menus: CustomLink[];
 }
 
-const widgetMenus: WidgetFooterMenu[] = [
-  {
-    id: "5",
-    title: "Getting started",
-    menus: [
-      { href: "/", label: "Installation" },
-      { href: "/", label: "Release Notes" },
-      { href: "/", label: "Upgrade Guide" },
-      { href: "/", label: "Browser Support" },
-      { href: "/", label: "Editor Support" },
-    ],
-  },
-  {
-    id: "1",
-    title: "Explore",
-    menus: [
-      { href: "/", label: "Design features" },
-      { href: "/", label: "Prototyping" },
-      { href: "/", label: "Design systems" },
-      { href: "/", label: "Pricing" },
-      { href: "/", label: "Customers" },
-    ],
-  },
-  {
-    id: "2",
-    title: "Resources",
-    menus: [
-      { href: "/", label: "Best practices" },
-      { href: "/", label: "Support" },
-      { href: "/", label: "Developers" },
-      { href: "/", label: "Learn design" },
-      { href: "/", label: "What's new" },
-    ],
-  },
-  {
-    id: "4",
-    title: "Community",
-    menus: [
-      { href: "/", label: "Discussion Forums" },
-      { href: "/", label: "Code of Conduct" },
-      { href: "/", label: "Community Resources" },
-      { href: "/", label: "Contributing" },
-      { href: "/", label: "Concurrent Mode" },
-    ],
-  },
-];
+// const widgetMenus: WidgetFooterMenu[] = [
+//   {
+//     id: "5",
+//     title: "Getting started",
+//     menus: [
+//       { href: "/", label: "Installation" },
+//       { href: "/", label: "Release Notes" },
+//       { href: "/", label: "Upgrade Guide" },
+//       { href: "/", label: "Browser Support" },
+//       { href: "/", label: "Editor Support" },
+//     ],
+//   },
+//   {
+//     id: "1",
+//     title: "Explore",
+//     menus: [
+//       { href: "/", label: "Design features" },
+//       { href: "/", label: "Prototyping" },
+//       { href: "/", label: "Design systems" },
+//       { href: "/", label: "Pricing" },
+//       { href: "/", label: "Customers" },
+//     ],
+//   },
+//   {
+//     id: "2",
+//     title: "Resources",
+//     menus: [
+//       { href: "/", label: "Best practices" },
+//       { href: "/", label: "Support" },
+//       { href: "/", label: "Developers" },
+//       { href: "/", label: "Learn design" },
+//       { href: "/", label: "What's new" },
+//     ],
+//   },
+//   {
+//     id: "4",
+//     title: "Community",
+//     menus: [
+//       { href: "/", label: "Discussion Forums" },
+//       { href: "/", label: "Code of Conduct" },
+//       { href: "/", label: "Community Resources" },
+//       { href: "/", label: "Contributing" },
+//       { href: "/", label: "Concurrent Mode" },
+//     ],
+//   },
+// ];
 
-const Footer: React.FC = () => {
+export default async function Footer() {
   const renderWidgetMenuItem = (menu: WidgetFooterMenu, index: number) => {
     return (
       <div key={index} className="text-sm">
@@ -80,28 +85,50 @@ const Footer: React.FC = () => {
       </div>
     );
   };
+  const queryClient = new QueryClient();
+  const data: Global = await queryClient.fetchQuery(getPrefetchQuery({
+    key: "global", urlParamsObject: {
+      populate: {
+        footer: {
+          populate: {
+            socials: {
+              populate: ["logo"]
+            }
+          }
+        }
+      }
+    }
+  }))
 
+
+  const { footer } = data;
+  const socials: SocialType[] = footer.socials.map((social) => {
+    return {
+      id: social.id.toString(),
+      name: social.name,
+      href: social.url,
+      icon: social.logo.data.attributes.url
+    }
+  })
   return (
     <>
-      {/* music player */}
-      <MusicPlayer />
-
       {/* footer */}
-      <div className="nc-Footer relative py-16 lg:py-28 border-t border-neutral-200 dark:border-neutral-700">
-        <div className="container grid grid-cols-2 gap-y-10 gap-x-5 sm:gap-x-8 md:grid-cols-4 lg:grid-cols-5 lg:gap-x-10 ">
-          <div className="grid grid-cols-4 gap-5 col-span-2 md:col-span-4 lg:md:col-span-1 lg:flex lg:flex-col">
-            <div className="col-span-2 md:col-span-1">
-              <Logo />
-            </div>
-            <div className="col-span-2 flex items-center md:col-span-3">
-              <SocialsList1 className="flex items-center space-x-3 lg:space-x-0 rtl:space-x-reverse lg:flex-col lg:space-y-2.5 lg:items-start" />
+      <div className="nc-Footer relative py-6 lg:py-8 border-t border-neutral-200 dark:border-neutral-700 bg-white">
+        <div className="container">
+          <div className="flex md:flex-row flex-col items-center gap-2 justify-between border-b border-neutral-200 pb-3">
+            <Logo />
+            <div className="flex gap-4 items-center">
+              <span className="text-sm text-neutral-300">{footer.label}</span>
+              <SocialsList socials={socials} className="flex items-center space-x-6" />
             </div>
           </div>
-          {widgetMenus.map(renderWidgetMenuItem)}
+          <p className="text-center text-sm text-neutral-400 mt-2">Copyright © 2024 TonStation </p>
         </div>
       </div>
     </>
   );
+
+
 };
 
-export default Footer;
+

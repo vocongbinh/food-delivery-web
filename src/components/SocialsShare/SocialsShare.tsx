@@ -7,10 +7,12 @@ export interface SocialsShareProps {
 
 export interface SocialType {
   id: string;
-  name: string;
   icon: string;
   href: string;
+  name: string;
 }
+
+
 
 const socials: SocialType[] = [
   {

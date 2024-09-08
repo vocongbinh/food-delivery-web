@@ -24,7 +24,7 @@ const Button: FC<ButtonProps> = ({
   pattern = "default",
   className = "",
   sizeClass = "py-3 px-4 sm:py-3.5 sm:px-6",
-  fontSize = "text-sm sm:text-base font-medium",
+  fontSize = "text-xs lg:text-sm font-medium",
   disabled = false,
   href,
   children,
@@ -36,14 +36,14 @@ const Button: FC<ButtonProps> = ({
     "bg-neutral-900 hover:bg-neutral-800 text-white dark:bg-neutral-100 dark:hover:bg-neutral-50 dark:text-black";
   switch (pattern) {
     case "primary":
-      colors = "bg-primary-700 hover:bg-primary-6000 text-primary-50";
+      colors = "bg-primary-500 hover:bg-primary-6000 text-primary-50";
       break;
     case "secondary":
       colors = "bg-secondary-500 hover:bg-secondary-6000 text-secondary-50";
       break;
     case "white":
       colors =
-        "bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-200";
+        "bg-white dark:bg-neutral-900  hover:bg-neutral-100 text-neutral-900 dark:text-neutral-200";
       break;
     case "third":
       colors =
@@ -54,7 +54,7 @@ const Button: FC<ButtonProps> = ({
       break;
   }
 
-  let CLASSES = `nc-Button flex-shrink-0 relative h-auto inline-flex items-center justify-center rounded-full transition-colors border-transparent ${colors} ${fontSize} ${sizeClass} ${className} `;
+  let CLASSES = `nc-Button flex-shrink-0 relative h-auto inline-flex items-center justify-center rounded-full transition-colors ${colors} ${fontSize} ${sizeClass} ${className} `;
 
   if (!!href) {
     return (

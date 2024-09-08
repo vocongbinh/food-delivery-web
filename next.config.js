@@ -18,7 +18,36 @@ const nextConfig = {
         port: "",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "dev-cms-api.tonstation.io", // Correct hostname
+        port: "",
+        pathname: "/uploads/**", // Correct pathname
+      },
+      {
+        protocol: "https",
+        hostname: "coin-images.coingecko.com",
+        port: "",
+        pathname: "/**",
+      },
     ],
+  },
+  webpack(config) {
+    let modularizeImports = null;
+    config.module.rules.some((rule) =>
+      rule.oneOf?.some((oneOf) => {
+        modularizeImports =
+          oneOf?.use?.options?.nextConfig?.modularizeImports;
+        return modularizeImports;
+      })
+    );
+    if (modularizeImports?.["@headlessui/react"])
+      delete modularizeImports["@headlessui/react"];
+    config.module.rules.push({
+      test: /\.svg$/,
+      use: ["@svgr/webpack"],
+    });
+    return config;
   },
 };
 
