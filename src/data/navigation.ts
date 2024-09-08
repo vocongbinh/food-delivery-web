@@ -330,16 +330,29 @@ NAVIGATION_DEMO_2: NavItemType[] = [
     id: randomId(),
     href: "/categories" as Route,
     name: "Categories",
+    type: "dropdown",
+    children: [
+      {
+        id: randomId(),
+        href: "/categories/food" as Route,
+        name: "Food",
+      },
+      {
+        id: randomId(),
+        href: "/categories/drink" as Route,
+        name: "Drink",
+      },
+    ],
   },
   {
     id: randomId(),
-    href: "/news" as Route,
-    name: "News",
+    href: "/restaurants" as Route,
+    name: "Restaurants",
   },
-  {
+   {
     id: randomId(),
-    href: "/ranking" as Route,
-    name: "Ranking",
+    href: "/my-orders" as Route,
+    name: "My Orders",
   },
   {
     id: randomId(),

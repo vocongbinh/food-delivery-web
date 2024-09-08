@@ -1,37 +1,35 @@
-"use client"
-import React, { ReactNode, useState } from "react";
-  import Login from "./login";
-import SignUp from "./signUp";
-interface TabItem {
-  id: number;
-  title: string;
-  component: ReactNode;
-}
+import React from "react";
+import facebookSvg from "@/images/Facebook.svg";
+import twitterSvg from "@/images/Twitter.svg";
+import googleSvg from "@/images/Google.svg";
+import Input from "@/components/Input/Input";
+import ButtonPrimary from "@/components/Button/ButtonPrimary";
+import NcLink from "@/components/NcLink/NcLink";
+import Heading2 from "@/components/Heading/Heading2";
+import Image from "next/image";
 
-
-const tabsValue: TabItem[] = [
+const loginSocials = [
   {
-    id: 1,
-    title: "Log In",
-    component: <Login />
+    name: "Continue with Facebook",
+    href: "#",
+    icon: facebookSvg,
   },
   {
-    id: 2,
-    title: "Sign Up",
-    component: <SignUp />
-  }
-]
+    name: "Continue with Twitter",
+    href: "#",
+    icon: twitterSvg,
+  },
+  {
+    name: "Continue with Google",
+    href: "#",
+    icon: googleSvg,
+  },
+];
 
-
-
-const PageLogin = ({ }) => {
-  const [activeTab, setActiveTab] = useState<TabItem>(tabsValue[0]);
-  const handleChangeTab = (tab: TabItem) => {
-    setActiveTab(tab);
-  }
+const PageLogin = ({}) => {
   return (
     <>
-      {/* <header className="text-center max-w-2xl mx-auto - mb-14 sm:mb-16 lg:mb-20 ">
+      <header className="text-center max-w-2xl mx-auto - mb-14 sm:mb-16 lg:mb-20 ">
         <Heading2>Login</Heading2>
         <span className="block text-sm mt-2 text-neutral-700 sm:text-base dark:text-neutral-200">
           Welcome to our blog magazine Community
@@ -58,19 +56,42 @@ const PageLogin = ({ }) => {
           ))}
         </div>
         {/* OR */}
-      {/* FORM */}
-      <div className="w-full flex">
-        {tabsValue.map((tab, index) =>
-          <div onClick={() => {
-            handleChangeTab(tab);
-          }} className={`text-center cursor-default transition-all duration-200 text-lg font-semibold flex-1 py-3 ${activeTab.id === tab.id ? "border-b-2 border-primary-500" : "text-neutral-200"}`}
-            key={index}>{tab.title}</div>)}
+        <div className="relative text-center">
+          <span className="relative z-10 inline-block px-4 font-medium text-sm bg-white dark:text-neutral-400 dark:bg-neutral-900">
+            OR
+          </span>
+          <div className="absolute left-0 w-full top-1/2 transform -translate-y-1/2 border border-neutral-100 dark:border-neutral-800"></div>
+        </div>
+        {/* FORM */}
+        <form className="grid grid-cols-1 gap-6" action="#" method="post">
+          <label className="block">
+            <span className="text-neutral-800 dark:text-neutral-200">
+              Email address
+            </span>
+            <Input
+              type="email"
+              placeholder="example@example.com"
+              className="mt-1"
+            />
+          </label>
+          <label className="block">
+            <span className="flex justify-between items-center text-neutral-800 dark:text-neutral-200">
+              Password
+              <NcLink href="/forgot-pass" className="text-sm underline">
+                Forgot password?
+              </NcLink>
+            </span>
+            <Input type="password" className="mt-1" />
+          </label>
+          <ButtonPrimary type="submit">Continue</ButtonPrimary>
+        </form>
+
+        {/* ==== */}
+        <span className="block text-center text-neutral-700 dark:text-neutral-300">
+          New user? {` `}
+          <NcLink href="/signup">Create an account</NcLink>
+        </span>
       </div>
-      {activeTab.component}
-      {/* ==== */}
-
-
-      {/* </div> */}
     </>
   );
 };

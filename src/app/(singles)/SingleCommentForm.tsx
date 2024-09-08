@@ -45,7 +45,6 @@ const SingleCommentForm: FC<SingleCommentFormProps> = ({
         ref={textareaRef}
         value={text}
         required={true}
-        defaultValue={defaultValue}
         onChange={(e) => setText(e.target.value)}
         rows={rows}
       />

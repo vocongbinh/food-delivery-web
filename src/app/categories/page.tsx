@@ -11,7 +11,17 @@ interface CategoriesPageProps {
 const CategoriesPage: FC<CategoriesPageProps> = async ({ }) => {
     const queryClient = new QueryClient();
     const categories: Category[] = await queryClient.fetchQuery(getPrefetchQuery({
-        key: "categories"
+        key: "categories",
+        urlParamsObject: {
+            sort: ["updatedAt:desc"],
+            populate: {
+              featuredApp: {
+                populate: {
+                  logo: { fields: ["url"] },
+                },
+              },
+            },
+          }
     }));
     return <div className="py-20 lg:px-20 px-10" style={{
         backgroundImage: `url(${bg.src})`,
