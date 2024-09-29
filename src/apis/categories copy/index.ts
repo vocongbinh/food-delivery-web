@@ -1,4 +1,4 @@
-import { getFormData } from "./../../utils/api-request";
+import { getFormData } from "../../utils/api-request";
 import { Category } from "@/types/category";
 import { apiGet, apiPost, apiDelete, apiPatch } from "@/utils/api-request";
 

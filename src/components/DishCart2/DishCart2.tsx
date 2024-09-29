@@ -7,14 +7,16 @@ import PostTypeFeaturedIcon from "@/components/PostTypeFeaturedIcon/PostTypeFeat
 import Link from "next/link";
 import Image from "next/image";
 import PostCardMeta from "../PostCardMeta/PostCardMeta";
+import { Dish } from "@/types/dish";
 
-export interface DishCart2Props {
+export interface Card2Props {
   className?: string;
   post: PostDataType;
   size?: "normal" | "large";
+  dish: Dish;
 }
 
-const DishCart2: FC<DishCart2Props> = ({
+const Card2: FC<Card2Props> = ({
   className = "h-full",
   size = "normal",
   post,
@@ -30,7 +32,7 @@ const DishCart2: FC<DishCart2Props> = ({
   } = post;
 
   return (
-    <div className={`nc-DishCart2 group relative flex flex-col ${className}`}>
+    <div className={`nc-Card2 group relative flex flex-col ${className}`}>
       <div className="block flex-shrink-0 flex-grow relative w-full h-0 pt-[75%] sm:pt-[55%] z-0">
         <Image
           fill
@@ -87,4 +89,4 @@ const DishCart2: FC<DishCart2Props> = ({
   );
 };
 
-export default DishCart2;
+export default Card2;

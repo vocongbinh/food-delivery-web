@@ -1,4 +1,3 @@
-
 export const HOST = process.env.NEXT_PUBLIC_HOST;
 export const API_HOST = process.env.NEXT_PUBLIC_HOST + "/api";
 
@@ -19,11 +18,11 @@ const getRequestHeaders = async (
   method: string,
   isFormData?: boolean
 ): Promise<any> => {
-  const token = localStorage.getItem("token");
+  const token = process.env.NEXT_PUBLIC_TOKEN;
 
   const headers = new Headers();
   if (token) {
-    headers.append("Authorization", "Bearer " + token);
+    headers.append("token", "Bearer " + token);
   }
   if (!isFormData) {
     headers.append("Content-Type", "application/json");
@@ -120,6 +119,7 @@ export const apiPatch = async (query: string, body: any) => {
 
 export const apiGet = async (query: string, body?: any) => {
   const headers = await getRequestHeaders("GET");
+  console.log(headers);
   return await apiFetch(getRequestUrl(query, body), {
     method: "GET",
     headers,

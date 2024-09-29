@@ -1,8 +1,6 @@
 import React, { FC } from "react";
 import PostCardCommentBtn from "@/components/PostCardCommentBtn/PostCardCommentBtn";
 import PostCardLikeAction from "@/components/PostCardLikeAction/PostCardLikeAction";
-import ShoppingCartIcon from "@heroicons/react/24/outline/ShoppingCartIcon";
-import HeartIcon from "@heroicons/react/24/outline/HeartIcon";
 
 export interface PostCardLikeAndCommentProps {
   className?: string;

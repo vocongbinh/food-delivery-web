@@ -26,7 +26,7 @@ const nextConfig = {
       },
       {
         protocol: "https",
-        hostname: "coin-images.coingecko.com",
+        hostname: "**",
         port: "",
         pathname: "/**",
       },
@@ -36,8 +36,7 @@ const nextConfig = {
     let modularizeImports = null;
     config.module.rules.some((rule) =>
       rule.oneOf?.some((oneOf) => {
-        modularizeImports =
-          oneOf?.use?.options?.nextConfig?.modularizeImports;
+        modularizeImports = oneOf?.use?.options?.nextConfig?.modularizeImports;
         return modularizeImports;
       })
     );

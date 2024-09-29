@@ -67,7 +67,7 @@ export interface BaseData {
   id: number;
 }
 export type MediaData = {
-  id: number,
+  id: number;
   attributes: {
     url: string;
   };
@@ -78,8 +78,8 @@ export interface Auth extends BaseData {
   firstname: string;
   lastname: string;
   avatar: {
-    data: MediaData
-  },
+    data: MediaData;
+  };
   position: string;
 }
 export interface User extends BaseData {
@@ -90,14 +90,13 @@ export interface User extends BaseData {
     url: string;
   };
   position: string;
-  settings: Setting[]
+  settings: Setting[];
 }
 //setting
 export interface Setting extends BaseData {
   key: string;
   name: string;
-  description: string
-
+  description: string;
 }
 
 //category
