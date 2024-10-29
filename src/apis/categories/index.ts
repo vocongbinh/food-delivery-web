@@ -1,3 +1,4 @@
+import { Restaurant } from "@/types";
 import { getFormData } from "./../../utils/api-request";
 import { Category } from "@/types/category";
 import { apiGet, apiPost, apiDelete, apiPatch } from "@/utils/api-request";
@@ -7,8 +8,8 @@ export class CategoriesApi {
     return await apiPost("/categories", request);
   }
 
-  static async getCategories(): Promise<Category> {
-    const response = await apiGet("/categories");
+  static async getCategories(id: Restaurant["id"]): Promise<Category[]> {
+    const response = await apiGet(`/categories/restaurant/${id}`);
     return response;
   }
 

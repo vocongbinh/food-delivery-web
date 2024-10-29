@@ -1,3 +1,6 @@
+import { createSupabaseClient } from "./supabase";
+import { v4 as uuidv4 } from "uuid";
+
 export const HOST = process.env.NEXT_PUBLIC_HOST;
 export const API_HOST = process.env.NEXT_PUBLIC_HOST + "/api";
 
@@ -124,4 +127,14 @@ export const apiGet = async (query: string, body?: any) => {
     method: "GET",
     headers,
   });
+};
+
+export const apiUploadImage = async (file: File, bucketName: string) => {
+  const supabase = createSupabaseClient();
+
+  const { data, error } = await supabase.storage
+    .from(bucketName)
+    .upload(uuidv4(), file);
+  if (error) throw error;
+  return data?.fullPath;
 };

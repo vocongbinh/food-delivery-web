@@ -3,7 +3,6 @@ import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import SectionDishOfType from "@/components/SectionDishOfType/SectionDishOfType";
 import { DEMO_POSTS_AUDIO } from "@/data/posts";
-import { DishType } from "@/types/dishType";
 import SectionDishOfType2 from "@/components/SectionDishOfType2/SectionDishOfType2";
 import { DISH_TYPE_KEY } from "@/contains/react_query_keys";
 import { DishTypesApi } from "@/apis/dishtypes";

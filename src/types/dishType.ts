@@ -1,7 +1,6 @@
 import { Dish } from "./dish";
 
 export interface DishType {
-  id: string;
+  id: number;
   name: string;
-  dishes: Dish[];
 }

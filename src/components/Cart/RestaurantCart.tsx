@@ -17,7 +17,7 @@ const RestaurantCart = () => {
       <div className="mt-10 p-4 flex flex-col overflow-hidden justify-start rounded-3xl bg-white h-80 w-full">
         {/* <div>Cart is empty now</div> */}
         {items?.map((item) => (
-          <DishCartItem cartItem={item} />
+          <DishCartItem cartItem={item} key={item.id} />
         ))}
         <div className="flex justify-between mt-3">
           <div>Total</div>

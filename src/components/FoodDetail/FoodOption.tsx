@@ -166,7 +166,9 @@ const FoodOption = () => {
             <PlusIcon className="w-4 h-4" />
           </button>
         </div>
-        <ButtonPrimary type="submit">Submit</ButtonPrimary>
+        <ButtonPrimary className="col-span-2" type="submit">
+          Submit
+        </ButtonPrimary>
       </form>
     </div>
   );
