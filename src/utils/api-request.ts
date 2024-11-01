@@ -1,3 +1,4 @@
+import { getCookie } from "cookies-next";
 import { createSupabaseClient } from "./supabase";
 import { v4 as uuidv4 } from "uuid";
 
@@ -21,8 +22,7 @@ const getRequestHeaders = async (
   method: string,
   isFormData?: boolean
 ): Promise<any> => {
-  const token = process.env.NEXT_PUBLIC_TOKEN;
-
+  const token = getCookie("token");
   const headers = new Headers();
   if (token) {
     headers.append("token", "Bearer " + token);
