@@ -1,5 +1,7 @@
+import { Dish } from "./dish"
+
 export interface DishType {
     id: string
     name: string
-    description?:string
+    dishes: Dish[]
 }

@@ -19,11 +19,11 @@ const getRequestHeaders = async (
   method: string,
   isFormData?: boolean
 ): Promise<any> => {
-  const token = localStorage.getItem("token");
+  const token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiaW5oIHZvIiwiaWF0IjoxNzI1NzgyMDg1LCJleHAiOjE3MjY5OTE2ODV9.u0aDtJlJs1AnjQ8cxNxOFxLjODQ6UYVJY9H5AP6vJBM"
 
   const headers = new Headers();
   if (token) {
-    headers.append("Authorization", "Bearer " + token);
+    headers.append("token", "Bearer " + token);
   }
   if (!isFormData) {
     headers.append("Content-Type", "application/json");
@@ -56,6 +56,8 @@ const apiFetch = async (
   init?: RequestInit | undefined
 ) => {
   try {
+    init = init || {};
+    init.cache = 'no-store';  
     const response = await fetch(input, init);
     const result = await response.json();
     if (!response.ok || response.status != 200) {
