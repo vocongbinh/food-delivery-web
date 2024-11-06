@@ -318,8 +318,7 @@ const OTHER_PAGE_CHILD: NavItemType[] = [
   },
 ];
 
-export const 
-NAVIGATION_DEMO_2: NavItemType[] = [
+export const NAVIGATION_DEMO_2: NavItemType[] = [
   {
     id: randomId(),
     href: "/" as Route,
@@ -349,7 +348,7 @@ NAVIGATION_DEMO_2: NavItemType[] = [
     href: "/restaurants" as Route,
     name: "Restaurants",
   },
-   {
+  {
     id: randomId(),
     href: "/my-orders" as Route,
     name: "My Orders",
@@ -359,7 +358,24 @@ NAVIGATION_DEMO_2: NavItemType[] = [
     href: "/about" as Route,
     name: "About Us",
   },
-  // {
+  {
+    id: randomId(),
+    href: "/admin" as Route,
+    name: "Admin",
+    type: "dropdown",
+    children: [
+      {
+        id: randomId(),
+        href: "/admin/7/food/add" as Route,
+        name: "Food",
+      },
+      {
+        id: randomId(),
+        href: "/admin/restaurant" as Route,
+        name: "Drink",
+      },
+    ],
+  }, // {
   //   id: randomId(),
   //   href: "/Use" as Route,
   //   name: "use",
