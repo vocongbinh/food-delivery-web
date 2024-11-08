@@ -286,7 +286,7 @@ const OTHER_PAGE_CHILD: NavItemType[] = [
     children: [
       {
         id: randomId(),
-        href: "/about",
+        href: "/hihi",
         name: "About",
       },
       {
@@ -319,11 +319,11 @@ const OTHER_PAGE_CHILD: NavItemType[] = [
 ];
 
 export const NAVIGATION_DEMO_2: NavItemType[] = [
-  {
-    id: randomId(),
-    href: "/" as Route,
-    name: "Home",
-  },
+  // {
+  //   id: randomId(),
+  //   href: "/" as Route,
+  //   name: "Home",
+  // },
   // single pages ----------------
   {
     id: randomId(),

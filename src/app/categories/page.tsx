@@ -18,7 +18,7 @@ const CategoriesPage =  () => {
         height: '100%',
         width: '100%',
     }}>
-        <Heading1 isCenter={false} desc="Choose a category and find the application you need">Categories</Heading1>
+        <Heading1 isCenter={false} desc="Choose a category and find your favorite food!">Categories</Heading1>
         <div className={`grid gap-6 md:gap-8 md:grid-cols-3 lg:grid-cols-4`}>
             {(dishTypes|| []).map((item, index) => {
                 return <CardCategory index={index + 1} key={index} dishType={item} />;

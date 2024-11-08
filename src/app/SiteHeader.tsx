@@ -12,7 +12,7 @@ import {
 import { Popover, Transition } from "@headlessui/react";
 import SwitchDarkMode2 from "@/components/SwitchDarkMode/SwitchDarkMode2";
 import { useThemeMode } from "@/hooks/useThemeMode";
-
+import {ToastContainer} from "react-toastify"
 const SiteHeader = () => {
   let pathname = usePathname();
   useThemeMode();
@@ -60,6 +60,7 @@ const SiteHeader = () => {
             );
           })}
         </div>
+        
       </div>
     );
   };
