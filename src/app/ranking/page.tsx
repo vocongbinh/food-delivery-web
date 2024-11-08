@@ -3,8 +3,8 @@ import Button from '@/components/Button/Button';
 import CustomMySlider from '@/components/CustomMySlider';
 import FeaturedRanking from '@/components/FeaturedRanking/FeaturedRanking';
 import Heading from '@/components/Heading/Heading'
-import TableCoins from '@/components/TableCoins/TableCoins';
-import TableRanking from '@/components/TableRanking/TableRanking';
+// import TableCoins from '@/components/TableCoins/TableCoins';
+// import TableRanking from '@/components/TableRanking/TableRanking';
 import TabList, { TabValue } from '@/components/TabList/TabList';
 import { Progress, Switch } from 'antd';
 import { calc } from 'antd/es/theme/internal';
@@ -13,7 +13,7 @@ import React, { useState } from 'react'
 import bitcoinImg from "@/images/Bitcoin.png"
 import Image from 'next/image';
 import { ArrowUpRightIcon } from '@heroicons/react/24/solid';
-import CoinChart from '@/components/CoinChart/CoinChart';
+// import CoinChart from '@/components/CoinChart/CoinChart';
 const colorsLevel = [
     "#F19D2A",
     "#F2DB34",
@@ -118,7 +118,7 @@ const RakingPage = () => {
                             <div className='px-2 border border-[#87E8DE] text-sm bg-[#E6FFFB] text-[#13C2C2] rounded-sm'>54.20%</div>
                             <span className='text-green-500 flex gap-2 text-sm items-center'>1.15% <ArrowUpRightIcon className='w-4 h-4' /></span>
                         </div>
-                        <CoinChart id='bitcoin' range={7} opts={
+                        {/* <CoinChart id='bitcoin' range={7} opts={
                             {
                                 scales: {
                                     x: {
@@ -130,7 +130,7 @@ const RakingPage = () => {
                                     },
                                 },
                             }
-                        } />
+                        } /> */}
                     </div>
                 </div>
                 <div className='flex justify-between py-4'>
@@ -140,7 +140,7 @@ const RakingPage = () => {
                         <Setting4 className="ms-3" size={24} color="#596780" />
                     </Button>
                 </div>
-                <TableCoins perPage={50} />
+                {/* <TableCoins perPage={50} /> */}
             </div>
 
         </div>
