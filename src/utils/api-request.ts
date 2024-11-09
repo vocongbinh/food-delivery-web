@@ -1,4 +1,4 @@
-import { getCookie } from "cookies-next";
+// import { getCookie } from "cookies-next";
 import { createSupabaseClient } from "./supabase";
 import { v4 as uuidv4 } from "uuid";
 
@@ -22,7 +22,9 @@ const getRequestHeaders = async (
   method: string,
   isFormData?: boolean
 ): Promise<any> => {
-  const token = getCookie("token");
+  const token =
+    "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiaW5oIHZvIiwiaWF0IjoxNzMwNzc1MDA5LCJleHAiOjE3MzE5ODQ2MDl9.hFL6eshtD2_a_PHDMhfQdVjYwIgRchGsKv-cFSwh3FM";
+
   const headers = new Headers();
   if (token) {
     headers.append("token", "Bearer " + token);
@@ -58,6 +60,8 @@ const apiFetch = async (
   init?: RequestInit | undefined
 ) => {
   try {
+    init = init || {};
+    init.cache = "no-store";
     const response = await fetch(input, init);
     const result = await response.json();
     if (!response.ok || response.status != 200) {

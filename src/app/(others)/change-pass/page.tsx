@@ -1,5 +1,5 @@
 "use client"
-import { AuthApi } from '@/apis/authApi'
+// import { AuthApi } from '@/apis/authApi'
 import ButtonPrimary from '@/components/Button/ButtonPrimary'
 import Input from '@/components/Input/Input'
 import { validatePassword } from '@/utils/validateHelpers'
@@ -21,7 +21,7 @@ const ChangePass = () => {
             return;
         }
         try {
-            await AuthApi.resetPassword({ code: searchParams.get('code') as string, password, passwordConfirmation: confirmedPassword });
+            // await AuthApi.resetPassword({ code: searchParams.get('code') as string, password, passwordConfirmation: confirmedPassword });
             router.push("/change-pass-success")
         }
         catch (e: any) {

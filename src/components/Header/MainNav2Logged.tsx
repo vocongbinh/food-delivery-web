@@ -9,6 +9,7 @@ import NotifyDropdown from "./NotifyDropdown";
 import ButtonLogin from "../ButtonLogin/ButtonLogin";
 import { getSession, useSession } from "next-auth/react";
 import { useAuthContext } from "@/contexts/auth/auth-context";
+import { TonConnectButton } from "@tonconnect/ui-react";
 
 export interface MainNav2LoggedProps { }
 
@@ -39,7 +40,7 @@ const MainNav2Logged: FC<MainNav2LoggedProps> = () => {
             <AvatarDropdown />
           </> : <ButtonLogin />}
           {/* <SearchModal /> */}
-
+          <TonConnectButton className="ml-4"/>
         </div>
       </div>
     );

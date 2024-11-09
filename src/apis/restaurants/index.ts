@@ -9,7 +9,7 @@ export class RestaurantsApi {
     return await apiPost("/restaurants", request);
   }
 
-  static async getRestaurants(request: FormData): Promise<Restaurant> {
+  static async getRestaurants(request: FormData): Promise<Restaurant[]> {
     const response = await apiGet("/restaurants", getFormData(request));
     return response;
   }
