@@ -24,11 +24,12 @@ const SingleCommentForm: FC<SingleCommentFormProps> = ({
   defaultValue = "",
   rows = 4,
 }) => {
-  const { token } = useAuthContext();
+  const token = "đsd";
   const [text, setText] = React.useState("");
   const handleCancel = () => {
     setText("")
   }
+  console.log(text)
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (textareaRef.current) {

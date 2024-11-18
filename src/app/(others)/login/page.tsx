@@ -23,7 +23,7 @@ const PageLogin = ({}) => {
       {
         onSuccess: (res) => {
           setCookie("token", res.token);
-          router.push("/");
+          window.location.href = "/";
         },
         onSettled: () => {
           setIsSubmitting(false);

@@ -10,7 +10,7 @@ import ButtonLogin from "../ButtonLogin/ButtonLogin";
 import { getSession, useSession } from "next-auth/react";
 import { useAuthContext } from "@/contexts/auth/auth-context";
 import { TonConnectButton } from "@tonconnect/ui-react";
-
+import { getCookie } from "cookies-next";
 export interface MainNav2LoggedProps { }
 
 const MainNav2Logged: FC<MainNav2LoggedProps> = () => {

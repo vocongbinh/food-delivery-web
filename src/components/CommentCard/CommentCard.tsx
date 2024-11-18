@@ -11,6 +11,8 @@ import Link from "next/link";
 import { DEMO_AUTHORS } from "@/data/authors";
 import SingleCommentForm from "@/app/(singles)/SingleCommentForm";
 import CommentCardLikeReply from "../CommentCardLikeReply/CommentCardLikeReply";
+import { formatDate } from "@/utils/apiHelpers";
+import { Review } from "@/types/review";
 
 const DEMO_COMMENTS = [
   {
@@ -51,18 +53,19 @@ export interface CommentType {
   };
 }
 
-export interface CommentCardProps {
+export interface ReviewCardProps {
   className?: string;
-  comment?: CommentType;
+  review: Review;
   size?: "large" | "normal";
 }
 
-const CommentCard: FC<CommentCardProps> = ({
+const ReviewCard: FC<ReviewCardProps> = ({
   className = "",
-  comment = DEMO_COMMENTS[0],
+  review,
   size = "large",
 }) => {
-  const { id, date, content, like } = comment;
+  const { rate, comment, createdAt, user } = review;
+  const date = formatDate(createdAt);
   const actions: NcDropDownItem[] = [
     {
       id: "edit",
@@ -149,7 +152,7 @@ const CommentCard: FC<CommentCardProps> = ({
 
   return (
     <>
-      <div className={`nc-CommentCard flex ${className}`}>
+      <div className={`nc-ReviewCard flex ${className}`}>
         <Avatar
           sizeClass={`h-6 w-6 text-base ${
             size === "large" ? "sm:text-lg sm:h-8 sm:w-8" : ""
@@ -181,7 +184,7 @@ const CommentCard: FC<CommentCardProps> = ({
 
           {/* CONTENT */}
           <span className="block text-neutral-700 mt-2 mb-3 sm:mt-3 sm:mb-4 dark:text-neutral-300">
-            {content}
+            {comment}
           </span>
 
           {/* ACTION LIKE REPLY */}
@@ -190,8 +193,8 @@ const CommentCard: FC<CommentCardProps> = ({
           ) : (
             <CommentCardLikeReply
               className={className}
-              isLiked={like.isLiked}
-              likeCount={like.count}
+              isLiked={true}
+              likeCount={2}
               onClickReply={() => setIsReplying(true)}
             />
           )}
@@ -214,4 +217,4 @@ const CommentCard: FC<CommentCardProps> = ({
   );
 };
 
-export default CommentCard;
+export default ReviewCard;

@@ -2,6 +2,12 @@ import { Restaurant } from "@/types";
 import { apiPut, getFormData } from "../../utils/api-request";
 import { Dish, DishRequest } from "@/types/dish";
 import { apiGet, apiPost, apiDelete, apiPatch } from "@/utils/api-request";
+import { User } from "@/types/user";
+import RecommendController from "@/utils/recommendation";
+import { RecommendedDish } from "@/types/recommendedDish";
+import endpoint from "@/utils/http";
+import { AuthsApi } from "../auths";
+import qs from "qs";
 
 export class DishesApi {
   static async postDish(request: DishRequest): Promise<Dish> {
@@ -28,5 +34,26 @@ export class DishesApi {
 
   static async deleteManyDishes(ids: Dish["id"][]): Promise<number> {
     return await apiDelete(`/dishes/many`, ids);
+  }
+
+  static async getByListId(ids: number[]) {
+    return await endpoint.get("dishes/recommend", {
+      params: {
+        ids,
+      },
+      paramsSerializer: params => {
+        return qs.stringify(params, { arrayFormat: 'repeat' });
+      } 
+    });
+  }
+  static async getRecommendedDishes(id: User["id"]) {
+    const user = await  AuthsApi.getUserById(id);
+    const res = await RecommendController.generateRecommendations(user);
+    let recommendedDishes: RecommendedDish[] = [];
+    const ids = res[0].map((dish: RecommendedDish) => {
+      const id = dish["RecipeId"];
+      return id;
+    });
+    return await this.getByListId(ids);
   }
 }

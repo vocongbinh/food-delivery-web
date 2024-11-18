@@ -6,6 +6,7 @@ import {
   useEffect,
   useState,
 } from "react";
+import { getCookie } from "cookies-next";
 interface ContextValue {
   token: string;
   setToken: (value: string) => void;
@@ -19,7 +20,7 @@ export const AuthContext = createContext<ContextValue>({
 const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [token, setToken] = useState("");
   useEffect(() => {
-    const value = localStorage.getItem("token") || ""
+    const value = getCookie("token") || "";
     setToken(value)
   }, [token]);
   return (

@@ -1,5 +1,5 @@
 import { BaseData, ObjectResponse, User } from "@/data/types";
-import http from "@/utils/http";
+import { http } from "@/utils/http";
 import { DefinedInitialDataOptions, useQuery } from "@tanstack/react-query";
 import { extend } from "lodash";
 import qs from "qs";
@@ -15,6 +15,7 @@ export type TypeKeys =
   | "users"
   | "users/me"
   | "settings"
+  |"restaurants"
   | "news-categories";
 export const getQueryFunction = async <T extends BaseData>({
   key,

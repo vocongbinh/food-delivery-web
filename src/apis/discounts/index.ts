@@ -2,7 +2,6 @@ import { Restaurant } from "@/types";
 import { CartItem } from "@/types/cartItem";
 import { Voucher } from "@/types/voucher";
 import { apiGet, apiPut } from "@/utils/api-request";
-import http from "@/utils/http";
 
 export class DiscountsApi {
   static async getDiscounts(id: Restaurant["id"]): Promise<Voucher[]> {

@@ -1,7 +1,6 @@
 import { Restaurant } from "@/types";
 import { CartItem } from "@/types/cartItem";
 import { apiGet, apiPut } from "@/utils/api-request";
-import http from "@/utils/http";
 
 export class CartsApi {
   static async getRestaurantCarts(id: Restaurant["id"]): Promise<CartItem[]> {

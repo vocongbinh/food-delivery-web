@@ -12,6 +12,7 @@ export default async function RestaurantsLayout({
         queryKey: ["restaurants"],
         queryFn: () => RestaurantsApi.getRestaurants(new FormData())
     })
+    
     return (
         <HydrationBoundary state={dehydrate(queryClient)}>
             {children}

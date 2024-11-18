@@ -1,9 +1,9 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { TypeKeys } from "./useCustomQuery";
-import http from "@/utils/http";
+import endpoint from "@/utils/http";
 interface MutationProps {
   key: TypeKeys;
-  queryKey?: TypeKeys;
+  queryKey?: any[];
   type: "create" | "update" | "delete";
   id?: number;
   handleSuccess?: () => void;
@@ -22,16 +22,16 @@ export const useCustomMutation = ({
     mutationFn: (data: any) => {
       switch (type) {
         case "create":
-          return http.post(`/${key}`, data);
+          return endpoint.post(`/${key}`, data);
         case "update":
-          return http.put(`/${key}/${id}`, data);
+          return endpoint.put(`/${key}/${id}`, data);
         case "delete":
-          return http.delete(`/${key}/${id}`);
+          return endpoint.delete(`/${key}/${id}`);
       }
     },
     onSuccess: () => {
       if (queryKey) {
-        queryClient.invalidateQueries({ queryKey: [queryKey, paramObj] });
+        queryClient.invalidateQueries({ queryKey: queryKey });
       }
     },
   });

@@ -50,12 +50,12 @@ const TonComponent = dynamic(() => import('./TonComponent'), { ssr: false });
                 <Providers>
                   <TonComponent>
                   <SessionProviders>
-                    {/* <AuthProvider> */}
+                    <AuthProvider>
                     <DefaultHeader />
                     {children}
                     <Footer />
                     <Toastify/>
-                    {/* </AuthProvider> */}
+                    </AuthProvider>
                   </SessionProviders>
                   </TonComponent>
                 

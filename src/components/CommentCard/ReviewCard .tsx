@@ -11,23 +11,62 @@ import Link from "next/link";
 import { DEMO_AUTHORS } from "@/data/authors";
 import SingleCommentForm from "@/app/(singles)/SingleCommentForm";
 import CommentCardLikeReply from "../CommentCardLikeReply/CommentCardLikeReply";
-import { DataResponse, Review, Auth } from "@/data/types";
 import { formatDate } from "@/utils/apiHelpers";
-import { Rate } from "antd";
+import { Review } from "@/types/review";
+
+const DEMO_COMMENTS = [
+  {
+    id: 1,
+    author: null,
+    date: "May 20, 2021",
+    content:
+      "Praesent id massa id nisl venenatis lacinia. Aenean sit amet justo. Morbi ut odio.",
+    like: { count: 96, isLiked: false },
+  },
+
+  {
+    id: 3,
+    author: null,
+    date: "May 20, 2021",
+    content:
+      "Mauris enim leo, rhoncus sed, vestibulum sit amet, cursus id, turpis. Integer aliquet, massa id lobortis convallis, tortor risus dapibus augue, vel accumsan tellus nisi eu orci. Mauris lacinia sapien quis libero.\n\nNullam sit amet turpis elementum ligula vehicula consequat. Morbi a ipsum. Integer a nibh.",
+    like: { count: 66, isLiked: true },
+  },
+  {
+    id: 4,
+    author: null,
+    date: "May 20, 2021",
+    content:
+      "In sagittis dui vel nisl. Duis ac nibh. Fusce lacus purus, aliquet at, feugiat non, pretium quis, lectus.\n\nSuspendisse potenti. In eleifend quam a odio. In hac habitasse platea dictumst.",
+    like: { count: 45, isLiked: true },
+  },
+];
+
+const AUTHOR = DEMO_AUTHORS[0];
+export interface CommentType {
+  id: number;
+  date: string;
+  content: string;
+  like: {
+    count: number;
+    isLiked: boolean;
+  };
+}
 
 export interface ReviewCardProps {
   className?: string;
   review: Review;
+  restaurantId: number;
   size?: "large" | "normal";
 }
 
 const ReviewCard: FC<ReviewCardProps> = ({
   className = "",
   review,
+  restaurantId,
   size = "large",
 }) => {
-  const { rating, content, createdAt } = review;
-  const author = review.author.data as DataResponse<Auth>;
+  const {id, rate, comment, createdAt, user } = review;
   const date = formatDate(createdAt);
   const actions: NcDropDownItem[] = [
     {
@@ -115,27 +154,17 @@ const ReviewCard: FC<ReviewCardProps> = ({
 
   return (
     <>
-      <div className={`nc-ReviewCard flex flex-col ${className}`}>
-        <div className="flex justify-between">
-          <div className="flex gap-2 items-start">
-            <Avatar
-              sizeClass={`h-8 w-8 text-base ${size === "large" ? "sm:text-lg sm:h-12 sm:w-12" : ""
-                }`}
-              radius="rounded-full"
-            />
-            <div>
-              <p className="text-sm font-semibold">{author.attributes.username}</p>
-              <Rate disabled defaultValue={4} allowHalf />
-            </div>
-          </div>
-          <span className="text-neutral-500 dark:text-neutral-400 text-xs line-clamp-1 sm:text-sm float-right">
-            {date}
-          </span>
-        </div>
-
-
-        {/* <div className="flex-grow flex flex-col py-4 text-sm rounded-xl dark:border-neutral-700"> */}
-          {/* <div className="relative flex items-center pe-6">
+      <div className={`nc-ReviewCard flex ${className}`}>
+        <Avatar
+          sizeClass={`h-6 w-6 text-base ${
+            size === "large" ? "sm:text-lg sm:h-8 sm:w-8" : ""
+          }`}
+          radius="rounded-full"
+          containerClassName="mt-4"
+        />
+        <div className="flex-grow flex flex-col p-4 ms-2 text-sm border border-neutral-200 rounded-xl sm:ms-3 sm:text-base dark:border-neutral-700">
+          {/* AUTHOR INFOR */}
+          <div className="relative flex items-center pe-6">
             <div className="absolute -end-3 -top-3">
               <NcDropDown
                 className={`p-2 text-neutral-500 flex items-center justify-center rounded-lg hover:text-neutral-800 dark:hover:text-neutral-200 sm:hover:bg-neutral-100 dark:hover:bg-neutral-800 ${twFocusClass()}`}
@@ -145,23 +174,39 @@ const ReviewCard: FC<ReviewCardProps> = ({
             </div>
             <h2
               className="flex-shrink-0 font-semibold text-neutral-800 dark:text-neutral-100"
-
+              
             >
-
+              {user.username}
             </h2>
             <span className="mx-2">·</span>
-          
-          </div> */}
+            <span className="text-neutral-500 dark:text-neutral-400 text-xs line-clamp-1 sm:text-sm">
+              {date}
+            </span>
+          </div>
 
           {/* CONTENT */}
-          <span className="block my-3 text-sm sm:mt-3 dark:text-neutral-300">
-            {content}
+          <span className="block text-neutral-700 mt-2 mb-3 sm:mt-3 sm:mb-4 dark:text-neutral-300">
+            {comment}
           </span>
-        {/* </div> */}
+
+          {/* ACTION LIKE REPLY */}
+          {isReplying ? (
+            renderCommentForm()
+          ) : (
+            <CommentCardLikeReply
+              className={className}
+              isLiked={true}
+              likeCount={2}
+              onClickReply={() => setIsReplying(true)}
+            />
+          )}
+        </div>
       </div>
 
       <ModalEditComment
         show={isEditting}
+        id={id}
+        restaurantId={restaurantId}
         onCloseModalEditComment={closeModalEditComment}
       />
       <ModalReportItem
