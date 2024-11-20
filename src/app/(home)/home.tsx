@@ -14,6 +14,7 @@ import Heading from "@/components/Heading/Heading";
 import DishCartItem from "@/components/DishCard11/DishCartItem";
 import ButtonPrimary from "@/components/Button/ButtonPrimary";
 import RestaurantCart from "@/components/Cart/RestaurantCart";
+import Chatbot from "@/components/Chatbot/Chatbot";
 
 const Home = () => {
   const { data: dishTypes } = useQuery({
@@ -80,9 +81,10 @@ const Home = () => {
     );
   };
   return (
-    <div className="grid grid-cols-8 gap-4 ">
+    <div className="grid grid-cols-8 gap-4">
       <div className="lg:col-span-6 col-span-4">{renderDishOfType()}</div>
       <RestaurantCart />
+      {/* <Chatbot className="fixed bottom-10 right-10"/> */}
     </div>
   );
 };

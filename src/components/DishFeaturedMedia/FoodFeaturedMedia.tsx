@@ -28,6 +28,7 @@ const FoodFeaturedMedia: FC<PostFeaturedMediaProps> = ({
           alt="featured"
           fill
           className="object-cover"
+          unoptimized={true}
           src={dishImages[0]}
           sizes="(max-width: 600px) 480px, 800px"
         />

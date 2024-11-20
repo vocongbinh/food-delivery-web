@@ -12,26 +12,22 @@ import { getStrapiMedia } from "@/utils/apiHelpers";
 import { retrieveDataFromResponse } from "@/utils/retrieveDataFromResponse";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Rate, Tooltip } from "antd";
 import Nav from "@/components/Nav/Nav";
 import NavItem from "@/components/NavItem/NavItem";
-import { ArrowDownCircleIcon } from "@heroicons/react/24/solid";
-import { User } from "iconsax-react";
-import SectionStatisticApp from "@/components/SectionStatisticApp/SectionStatisticApp";
-import SectionAppNews from "@/components/SectionAppNews/SectionAppNews";
-import { BlocksRenderer } from "@strapi/blocks-react-renderer";
-import SectionCharts from "@/components/SectionCharts/SectionCharts";
-import { SocialComponent } from "@/data/components";
+
 import { useQuery } from "@tanstack/react-query";
 import { RestaurantsApi } from "@/apis/restaurants";
 import { Restaurant } from "@/types/restaurant";
 import { Category } from "@/types/category";
 import { DiscountsApi } from "@/apis/discounts";
 import CardVoucher from "@/components/CardVoucher/CardVoucher";
-import { Alert, Snackbar } from "@mui/material";
+import { Alert, CircularProgress, Pagination, Snackbar } from "@mui/material";
 import { ReviewsApi } from "@/apis/reviews";
 import { ReviewForm } from "@/types/review";
+import { DishesApi } from "@/apis/dish";
+import DishCard11 from "@/components/DishCard11/DishCard11";
 export interface TabProps {
   id: number;
   name: string;
@@ -39,11 +35,12 @@ export interface TabProps {
 
 const RestaurantPage = ({ params }: { params: { id: number } }) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [tabActive, setTabActive] = useState<Category>();
   const { mutate } = useCustomMutation({
     key: "reviews",
     type: "create",
     queryKey: ["reviews", params.id],
-});
+  });
   const { data: restaurant, isLoading } = useQuery({
     queryKey: ["restaurants", params.id],
     queryFn: () => RestaurantsApi.getRestaurantById(params.id),
@@ -56,7 +53,12 @@ const RestaurantPage = ({ params }: { params: { id: number } }) => {
     queryKey: ["vouchers", params.id],
     queryFn: () => DiscountsApi.getDiscounts(params.id),
   });
-  const [tabActive, setTabActive] = useState<Category>();
+  const { data: dishes, isLoading: dishesLoading } = useQuery({
+    queryKey: ["vouchers", params.id, tabActive?.id],
+    queryFn: () =>
+      DishesApi.getDishesByCategory(params.id, tabActive?.id || 1, 1, 10),
+  });
+
   const handleClickTab = (tab: Category) => {
     setTabActive(tab);
   };
@@ -65,12 +67,15 @@ const RestaurantPage = ({ params }: { params: { id: number } }) => {
     const data: ReviewForm = {
       comment: content,
       userId: 5,
-      restaurantId:Number(params.id),
-      rate: 3
+      restaurantId: Number(params.id),
+      rate: 3,
     };
     mutate(data);
   };
- 
+
+  useEffect(() => {
+    setTabActive(restaurant?.categories[0]);
+  }, [restaurant]);
 
   if (isLoading) return <></>;
   else {
@@ -123,6 +128,20 @@ const RestaurantPage = ({ params }: { params: { id: number } }) => {
                 </NavItem>
               ))}
             </Nav>
+            {dishesLoading ? (
+              <div className="flex items-center justify-center">
+                 <CircularProgress />
+              </div>
+             
+           ) : (
+              <div className="grid gap-6 sm:grid-cols-2 sm:py-2 md:gap-8 md:grid-cols-3 lg:grid-cols-4 xl:md:grid-cols-5">
+                {dishes &&
+                  dishes.map((dish, index) => (
+                    <DishCard11 key={index} dish={dish} />
+                  ))}
+              </div>
+            )} 
+
             {/* {tabActive.id === 0 ? <>
                         <MySlider
                             className="py-10"
@@ -174,12 +193,14 @@ const RestaurantPage = ({ params }: { params: { id: number } }) => {
                 onClickSubmit={handleSubmit}
               />
               <div className="max-w-screen py-10">
-                <SingleCommentLists reviews={reviews} restaurantId={params.id} />
+                <SingleCommentLists
+                  reviews={reviews}
+                  restaurantId={params.id}
+                />
               </div>
             </div>
           </div>
         </div>
-        
       </>
     );
   }

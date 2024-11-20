@@ -56,4 +56,13 @@ export class DishesApi {
     });
     return await this.getByListId(ids);
   }
+  static async getDishesByCategory(restaurantId:number, categoryId: number, page: number, limit: number = 0): Promise<Dish[]> {
+    const res = await endpoint.get(`dishes/category/${restaurantId}/${categoryId}`, {
+      params: {
+        page,
+        limit,
+      },
+    });
+    return res.data;
+  }
 }
