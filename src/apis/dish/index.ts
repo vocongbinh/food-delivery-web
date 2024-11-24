@@ -36,8 +36,8 @@ export class DishesApi {
     return await apiDelete(`/dishes/many`, ids);
   }
 
-  static async getByListId(ids: number[]) {
-    return await endpoint.get("dishes/recommend", {
+  static async getByListId(ids: number[]): Promise<Dish[]> {
+    const res =  await endpoint.get("dishes/recommend", {
       params: {
         ids,
       },
@@ -45,11 +45,14 @@ export class DishesApi {
         return qs.stringify(params, { arrayFormat: 'repeat' });
       } 
     });
+    return res.data;
   }
   static async getRecommendedDishes(id: User["id"]) {
     const user = await  AuthsApi.getUserById(id);
     const res = await RecommendController.generateRecommendations(user);
     let recommendedDishes: RecommendedDish[] = [];
+    console.log("save local storage")
+    localStorage.setItem("recommendedDishes", JSON.stringify(res[0]));
     const ids = res[0].map((dish: RecommendedDish) => {
       const id = dish["RecipeId"];
       return id;

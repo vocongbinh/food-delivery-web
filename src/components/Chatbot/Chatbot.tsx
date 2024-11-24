@@ -5,6 +5,8 @@ import MessageItem from "./MessageItem";
 import Input from "../Input/Input";
 import { CogIcon, PaperAirplaneIcon } from "@heroicons/react/24/solid";
 import { ChatbotApi } from "@/apis/chatbot";
+import styles from "./Chatbot.module.css";
+import clsx from "clsx";
 import { Popover, Transition } from "@headlessui/react";
 interface ChatbotProps {
   className?: string;
@@ -16,6 +18,7 @@ export interface Message {
 }
 const Chatbot: FC<ChatbotProps> = ({ className = "" }) => {
   const [messages, setMessages] = React.useState<Message[]>([]);
+  const [loading, setLoading] = React.useState<boolean>(false);
   const [inputValue, setInputValue] = React.useState<string>("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -26,7 +29,9 @@ const Chatbot: FC<ChatbotProps> = ({ className = "" }) => {
     setMessages([...messages, { text: inputValue, isUser: true }]);
     setInputValue("");
     try {
+      setLoading(true);
       const resMessage = await ChatbotApi.getMessageRes(inputValue);
+      setLoading(false);
       setMessages([
         ...messages,
         { text: inputValue, isUser: true },
@@ -37,7 +42,7 @@ const Chatbot: FC<ChatbotProps> = ({ className = "" }) => {
     }
   };
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       handleSend();
     }
   };
@@ -84,6 +89,25 @@ const Chatbot: FC<ChatbotProps> = ({ className = "" }) => {
                           message={message}
                         />
                       ))}
+                      {loading && (
+                        <div className="flex items-center w-fit gap-2 bg-gray-100 px-3 py-3 rounded-2xl">
+                          <div
+                            className={`w-2 h-2 bg-black rounded-full ${clsx(
+                              styles.translateUp
+                            )}`}
+                          ></div>
+                          <div
+                            className={`w-2 h-2 bg-black rounded-full ${clsx(
+                              styles.translateDown
+                            )}`}
+                          ></div>
+                          <div
+                            className={`w-2 h-2 bg-black rounded-full ${clsx(
+                              styles.translateUp
+                            )}`}
+                          ></div>
+                        </div>
+                      )}
                     </div>
                     <div className="rounded-2xl p-2 w-full flex gap-2 items-center justify-between">
                       <input

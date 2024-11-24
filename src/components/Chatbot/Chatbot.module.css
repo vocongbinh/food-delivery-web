@@ -1,0 +1,42 @@
+@keyframes translateUp {
+    0% {
+        transform: translateY(0px);
+    }
+    33% {
+        transform: translateY(-4px);
+    }
+    66% {
+        transform: translateY(-4px);
+    }
+    100% {
+        transform: translateY(4px);
+    } 
+} 
+@keyframes translateDown {
+    0% {
+        transform: translateY(0%);
+    }
+    33% {
+        transform: translateY(-2px);
+    }
+    40% {
+        transform: translateY(-4px);
+    }
+    66% {
+        transform: translateY(4px);
+    }
+    80% {
+        transform: translateY(-2px);
+    }
+    100% {
+        transform: translateY(4px);
+    }
+}
+
+.translateUp {
+    animation: translateUp 0.8s infinite;
+}
+
+.translateDown {
+    animation: translateDown 0.8s infinite;
+}

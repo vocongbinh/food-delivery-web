@@ -15,12 +15,19 @@ import DishCartItem from "@/components/DishCard11/DishCartItem";
 import ButtonPrimary from "@/components/Button/ButtonPrimary";
 import RestaurantCart from "@/components/Cart/RestaurantCart";
 import Chatbot from "@/components/Chatbot/Chatbot";
+import SectionRecommendedDish from "@/components/Sections/SectionRecommendedDish";
+import { DishesApi } from "@/apis/dish";
 
 const Home = () => {
   const { data: dishTypes } = useQuery({
     queryKey: [DISH_TYPE_KEY],
     queryFn: () => DishTypesApi.getDishTypes(),
   });
+  const { data: dishes } = useQuery({
+    queryKey: ["Recommend-dish"],
+    queryFn: () => DishesApi.getRecommendedDishes(24),
+  });
+  console.log(dishes)
   const landingSection = () => {
     return (
       <div className="nc-PageHomeDemo3 relative">
@@ -81,11 +88,26 @@ const Home = () => {
     );
   };
   return (
-    <div className="grid grid-cols-8 gap-4">
-      <div className="lg:col-span-6 col-span-4">{renderDishOfType()}</div>
-      <RestaurantCart />
-      {/* <Chatbot className="fixed bottom-10 right-10"/> */}
-    </div>
+    <>
+      <div className="dark bg-neutral-900 dark:bg-black dark:bg-opacity-20 text-neutral-100">
+        <div className="relative container">
+          <SectionRecommendedDish
+            className="py-16 lg:py-28"
+            headingIsCenter
+            postCardName="card10V2"
+            heading="Discover foods that meet your nutritional needs"
+            subHeading="Hover on the card and preview image 🥡"
+            dishes={dishes || []}
+            gridClass="md:grid-cols-2 lg:grid-cols-3"
+          />
+        </div>
+      </div>
+      <div className="grid grid-cols-8 gap-4 px-10">
+        <div className="lg:col-span-6 col-span-4">{renderDishOfType()}</div>
+        <RestaurantCart />
+        {/* <Chatbot className="fixed bottom-10 right-10"/> */}
+      </div>
+    </>
   );
 };
 
