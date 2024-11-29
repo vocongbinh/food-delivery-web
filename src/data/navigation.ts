@@ -329,19 +329,19 @@ export const NAVIGATION_DEMO_2: NavItemType[] = [
     id: randomId(),
     href: "/categories" as Route,
     name: "Categories",
-    type: "dropdown",
-    children: [
-      {
-        id: randomId(),
-        href: "/categories/food" as Route,
-        name: "Food",
-      },
-      {
-        id: randomId(),
-        href: "/categories/drink" as Route,
-        name: "Drink",
-      },
-    ],
+    // type: "dropdown",
+    // children: [
+    //   {
+    //     id: randomId(),
+    //     href: "/categories/food" as Route,
+    //     name: "Food",
+    //   },
+    //   {
+    //     id: randomId(),
+    //     href: "/categories/drink" as Route,
+    //     name: "Drink",
+    //   },
+    // ],
   },
   {
     id: randomId(),

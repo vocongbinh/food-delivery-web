@@ -13,6 +13,7 @@ import SingleCommentForm from "@/app/(singles)/SingleCommentForm";
 import CommentCardLikeReply from "../CommentCardLikeReply/CommentCardLikeReply";
 import { formatDate } from "@/utils/apiHelpers";
 import { Review } from "@/types/review";
+import { Rate } from "antd";
 
 const DEMO_COMMENTS = [
   {
@@ -102,6 +103,7 @@ const ReviewCard: FC<ReviewCardProps> = ({
   ];
   const textareaRef = useRef(null);
   const [isReplying, setIsReplying] = useState(false);
+  const [rating, setRating] = useState(review.rate);
   const [isEditting, setIsEditting] = useState(false);
   const [isReporting, setIsReporting] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -144,6 +146,8 @@ const ReviewCard: FC<ReviewCardProps> = ({
   const renderCommentForm = () => {
     return (
       <SingleCommentForm
+        rating={rating}
+        setRating={setRating}
         textareaRef={textareaRef}
         onClickSubmit={closeReplyForm}
         onClickCancel={closeReplyForm}
@@ -178,6 +182,8 @@ const ReviewCard: FC<ReviewCardProps> = ({
             >
               {user.username}
             </h2>
+            <span className="mx-2">·</span>
+            <Rate disabled defaultValue={rate} allowHalf />
             <span className="mx-2">·</span>
             <span className="text-neutral-500 dark:text-neutral-400 text-xs line-clamp-1 sm:text-sm">
               {date}

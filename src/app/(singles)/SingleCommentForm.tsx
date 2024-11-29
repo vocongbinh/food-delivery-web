@@ -5,7 +5,8 @@ import ButtonSecondary from "@/components/Button/ButtonSecondary";
 import Textarea from "@/components/Textarea/Textarea";
 import Button from "@/components/Button/Button";
 import Link from "next/link";
-import { useAuthContext } from "@/contexts/auth/auth-context";
+import { AuthContext, useAuthContext } from "@/contexts/auth/auth-context";
+import { Rate } from "antd";
 
 export interface SingleCommentFormProps {
   className?: string;
@@ -14,6 +15,8 @@ export interface SingleCommentFormProps {
   textareaRef: RefObject<HTMLTextAreaElement>;
   defaultValue?: string;
   rows?: number;
+  rating: number;
+  setRating: React.Dispatch<React.SetStateAction<number>>
 }
 
 const SingleCommentForm: FC<SingleCommentFormProps> = ({
@@ -21,10 +24,12 @@ const SingleCommentForm: FC<SingleCommentFormProps> = ({
   onClickSubmit,
   onClickCancel,
   textareaRef,
+  rating,
+  setRating,
   defaultValue = "",
   rows = 4,
 }) => {
-  const token = "đsd";
+  const {token} = useAuthContext();
   const [text, setText] = React.useState("");
   const handleCancel = () => {
     setText("")
@@ -35,12 +40,14 @@ const SingleCommentForm: FC<SingleCommentFormProps> = ({
     if (textareaRef.current) {
       onClickSubmit();
       setText("")
+      setRating(0)
     }
   };
 
 
   return (
     <form action="#" className={`nc-SingleCommentForm ${className}`} onSubmit={handleSubmit}>
+       <Rate defaultValue={0} value={rating} onChange={(e) => setRating(e)} allowHalf />
       <Textarea
         placeholder="Enter review text"
         ref={textareaRef}

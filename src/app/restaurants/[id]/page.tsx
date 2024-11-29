@@ -35,6 +35,7 @@ export interface TabProps {
 
 const RestaurantPage = ({ params }: { params: { id: number } }) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [rate, setRate] = useState<number>(0);
   const [tabActive, setTabActive] = useState<Category>();
   const { mutate } = useCustomMutation({
     key: "reviews",
@@ -68,7 +69,7 @@ const RestaurantPage = ({ params }: { params: { id: number } }) => {
       comment: content,
       userId: 5,
       restaurantId: Number(params.id),
-      rate: 3,
+      rate,
     };
     mutate(data);
   };
@@ -109,7 +110,7 @@ const RestaurantPage = ({ params }: { params: { id: number } }) => {
                   <Rate defaultValue={rating} allowHalf disabled />
                   <span className="text-neutral-500 ">•</span>
                   <span className="text-neutral-500 md:text-base text-sm">
-                    {numReviews} Reviews
+                    {reviews?.length || 0} Reviews
                   </span>
                 </div>
               </div>
@@ -189,6 +190,8 @@ const RestaurantPage = ({ params }: { params: { id: number } }) => {
                 Reviews ({reviews?.length || 0})
               </h3>
               <SingleCommentForm
+                rating={rate}
+                setRating={setRate}
                 textareaRef={textareaRef}
                 onClickSubmit={handleSubmit}
               />

@@ -15,7 +15,10 @@ export interface CardCategoryProps {
 const CardCategory: FC<CardCategoryProps> = ({ className = "h-full", dishType, index }) => {
   const { dishes, name} = dishType;
   const [isHover, setIsHover] = useState(false);
-  const images = dishes.map(dish => dish.imageUrl);
+  const images = dishes.map(dish => {
+    const dishImgs = dish.imageUrl?.split(",");
+    return dishImgs![0]
+  });
   const itemClassName = "lg:w-16 w-14 lg:h-16 h-14 border border-white rounded-full border-2 transition duration-300";
   return (
     <Link href={`/categories/${name}`}>
