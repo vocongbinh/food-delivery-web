@@ -12,17 +12,22 @@ import { getStrapiMedia } from "@/utils/apiHelpers";
 import { retrieveDataFromResponse } from "@/utils/retrieveDataFromResponse";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Rate, Tooltip } from "antd";
 import Nav from "@/components/Nav/Nav";
 import NavItem from "@/components/NavItem/NavItem";
+
 import { useQuery } from "@tanstack/react-query";
 import { RestaurantsApi } from "@/apis/restaurants";
 import { Restaurant } from "@/types/restaurant";
 import { Category } from "@/types/category";
 import { DiscountsApi } from "@/apis/discounts";
 import CardVoucher from "@/components/CardVoucher/CardVoucher";
-import { Alert, Snackbar } from "@mui/material";
+import { Alert, CircularProgress, Pagination, Snackbar } from "@mui/material";
+import { ReviewsApi } from "@/apis/reviews";
+import { ReviewForm } from "@/types/review";
+import { DishesApi } from "@/apis/dish";
+import DishCard11 from "@/components/DishCard11/DishCard11";
 export interface TabProps {
   id: number;
   name: string;
@@ -30,32 +35,48 @@ export interface TabProps {
 
 const RestaurantPage = ({ params }: { params: { id: number } }) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [rate, setRate] = useState<number>(0);
+  const [tabActive, setTabActive] = useState<Category>();
   const { mutate } = useCustomMutation({
     key: "reviews",
     type: "create",
-    queryKey: "applications",
+    queryKey: ["reviews", params.id],
   });
   const { data: restaurant, isLoading } = useQuery({
     queryKey: ["restaurants", params.id],
     queryFn: () => RestaurantsApi.getRestaurantById(params.id),
   });
+  const { data: reviews } = useQuery({
+    queryKey: ["reviews", params.id],
+    queryFn: () => ReviewsApi.getReviews(params.id),
+  });
   const { data: vouchers } = useQuery({
     queryKey: ["vouchers", params.id],
     queryFn: () => DiscountsApi.getDiscounts(params.id),
   });
-  const [tabActive, setTabActive] = useState<Category>();
+  const { data: dishes, isLoading: dishesLoading } = useQuery({
+    queryKey: ["vouchers", params.id, tabActive?.id],
+    queryFn: () =>
+      DishesApi.getDishesByCategory(params.id, tabActive?.id || 1, 1, 10),
+  });
+
   const handleClickTab = (tab: Category) => {
     setTabActive(tab);
   };
   const handleSubmit = () => {
     const content = textareaRef.current?.value || "";
-    const data: ReviewFormData = {
-      content,
-      author: 1,
-      application: params.id,
+    const data: ReviewForm = {
+      comment: content,
+      userId: 5,
+      restaurantId: Number(params.id),
+      rate,
     };
-    mutate({ data });
+    mutate(data);
   };
+
+  useEffect(() => {
+    setTabActive(restaurant?.categories[0]);
+  }, [restaurant]);
 
   if (isLoading) return <></>;
   else {
@@ -89,7 +110,7 @@ const RestaurantPage = ({ params }: { params: { id: number } }) => {
                   <Rate defaultValue={rating} allowHalf disabled />
                   <span className="text-neutral-500 ">•</span>
                   <span className="text-neutral-500 md:text-base text-sm">
-                    {numReviews} Reviews
+                    {reviews?.length || 0} Reviews
                   </span>
                 </div>
               </div>
@@ -108,6 +129,19 @@ const RestaurantPage = ({ params }: { params: { id: number } }) => {
                 </NavItem>
               ))}
             </Nav>
+            {dishesLoading ? (
+              <div className="flex items-center justify-center">
+                <CircularProgress />
+              </div>
+            ) : (
+              <div className="grid gap-6 sm:grid-cols-2 sm:py-2 md:gap-8 md:grid-cols-3 lg:grid-cols-4 xl:md:grid-cols-5">
+                {dishes &&
+                  dishes.map((dish, index) => (
+                    <DishCard11 key={index} dish={dish} />
+                  ))}
+              </div>
+            )}
+
             {/* {tabActive.id === 0 ? <>
                         <MySlider
                             className="py-10"
@@ -152,14 +186,19 @@ const RestaurantPage = ({ params }: { params: { id: number } }) => {
               className="scroll-mt-20 p-4 bg-white rounded-3xl"
             >
               <h3 className="text-xl font-semibold  text-center text-neutral-800 dark:text-neutral-200">
-                Reviews (10)
+                Reviews ({reviews?.length || 0})
               </h3>
               <SingleCommentForm
+                rating={rate}
+                setRating={setRate}
                 textareaRef={textareaRef}
                 onClickSubmit={handleSubmit}
               />
-              <div className="max-w-screen-md py-10">
-                <SingleCommentLists reviews={[]} />
+              <div className="max-w-screen py-10">
+                <SingleCommentLists
+                  reviews={reviews}
+                  restaurantId={params.id}
+                />
               </div>
             </div>
           </div>

@@ -1,8 +1,6 @@
-import { Restaurant } from "@/types";
 
-import { UserVoucherRequest, Voucher } from "@/types/voucher";
-import { apiGet, apiPost, apiPut } from "@/utils/api-request";
-import http from "@/utils/http";
+import { UserVoucherRequest } from "@/types/voucher";
+import { apiPost } from "@/utils/api-request";
 
 export class VouchersApi {
   static async receiveVoucher(data: UserVoucherRequest) {

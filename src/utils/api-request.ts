@@ -1,4 +1,4 @@
-// import { getCookie } from "cookies-next";
+import { getCookie } from "cookies-next";
 import { createSupabaseClient } from "./supabase";
 import { v4 as uuidv4 } from "uuid";
 

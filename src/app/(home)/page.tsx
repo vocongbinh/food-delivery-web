@@ -39,6 +39,7 @@ import {
   RESTAURANT_CART_KEY,
 } from "@/contains/react_query_keys";
 import { CartsApi } from "@/apis/carts";
+import { DishesApi } from "@/apis/dish";
 
 //
 const MAGAZINE1_POSTS = DEMO_POSTS.filter((_, i) => i >= 8 && i < 16);
@@ -54,11 +55,15 @@ export default async function PageHome() {
       }),
       queryClient.prefetchQuery({
         queryKey: [RESTAURANT_CART_KEY, restaurantId],
-        queryFn: () => CartsApi.getRestaurantCarts(restaurantId.toString()),
+        queryFn: () => CartsApi.getRestaurantCarts(restaurantId),
       }),
       queryClient.prefetchQuery({
         queryKey: ["restaurants"],
         queryFn: () => RestaurantsApi.getRestaurants(new FormData()),
+      }),
+      queryClient.prefetchQuery({
+        queryKey: ["recommend-dish"],
+        queryFn: () => DishesApi.getRecommendedDishes(24),
       }),
       queryClient.prefetchQuery(
         getPrefetchQuery({
@@ -78,7 +83,7 @@ export default async function PageHome() {
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <div className="nc-PageHome relative ">
-        <div className="px-6">
+        <div className="">
           <Home />
         </div>
         <div className="container relative ">
