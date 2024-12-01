@@ -1,5 +1,8 @@
-"use client"
-import { 
+"use client";
+import { useUserProfile } from "@/react-query/auth";
+import { UserInfo } from "@/types";
+import { getCookie } from "cookies-next";
+import {
   ReactNode,
   createContext,
   useContext,
@@ -9,24 +12,32 @@ import {
 interface ContextValue {
   token: string;
   setToken: (value: string) => void;
+  isLogin: () => boolean;
 }
 
 export const AuthContext = createContext<ContextValue>({
   token: "",
-  setToken: () => { }
+  setToken: () => {},
+  isLogin: () => false,
 });
 
 const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [token, setToken] = useState("");
+  const { data: userProfile } = useUserProfile(token);
   useEffect(() => {
-    const value = localStorage.getItem("token") || ""
-    setToken(value)
+    const value = getCookie("token") || "";
+    setToken(value);
   }, [token]);
+  const isLogin = () => {
+    if (userProfile) return true;
+    return false;
+  };
   return (
     <AuthContext.Provider
       value={{
         token,
-        setToken
+        setToken,
+        isLogin,
       }}
     >
       {children}

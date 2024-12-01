@@ -20,7 +20,10 @@ import { CategoriesApi } from "@/apis/categories";
 import Image from "next/image";
 import { apiUploadImage } from "@/utils/api-request";
 import { XCircleIcon } from "@heroicons/react/24/solid";
-import { useAddDishMutation, useUpdateDishMutation } from "@/react-query/dishes";
+import {
+  useAddDishMutation,
+  useUpdateDishMutation,
+} from "@/react-query/dishes";
 
 const FoodDetailInfor = ({
   dish,
@@ -37,7 +40,7 @@ const FoodDetailInfor = ({
   const onSubmit = (data: DishRequest) => {
     console.log("call submit");
     setIsSubmitting(true);
-    if(dish){
+    if (dish) {
       updateDish.mutate(
         { ...data, id: dish!.id },
         {
@@ -49,11 +52,10 @@ const FoodDetailInfor = ({
           },
           onSettled: () => {
             setIsSubmitting(false);
-          }
+          },
         }
       );
-    }
-    else {
+    } else {
       addDish.mutate(
         { ...data },
         {
@@ -65,10 +67,9 @@ const FoodDetailInfor = ({
           },
           onSettled: () => {
             setIsSubmitting(false);
-          }
+          },
         }
       );
-
     }
     setIsSubmitting(false);
   };

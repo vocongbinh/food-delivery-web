@@ -1,12 +1,11 @@
-import { DishesApi } from "@/apis/dish";
-import { DISH_KEY } from "@/contains/react_query_keys";
-import { Dish } from "@/types";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { AuthsApi } from "@/apis/auths";
+import { USER_PROFILE } from "@/contains/react_query_keys";
+import { useQuery } from "@tanstack/react-query";
 
-export const useGetDishQuery = (dishId: Dish["id"]) => {
+export const useUserProfile = (token: string) => {
   return useQuery({
-    queryKey: [DISH_KEY, dishId],
-    queryFn: () => DishesApi.getDishById(dishId),
-    enabled: dishId != null,
+    queryKey: [USER_PROFILE, token],
+    queryFn: () => AuthsApi.getUserProfile(),
+    enabled: token !== undefined,
   });
 };

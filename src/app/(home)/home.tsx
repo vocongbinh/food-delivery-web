@@ -67,7 +67,6 @@ const Home = () => {
         <div className="mt-10 p-4 flex flex-col overflow-hidden justify-start rounded-3xl bg-white h-80 w-full">
           {/* <div>Cart is empty now</div> */}
           <DishCartItem dish={dish} />
-          <DishCartItem dish={dish} />
           <div className="flex justify-between mt-3">
             <div>Total</div>
             <div className="font-medium ">135.000đ</div>
@@ -80,7 +79,7 @@ const Home = () => {
     );
   };
   return (
-    <div className="grid grid-cols-8 gap-4 ">
+    <div className="grid grid-cols-8 gap-4 relative">
       <div className="lg:col-span-6 col-span-4">{renderDishOfType()}</div>
       <RestaurantCart />
     </div>

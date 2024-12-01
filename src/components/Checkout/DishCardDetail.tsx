@@ -1,6 +1,5 @@
 import { Combobox, Dialog, Transition } from "@headlessui/react";
 import { Checkbox } from "antd";
-import Image from "next/image";
 import Input from "@/components/Input/Input";
 import {
   ArrowRightIcon,
@@ -10,32 +9,73 @@ import {
   MinusIcon,
 } from "@heroicons/react/24/solid";
 
-import { FC, ReactNode, useState, Fragment, MouseEventHandler } from "react";
+import { FC, ReactNode, useState, Fragment } from "react";
 import ButtonPrimary from "../Button/ButtonPrimary";
 import { Dish } from "@/types/dish";
 import FoodFeaturedMedia from "../DishFeaturedMedia/FoodFeaturedMedia";
+import { useUpsertCartMutation } from "@/react-query/carts";
+import { CartItem } from "@/types/cartItem";
+import { useGetDishGroupOptionsQuery } from "@/react-query/options";
+
 export interface DishOptionItem {
   key: string;
   value: string;
   price: number;
 }
 
-const toppingOptions: DishOptionItem[] = [
-  { key: "peachy", value: "Peachy", price: 8000 },
-  { key: "icecream", value: "Ice Cream", price: 9000 },
-  { key: "milkfoam", value: "Milk Foam", price: 10000 },
-];
 interface Props {
   renderTrigger: (onClick: { onClick: Function }) => ReactNode;
   dish: Dish;
+  cartItem?: CartItem;
 }
+
 const DishCardDetail: FC<Props> = ({ renderTrigger, dish }) => {
   const [open, setOpen] = useState(false);
+  const [quantity, setQuantity] = useState(1);
+  const [isSubmiting, setIsSubmiting] = useState(false);
+
+  // State to manage selected options for each group
+  const [selectedGroupOptions, setSelectedGroupOptions] = useState<
+    Record<number, number[]>
+  >({});
+
+  const { data: groupOptions } = useGetDishGroupOptionsQuery(dish.id);
+  const upsertCartMutation = useUpsertCartMutation();
+
+  // Handle adding to the cart
+  const handleUpsertCart = () => {
+    setIsSubmiting(true);
+
+    // Prepare the cartItemGroupOptionRequests based on selected options
+    const cartItemGroupOptionRequests = Object.entries(
+      selectedGroupOptions
+    ).map(([groupOptionId, selectedOptions]) => ({
+      groupOptionId: parseInt(groupOptionId), // Convert to number
+      selectedOptions: selectedOptions,
+    }));
+
+    // Call the mutation to add to the cart
+    upsertCartMutation.mutate(
+      {
+        quantity: quantity,
+        cartItemGroupOptionRequests,
+        dishId: dish.id,
+      },
+      {
+        onSuccess: () => {
+          setIsSubmiting(false);
+          setOpen(false);
+        },
+      }
+    );
+  };
+
   return (
     <>
       {renderTrigger({
         onClick: () => setOpen(true),
       })}
+
       <Transition.Root show={open} as={Fragment} appear>
         <Dialog
           open={open}
@@ -44,13 +84,13 @@ const DishCardDetail: FC<Props> = ({ renderTrigger, dish }) => {
         >
           <div className="fixed inset-0 bg-black/40 transition-opacity" />
 
-          <div className="fixed w-screen flex inset-0 items-center justify-center ">
-            <Dialog.Panel className=" space-y-4 border bg-white max-w-lg w-2/4 rounded-xl overflow-hidden">
+          <div className="fixed w-screen flex inset-0 items-center justify-center">
+            <Dialog.Panel className="space-y-4 border bg-white max-w-lg w-2/4 rounded-xl overflow-hidden">
               <div className="overflow-auto h-[480px] bg-white">
                 <div className="relative w-full h-60">
                   <FoodFeaturedMedia dish={dish} />
                 </div>
-                <div className=" flex flex-col gap-3">
+                <div className="flex flex-col gap-3">
                   <div className="flex flex-col gap-3 border-b-6 p-6 sticky top-0 z-40 bg-white">
                     <Dialog.Title className="flex justify-between items-center font-semibold text-xl">
                       <div>{dish?.name}</div>
@@ -63,7 +103,7 @@ const DishCardDetail: FC<Props> = ({ renderTrigger, dish }) => {
                       </div>
                       <div className="flex gap-2">
                         <ShoppingCartIcon className="w-5 h-5" />
-                        <div>10+ saled</div>
+                        <div>10+ sold</div>
                       </div>
                     </div>
                     <Input
@@ -72,105 +112,101 @@ const DishCardDetail: FC<Props> = ({ renderTrigger, dish }) => {
                       className="mt-1"
                     />
                   </div>
-                  <div className="flex flex-col gap-3 border-b-6 p-6">
-                    <Combobox>
-                      <div className="flex justify-start text-center text-sm ">
-                        <h2 className="uppercase font-semibold text-gray-500 mr-3">
-                          Adding Topings
-                        </h2>
-                        <h4> - Choose maximum 4</h4>
+
+                  {/* Group Options (Dynamic based on `groupOptions`) */}
+                  {groupOptions?.map((item) => {
+                    return (
+                      <div
+                        className="flex flex-col gap-3 border-b-6 p-6"
+                        key={item.id}
+                      >
+                        <Combobox
+                          value={selectedGroupOptions[item.id] || []}
+                          // onChange={(selectedItems) => {
+                          //   setSelectedGroupOptions((prev) => ({
+                          //     ...prev,
+                          //     [item.id]: selectedItems.map((selectedItem) => selectedItem.id),
+                          //   }));
+                          // }}
+                        >
+                          <div className="flex justify-start text-center text-sm">
+                            <h2 className="uppercase font-semibold text-gray-500 mr-3">
+                              {item.name}
+                            </h2>
+                            <h4>
+                              {" "}
+                              - Choose from {item.minimum} to {item.maximum}
+                            </h4>
+                          </div>
+                          <Combobox.Options static className="">
+                            <ul className="">
+                              {item.optionItems.map((option) => (
+                                <Combobox.Option
+                                  key={option.id}
+                                  value={option}
+                                  className="flex items-center gap-3 text-center"
+                                >
+                                  <Checkbox
+                                    checked={selectedGroupOptions[
+                                      item.id
+                                    ]?.includes(option.id)}
+                                    onChange={(e) => {
+                                      const isChecked = e.target.checked;
+                                      setSelectedGroupOptions((prev) => {
+                                        const selectedOptions =
+                                          prev[item.id] || [];
+                                        const updatedOptions = isChecked
+                                          ? [...selectedOptions, option.id]
+                                          : selectedOptions.filter(
+                                              (id) => id !== option.id
+                                            );
+
+                                        return {
+                                          ...prev,
+                                          [item.id]: updatedOptions,
+                                        };
+                                      });
+                                    }}
+                                  />
+                                  <div className="text-sm flex items-center justify-between border-b py-4 flex-1">
+                                    <div>{option.name}</div>
+                                    <div className="text-gray-500">
+                                      {option.price}đ
+                                    </div>
+                                  </div>
+                                </Combobox.Option>
+                              ))}
+                            </ul>
+                          </Combobox.Options>
+                        </Combobox>
                       </div>
-                      <Combobox.Options static className="">
-                        <ul className="">
-                          {toppingOptions.map((item) => (
-                            <Combobox.Option
-                              className="flex items-center gap-3  text-center"
-                              key={item.key}
-                              value={item.value}
-                            >
-                              <Checkbox></Checkbox>
-                              <div className="text-sm flex items-center justify-between border-b py-4 flex-1">
-                                <div>{item.value}</div>
-                                <div className="text-gray-500">
-                                  {item.price}đ
-                                </div>
-                              </div>
-                            </Combobox.Option>
-                          ))}
-                        </ul>
-                      </Combobox.Options>
-                    </Combobox>
-                  </div>
-                  <div className="flex flex-col gap-3 border-b-6 p-6">
-                    <Combobox>
-                      <div className="flex justify-start text-center text-sm ">
-                        <h2 className="uppercase font-semibold text-gray-500 mr-3">
-                          Adding Topings
-                        </h2>
-                        <h4> - Choose maximum 4</h4>
-                      </div>
-                      <Combobox.Options static className="">
-                        <ul className="">
-                          {toppingOptions.map((item) => (
-                            <Combobox.Option
-                              className="flex items-center gap-3  text-center"
-                              key={item.key}
-                              value={item.value}
-                            >
-                              <Checkbox></Checkbox>
-                              <div className="text-sm flex items-center justify-between border-b py-4 flex-1">
-                                <div>{item.value}</div>
-                                <div className="text-gray-500">
-                                  {item.price}đ
-                                </div>
-                              </div>
-                            </Combobox.Option>
-                          ))}
-                        </ul>
-                      </Combobox.Options>
-                    </Combobox>
-                  </div>
-                  <div className="flex flex-col gap-3 border-b-6 p-6">
-                    <Combobox>
-                      <div className="flex justify-start text-center text-sm ">
-                        <h2 className="uppercase font-semibold text-gray-500 mr-3">
-                          Adding Topings
-                        </h2>
-                        <h4> - Choose maximum 4</h4>
-                      </div>
-                      <Combobox.Options static className="">
-                        <ul className="">
-                          {toppingOptions.map((item) => (
-                            <Combobox.Option
-                              className="flex items-center gap-3  text-center"
-                              key={item.key}
-                              value={item.value}
-                            >
-                              <Checkbox></Checkbox>
-                              <div className="text-sm flex items-center justify-between border-b py-4 flex-1">
-                                <div>{item.value}</div>
-                                <div className="text-gray-500">
-                                  {item.price}đ
-                                </div>
-                              </div>
-                            </Combobox.Option>
-                          ))}
-                        </ul>
-                      </Combobox.Options>
-                    </Combobox>
-                  </div>
+                    );
+                  })}
                 </div>
               </div>
+
               <div className="flex items-center gap-3 p-3 w-full">
-                <button className="p-1 bg-gray-300  rounded-md">
+                <button
+                  disabled={quantity <= 1}
+                  onClick={() => setQuantity(quantity - 1)}
+                  className="p-1 bg-gray-300 rounded-md"
+                >
                   <MinusIcon className="w-4 h-4" />
                 </button>
-                <div>1</div>
-                <button className="p-1 bg-primary-500 text-white rounded-md">
+                <div>{quantity}</div>
+                <button
+                  onClick={() => setQuantity(quantity + 1)}
+                  className="p-1 bg-primary-500 text-white rounded-md"
+                >
                   <PlusIcon className="w-4 h-4" />
                 </button>
-                <ButtonPrimary className=" rounded-md flex-grow">
-                  Add to cart - 15.000đ
+                <ButtonPrimary
+                  onClick={handleUpsertCart}
+                  disabled={isSubmiting}
+                  loading={isSubmiting}
+                  className="rounded-md flex-grow"
+                >
+                  Add to cart - {dish?.price}
                 </ButtonPrimary>
               </div>
             </Dialog.Panel>

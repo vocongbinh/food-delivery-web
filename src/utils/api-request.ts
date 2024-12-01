@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 
 export const HOST = process.env.NEXT_PUBLIC_HOST;
 export const API_HOST = process.env.NEXT_PUBLIC_HOST + "/api";
+import { getCookie } from "cookies-next";
 
 export const getFormData = (data: { [name: string]: any }): FormData => {
   const formData = new FormData();
@@ -22,8 +23,7 @@ const getRequestHeaders = async (
   method: string,
   isFormData?: boolean
 ): Promise<any> => {
-  const token =
-    "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiaW5oIHZvIiwiaWF0IjoxNzMwNzc1MDA5LCJleHAiOjE3MzE5ODQ2MDl9.hFL6eshtD2_a_PHDMhfQdVjYwIgRchGsKv-cFSwh3FM";
+  const token = getCookie("token");
 
   const headers = new Headers();
   if (token) {

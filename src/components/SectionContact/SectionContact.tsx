@@ -72,9 +72,6 @@ const SectionContact: FC<SectionContactProps> = ({ className = "", header, socia
                          />
                 </div>
                 <ButtonPrimary className="self-end">Send Message</ButtonPrimary>
-
-
-
             </form>
         </div>
 

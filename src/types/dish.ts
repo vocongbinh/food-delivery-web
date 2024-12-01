@@ -11,8 +11,10 @@ export type Dish = {
   status?: string;
   category: Category;
   dishType: DishType;
+  options: GroupOption[];
+  restaurant: { id: number; name: string };
 };
-export type DishRequest = Omit<Dish, "category" | "dishType"> & {
+export type DishRequest = Omit<Dish, "category" | "dishType" | "restaurant"> & {
   categoryId: Category["id"];
   dishTypeId: DishType["id"];
   restaurantId: Restaurant["id"];

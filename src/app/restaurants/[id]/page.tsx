@@ -16,13 +16,6 @@ import { useCallback, useRef, useState } from "react";
 import { Rate, Tooltip } from "antd";
 import Nav from "@/components/Nav/Nav";
 import NavItem from "@/components/NavItem/NavItem";
-import { ArrowDownCircleIcon } from "@heroicons/react/24/solid";
-import { User } from "iconsax-react";
-import SectionStatisticApp from "@/components/SectionStatisticApp/SectionStatisticApp";
-import SectionAppNews from "@/components/SectionAppNews/SectionAppNews";
-import { BlocksRenderer } from "@strapi/blocks-react-renderer";
-import SectionCharts from "@/components/SectionCharts/SectionCharts";
-import { SocialComponent } from "@/data/components";
 import { useQuery } from "@tanstack/react-query";
 import { RestaurantsApi } from "@/apis/restaurants";
 import { Restaurant } from "@/types/restaurant";
@@ -41,7 +34,7 @@ const RestaurantPage = ({ params }: { params: { id: number } }) => {
     key: "reviews",
     type: "create",
     queryKey: "applications",
-});
+  });
   const { data: restaurant, isLoading } = useQuery({
     queryKey: ["restaurants", params.id],
     queryFn: () => RestaurantsApi.getRestaurantById(params.id),
@@ -63,7 +56,6 @@ const RestaurantPage = ({ params }: { params: { id: number } }) => {
     };
     mutate({ data });
   };
- 
 
   if (isLoading) return <></>;
   else {
@@ -131,7 +123,7 @@ const RestaurantPage = ({ params }: { params: { id: number } }) => {
                         </div>
                         <SectionStatisticApp className="p-6 bg-white rounded-3xl mb-10" />
                         <SectionCharts className="p-6 bg-white rounded-3xl mb-10" />
-    
+
                         <div
                             id="comments"
                             className="scroll-mt-20 p-4 bg-white rounded-3xl"
@@ -172,7 +164,6 @@ const RestaurantPage = ({ params }: { params: { id: number } }) => {
             </div>
           </div>
         </div>
-        
       </>
     );
   }

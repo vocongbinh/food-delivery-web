@@ -9,8 +9,8 @@ import { ConfigProvider } from "antd";
 import SessionProviders from "@/components/SessionProvider/SessionProvider";
 import DefaultHeader from "@/components/Header/DefaultHeader";
 import AuthProvider from "@/contexts/auth/auth-context";
-import 'react-toastify/dist/ReactToastify.css';
-import dynamic from 'next/dynamic';
+import "react-toastify/dist/ReactToastify.css";
+import dynamic from "next/dynamic";
 import Toastify from "@/components/Toastify/Toastify";
 export const metadata = {
   title: "Ton station",
@@ -28,44 +28,40 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  
-const TonComponent = dynamic(() => import('./TonComponent'), { ssr: false });
+  const TonComponent = dynamic(() => import("./TonComponent"), { ssr: false });
   return (
- <html lang="en" className={poppins.className}>
+    <html lang="en" className={poppins.className}>
       <body className="">
-          <ConfigProvider
-            theme={{
-              token: {
-                fontFamily: "Poppins, sans-serif",
+        <ConfigProvider
+          theme={{
+            token: {
+              fontFamily: "Poppins, sans-serif",
+            },
+            components: {
+              Switch: {
+                colorPrimary: "#2B52FF",
               },
-              components: {
-                Switch: {
-                  colorPrimary: "#2B52FF",
-                },
-              },
-            }}
-          >
-            <AntdRegistry>
-              <div className="bg-[#f8f8f8] text-base dark:bg-neutral-900/95 text-neutral-900 dark:text-neutral-200">
-                <Providers>
-                  <TonComponent>
+            },
+          }}
+        >
+          <AntdRegistry>
+            <div className="bg-[#f8f8f8] text-base dark:bg-neutral-900/95 text-neutral-900 dark:text-neutral-200">
+              <Providers>
+                <TonComponent>
                   <SessionProviders>
-                    {/* <AuthProvider> */}
-                    <DefaultHeader />
-                    {children}
-                    <Footer />
-                    <Toastify/>
-                    {/* </AuthProvider> */}
+                    <AuthProvider>
+                      <DefaultHeader />
+                      {children}
+                      <Footer />
+                      <Toastify />
+                    </AuthProvider>
                   </SessionProviders>
-                  </TonComponent>
-                
-                </Providers>
-              </div>
-            </AntdRegistry>
-          </ConfigProvider>
-        
+                </TonComponent>
+              </Providers>
+            </div>
+          </AntdRegistry>
+        </ConfigProvider>
       </body>
     </html>
-   
   );
 }
