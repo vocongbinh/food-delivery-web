@@ -4,7 +4,6 @@ import { v4 as uuidv4 } from "uuid";
 
 export const HOST = process.env.NEXT_PUBLIC_HOST;
 export const API_HOST = process.env.NEXT_PUBLIC_HOST + "/api";
-import { getCookie } from "cookies-next";
 
 export const getFormData = (data: { [name: string]: any }): FormData => {
   const formData = new FormData();

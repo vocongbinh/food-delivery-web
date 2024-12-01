@@ -39,7 +39,7 @@ import {
   RESTAURANT_CART_KEY,
 } from "@/contains/react_query_keys";
 import { CartsApi } from "@/apis/carts";
-import { DishesApi } from "@/apis/dish";
+import { DishesApi } from "@/apis/dishes";
 
 //
 const MAGAZINE1_POSTS = DEMO_POSTS.filter((_, i) => i >= 8 && i < 16);

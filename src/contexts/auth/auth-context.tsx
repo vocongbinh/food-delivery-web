@@ -9,7 +9,6 @@ import {
   useEffect,
   useState,
 } from "react";
-import { getCookie } from "cookies-next";
 interface ContextValue {
   token: string;
   setToken: (value: string) => void;
