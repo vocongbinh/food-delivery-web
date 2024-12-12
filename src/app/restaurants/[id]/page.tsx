@@ -26,7 +26,7 @@ import CardVoucher from "@/components/CardVoucher/CardVoucher";
 import { Alert, CircularProgress, Pagination, Snackbar } from "@mui/material";
 import { ReviewsApi } from "@/apis/reviews";
 import { ReviewForm } from "@/types/review";
-import { DishesApi } from "@/apis/dish";
+import { DishesApi } from "@/apis/dishes";
 import DishCard11 from "@/components/DishCard11/DishCard11";
 export interface TabProps {
   id: number;

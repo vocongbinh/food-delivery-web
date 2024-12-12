@@ -1,5 +1,6 @@
 import { Category } from "./category";
 import { DishType } from "./dishType";
+import { GroupOption } from "./groupOption";
 import { Restaurant } from "./restaurant";
 
 export type Dish = {
@@ -14,6 +15,7 @@ export type Dish = {
   options: GroupOption[];
   restaurant: { id: number; name: string };
 };
+
 export type DishRequest = Omit<Dish, "category" | "dishType" | "restaurant"> & {
   categoryId: Category["id"];
   dishTypeId: DishType["id"];
