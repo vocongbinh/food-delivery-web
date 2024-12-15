@@ -28,7 +28,6 @@ const Home = () => {
     queryKey: ["Recommend-dish"],
     queryFn: () => DishesApi.getRecommendedDishes(24),
   });
-  console.log(dishes);
   const landingSection = () => {
     return (
       <div className="nc-PageHomeDemo3 relative">

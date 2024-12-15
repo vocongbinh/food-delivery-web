@@ -1,12 +1,13 @@
-import { DishesApi } from "@/apis/orders";
-import { DISH_KEY } from "@/contains/react_query_keys";
-import { Dish } from "@/types";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { OrdersApi } from "@/apis/orders";
+import { LIST_ORDER_KEY } from "@/contains/react_query_keys";
+import { Restaurant } from "@/types";
+import { useQuery } from "@tanstack/react-query";
 
-export const useGetDishQuery = (dishId: Dish["id"]) => {
+export const useGetOrdersOfRestaurantQuery = (
+  restaurantId: Restaurant["id"]
+) => {
   return useQuery({
-    queryKey: [DISH_KEY, dishId],
-    queryFn: () => DishesApi.getDishById(dishId),
-    enabled: dishId != null,
+    queryKey: [LIST_ORDER_KEY],
+    queryFn: () => OrdersApi.getOrdersByRestaurant(restaurantId),
   });
 };

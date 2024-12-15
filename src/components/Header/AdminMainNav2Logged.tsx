@@ -18,15 +18,15 @@ import ModalChangeAddress from "../ModalChangeAddress/ModalChangeAddress";
 import Button from "../Button/Button";
 import ButtonPrimary from "../Button/ButtonPrimary";
 import MapComponent from "../MapComponent/MapComponent";
-import { NAVIGATION_DEMO_2 } from "@/data/navigation";
-export interface MainNav2LoggedProps {}
+import { ADMIN_NAVIGATION } from "@/data/navigation";
+export interface AdminMainNav2LoggedProps {}
 
 interface Location {
   latitude: number;
   longitude: number;
 }
 
-const MainNav2Logged: FC<MainNav2LoggedProps> = () => {
+const AdminMainNav2Logged: FC<AdminMainNav2LoggedProps> = () => {
   const { token } = useAuthContext();
   const { data } = useSession();
   const session = data as any;
@@ -92,7 +92,7 @@ const MainNav2Logged: FC<MainNav2LoggedProps> = () => {
         </div>
 
         <div className="flex-[2] hidden lg:flex justify-center mx-4">
-          <Navigation navigations={NAVIGATION_DEMO_2} />
+          <Navigation navigations={ADMIN_NAVIGATION} />
         </div>
 
         <div className="flex-1 flex items-center justify-end text-slate-700 dark:text-slate-100">
@@ -122,10 +122,10 @@ const MainNav2Logged: FC<MainNav2LoggedProps> = () => {
   };
 
   return (
-    <div className="nc-MainNav2Logged relative z-10 bg-white dark:bg-neutral-900 border-b border-slate-100 dark:border-slate-700">
+    <div className="nc-AdminMainNav2Logged relative z-10 bg-white dark:bg-neutral-900 border-b border-slate-100 dark:border-slate-700">
       <div className="container ">{renderContent()}</div>
     </div>
   );
 };
 
-export default MainNav2Logged;
+export default AdminMainNav2Logged;

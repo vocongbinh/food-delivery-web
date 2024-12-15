@@ -51,7 +51,6 @@ const CheckoutPage: React.FC = () => {
     setValue,
   } = form;
   const onSubmit = (data: z.infer<typeof OrderRequestSchema>) => {
-    console.log("call submit");
     setIsSubmitting(true);
     createOrderMutation.mutate(
       {
@@ -60,8 +59,8 @@ const CheckoutPage: React.FC = () => {
         voucherIds: [],
       },
       {
-        onSuccess: (res) => console.log(res),
-        onSettled: (res) => console.log(res),
+        onSuccess: (res) => {},
+        onSettled: (res) => {},
       }
     );
     setIsSubmitting(false);

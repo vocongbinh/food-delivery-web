@@ -13,6 +13,10 @@ export class RestaurantsApi {
     const response = await apiGet("/restaurants", getFormData(request));
     return response;
   }
+  static async getOwnRestaurants(): Promise<Restaurant[]> {
+    const response = await apiGet("/restaurants/owner");
+    return response;
+  }
 
   static async getRestaurantById(id: Restaurant["id"]): Promise<Restaurant> {
     return await apiGet(`/restaurants/${id}`);

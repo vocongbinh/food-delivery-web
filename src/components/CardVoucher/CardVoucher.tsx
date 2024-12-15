@@ -25,15 +25,18 @@ import {
 import { useTonConnect } from "../../../hooks/useTonConnect";
 import { useTonAddress } from "@tonconnect/ui-react";
 import { VouchersApi } from "@/apis/vouchers";
+import { Route } from "next";
 export interface CardVoucherProps {
   className?: string;
   voucher: Voucher;
   ratio?: string;
+  isAdmin?: boolean;
 }
 
 const CardVoucher: FC<CardVoucherProps> = ({
   className = "h-full",
   voucher,
+  isAdmin,
   ratio = "aspect-w-3 xl:aspect-w-4 aspect-h-3",
 }) => {
   const {
@@ -52,7 +55,7 @@ const CardVoucher: FC<CardVoucherProps> = ({
   const exchangeVoucher = async (value: number) => {
     const jettonWalletAddress = await getJettonAddress(userFriendlyAddress);
     const balance = await getJettonBalance(jettonWalletAddress);
-    
+
     if (!connected) {
       toast.error("Please connect your wallet first.");
       return;
@@ -138,22 +141,37 @@ const CardVoucher: FC<CardVoucherProps> = ({
               {formatDate(validFrom)} - {formatDate(validTo)}
             </span>
           </span>
-          <div className="flex items-end justify-between mt-auto">
-            <ButtonPrimary
-              className="opacity-25"
-              onClick={async () => {
-                // exchangeVoucher(exchangeRate);
-                VouchersApi.receiveVoucher({ code: couponCode, productDiscountId: id });
+          {!isAdmin && (
+            <div className="flex items-end justify-between mt-auto">
+              <ButtonPrimary
+                className="opacity-25"
+                onClick={async () => {
+                  // exchangeVoucher(exchangeRate);
+                  VouchersApi.receiveVoucher({
+                    code: couponCode,
+                    productDiscountId: id,
+                  });
+                }}
+              >
+                Exchange With {exchangeRate} DFT
+              </ButtonPrimary>
 
-              }}
+              <DialogAlert isOpen={true}>
+                <PostCardSaveAction className="relative" />
+              </DialogAlert>
+            </div>
+          )}
+          {isAdmin && (
+            <Link
+              href={
+                `/admin/restaurant/${voucher?.restaurant?.id}/discount/${voucher?.id}` as Route
+              }
+              onClick={() => {}}
+              className="text-sm text-center hover:bg-gray-50 flex-shrink-0 font-normal rounded-xl border  py-2"
             >
-              Exchange With {exchangeRate} DFT
-            </ButtonPrimary>
-
-            <DialogAlert isOpen={true}>
-              <PostCardSaveAction className="relative" />
-            </DialogAlert>
-          </div>
+              Details
+            </Link>
+          )}
         </div>
       </div>
     </div>

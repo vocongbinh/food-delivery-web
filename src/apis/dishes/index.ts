@@ -24,7 +24,6 @@ export class DishesApi {
   }
 
   static async putDishes(request: DishRequest): Promise<Dish> {
-    console.log("put");
     return await apiPut(`/dishes/${request.id}`, request);
   }
 
@@ -37,21 +36,20 @@ export class DishesApi {
   }
 
   static async getByListId(ids: number[]): Promise<Dish[]> {
-    const res =  await endpoint.get("dishes/recommend", {
+    const res = await endpoint.get("dishes/recommend", {
       params: {
         ids,
       },
-      paramsSerializer: params => {
-        return qs.stringify(params, { arrayFormat: 'repeat' });
-      } 
+      paramsSerializer: (params) => {
+        return qs.stringify(params, { arrayFormat: "repeat" });
+      },
     });
     return res.data;
   }
   static async getRecommendedDishes(id: User["id"]) {
-    const user = await  AuthsApi.getUserById(id);
+    const user = await AuthsApi.getUserById(id);
     const res = await RecommendController.generateRecommendations(user);
     let recommendedDishes: RecommendedDish[] = [];
-    console.log("save local storage")
     localStorage.setItem("recommendedDishes", JSON.stringify(res[0]));
     const ids = res[0].map((dish: RecommendedDish) => {
       const id = dish["RecipeId"];
@@ -59,13 +57,21 @@ export class DishesApi {
     });
     return await this.getByListId(ids);
   }
-  static async getDishesByCategory(restaurantId:number, categoryId: number, page: number, limit: number = 0): Promise<Dish[]> {
-    const res = await endpoint.get(`dishes/category/${restaurantId}/${categoryId}`, {
-      params: {
-        page,
-        limit,
-      },
-    });
+  static async getDishesByCategory(
+    restaurantId: number,
+    categoryId: number,
+    page: number,
+    limit: number = 0
+  ): Promise<Dish[]> {
+    const res = await endpoint.get(
+      `dishes/category/${restaurantId}/${categoryId}`,
+      {
+        params: {
+          page,
+          limit,
+        },
+      }
+    );
     return res.data;
   }
 }

@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */
+const { nextui } = require("@nextui-org/react");
 
 const defaultTheme = require("tailwindcss/defaultTheme");
 
@@ -16,7 +17,10 @@ function customColors(cssVar) {
 }
 
 module.exports = {
-  content: ["./src/**/*.{js,jsx,ts,tsx}"],
+  content: [
+    "./src/**/*.{js,jsx,ts,tsx}",
+    "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
+  ],
   darkMode: "class", // or 'media' or 'class',
   theme: {
     container: {
@@ -91,5 +95,6 @@ module.exports = {
     require("@tailwindcss/typography"),
     require("@tailwindcss/forms"),
     require("@tailwindcss/aspect-ratio"),
+    nextui(),
   ],
 };

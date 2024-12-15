@@ -12,7 +12,8 @@ import {
 import { Popover, Transition } from "@headlessui/react";
 import SwitchDarkMode2 from "@/components/SwitchDarkMode/SwitchDarkMode2";
 import { useThemeMode } from "@/hooks/useThemeMode";
-import {ToastContainer} from "react-toastify"
+import { ToastContainer } from "react-toastify";
+import AdminHeaderLogged from "@/components/Header/AdminHeaderLogged";
 const SiteHeader = () => {
   let pathname = usePathname();
   useThemeMode();
@@ -60,7 +61,6 @@ const SiteHeader = () => {
             );
           })}
         </div>
-        
       </div>
     );
   };
@@ -154,8 +154,8 @@ const SiteHeader = () => {
 
   const headerComponent = useMemo(() => {
     let HeadComponent = HeaderLogged;
-    if (pathname === "/home-2" || headerSelected === "Header 2") {
-      HeadComponent = Header;
+    if (pathname.startsWith("/admin")) {
+      HeadComponent = AdminHeaderLogged;
     }
     if (pathname === "/home-3" || headerSelected === "Header 3") {
       HeadComponent = Header2;

@@ -9,7 +9,6 @@ export class DishTypesApi {
 
   static async getDishTypes(): Promise<DishType[]> {
     const response = await apiGet(DISH_TYPE_ROUTE);
-    console.log(response);
     return response;
   }
 

@@ -19,6 +19,7 @@ import {
   useAddVoucherMutation,
   useUpdateVoucherMutation,
 } from "@/react-query/vouchers";
+import { useRouter } from "next/navigation";
 
 const VoucherDetailInfors = ({
   voucher,
@@ -38,7 +39,7 @@ const VoucherDetailInfors = ({
       description: voucher?.description ?? "",
       image: voucher?.image ?? "",
       discountValue: voucher?.discountValue,
-      discountType: voucher?.discountType,
+      discountType: voucher?.discountType ?? DiscountType.PERCENTAGE,
       couponCode: voucher?.couponCode,
       exchangeRate: voucher?.exchangeRate,
       maximumDiscountValue: voucher?.maximumDiscountValue,
@@ -54,7 +55,8 @@ const VoucherDetailInfors = ({
     setValue,
   } = form;
   const updateVoucher = useUpdateVoucherMutation();
-  const addDish = useAddVoucherMutation();
+  const addVoucher = useAddVoucherMutation();
+  const router = useRouter();
   const onSubmit = (data: VoucherRequest) => {
     console.log("call submit");
     setIsSubmitting(true);
@@ -63,6 +65,7 @@ const VoucherDetailInfors = ({
         { ...data, id: voucher!.id },
         {
           onSuccess: () => {
+            router.back();
             console.log("success");
           },
           onError: () => {
@@ -74,10 +77,11 @@ const VoucherDetailInfors = ({
         }
       );
     } else {
-      addDish.mutate(
+      addVoucher.mutate(
         { ...data },
         {
           onSuccess: () => {
+            router.back();
             console.log("success");
           },
           onError: () => {
@@ -91,7 +95,7 @@ const VoucherDetailInfors = ({
     }
     setIsSubmitting(false);
   };
-
+  console.log(form.formState.errors);
   return (
     <div className="bg-white max-w-2xl w-full p-4 mx-auto">
       <form
@@ -144,12 +148,7 @@ const VoucherDetailInfors = ({
         </div>
         <div>
           <Label>Coupon code</Label>
-          <Input
-            type="text"
-            {...register("couponCode", {
-              setValueAs: (value) => (value === "" ? undefined : Number(value)),
-            })}
-          />
+          <Input type="text" {...register("couponCode")} />
           {errors.couponCode && (
             <p className="text-red-500 text-sm mt-2">
               {errors.couponCode.message}
@@ -174,7 +173,7 @@ const VoucherDetailInfors = ({
           <Label>Exchange rate</Label>
           <Input
             type="number"
-            {...register("maximumDiscountValue", {
+            {...register("exchangeRate", {
               setValueAs: (value) => (value === "" ? undefined : Number(value)),
             })}
           />
@@ -186,12 +185,7 @@ const VoucherDetailInfors = ({
         </div>
         <div>
           <Label>Valid from date</Label>
-          <Input
-            type="date"
-            {...register("validFrom", {
-              setValueAs: (value) => (value === "" ? undefined : Number(value)),
-            })}
-          />
+          <Input type="date" {...register("validFrom")} />
           {errors.validFrom && (
             <p className="text-red-500 text-sm mt-2">
               {errors.validFrom.message}
@@ -200,12 +194,7 @@ const VoucherDetailInfors = ({
         </div>
         <div>
           <Label>Valid to date</Label>
-          <Input
-            type="date"
-            {...register("validFrom", {
-              setValueAs: (value) => (value === "" ? undefined : Number(value)),
-            })}
-          />
+          <Input type="date" {...register("validTo")} />
           {errors.validFrom && (
             <p className="text-red-500 text-sm mt-2">
               {errors.validFrom.message}

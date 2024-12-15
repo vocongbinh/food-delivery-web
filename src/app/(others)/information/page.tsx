@@ -21,7 +21,7 @@ import {
   FormControl,
 } from "@mui/material";
 import { AuthsApi } from "@/apis/auths";
-import { DishesApi } from "@/apis/dish";
+import { DishesApi } from "@/apis/dishes";
 const converter = require("number-to-words");
 const activitiesMark = [
   {
@@ -99,7 +99,6 @@ const InformationPage = ({}) => {
     });
   };
   const getAriaValue = (value: number) => {
-    console.log(value);
     switch (value) {
       case 0:
         return "Little/no exercise";
@@ -118,9 +117,8 @@ const InformationPage = ({}) => {
 
   const handleContinue = async () => {
     // await AuthsApi.updateUser(information, 24);
-    
+
     const data = await DishesApi.getRecommendedDishes(24);
-    console.log(data)
   };
 
   const renderAgeItem = () => {
@@ -243,8 +241,13 @@ const InformationPage = ({}) => {
                   valueLabelDisplay="off"
                   marks={activitiesMark}
                   onChange={(e, value) => {
-                    handleChangeInformation("activity", activitiesMark.filter(activity => activity.value === value)[0].label);
-                    }}
+                    handleChangeInformation(
+                      "activity",
+                      activitiesMark.filter(
+                        (activity) => activity.value === value
+                      )[0].label
+                    );
+                  }}
                 />
               </label>
             </span>
@@ -264,7 +267,10 @@ const InformationPage = ({}) => {
                   marks={goalsMark}
                   color="warning"
                   onChange={(e, value) => {
-                  handleChangeInformation("weightLoss", goalsMark.filter(goal => goal.value === value)[0].label);
+                    handleChangeInformation(
+                      "weightLoss",
+                      goalsMark.filter((goal) => goal.value === value)[0].label
+                    );
                   }}
                 />
               </label>
