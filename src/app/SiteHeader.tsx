@@ -167,7 +167,7 @@ const SiteHeader = () => {
   return (
     <>
       {/* for our demo page, please delete this if you do not use */}
-      {renderControlSelections()}
+      {/* {renderControlSelections()} */}
       {/*  */}
 
       {headerComponent}

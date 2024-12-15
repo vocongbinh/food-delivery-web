@@ -18,6 +18,7 @@ import ModalChangeAddress from "../ModalChangeAddress/ModalChangeAddress";
 import Button from "../Button/Button";
 import ButtonPrimary from "../Button/ButtonPrimary";
 import MapComponent from "../MapComponent/MapComponent";
+import {Location} from 'iconsax-react'
 export interface MainNav2LoggedProps {}
 
 interface Location {
@@ -79,7 +80,8 @@ const MainNav2Logged: FC<MainNav2LoggedProps> = () => {
                 onClick={openModal}
                 className=" cursor-pointer px-4 max-w-[300px] rounded-3xl border border-gray-400 flex gap-2 items-center"
               >
-                <MapPinIcon className="w-10 h-10 text-primary-500" />
+                <Location size="32" color="#2b52ff"  variant="Bold"/>
+                {/* <MapPinIcon className="w-10 h-10 text-primary-500" /> */}
                 <span className="overflow-hidden text-ellipsis whitespace-nowrap">
                   {address}
                 </span>

@@ -28,6 +28,11 @@ import { ReviewsApi } from "@/apis/reviews";
 import { ReviewForm } from "@/types/review";
 import { DishesApi } from "@/apis/dish";
 import DishCard11 from "@/components/DishCard11/DishCard11";
+import { Map1 } from "iconsax-react";
+import axios from "axios";
+import { useAddressContext } from "@/contexts/address/address-context";
+import ModalShowDistance from "@/components/ModalShowDistance/ModalShowDistance";
+import DistanceMapComponent from "@/components/DistanceMapComponent/DistanceMapComponent";
 export interface TabProps {
   id: number;
   name: string;
@@ -35,8 +40,12 @@ export interface TabProps {
 
 const RestaurantPage = ({ params }: { params: { id: number } }) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const { location } = useAddressContext();
   const [rate, setRate] = useState<number>(0);
   const [tabActive, setTabActive] = useState<Category>();
+  const [distance, setDistance] = useState(0);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+
   const { mutate } = useCustomMutation({
     key: "reviews",
     type: "create",
@@ -59,6 +68,22 @@ const RestaurantPage = ({ params }: { params: { id: number } }) => {
     queryFn: () =>
       DishesApi.getDishesByCategory(params.id, tabActive?.id || 1, 1, 10),
   });
+  
+
+  useEffect(() => {
+
+    const accessToken = process.env.NEXT_PUBLIC_MAP_TOKEN || "";
+    const url = `https://api.mapbox.com/directions/v5/mapbox/driving/${location.longitude}%2C${location.latitude}%3B${restaurant?.longitude}%2C${restaurant?.latitude}?alternatives=true&geometries=geojson&language=en&overview=full&steps=true&access_token=${accessToken}`;
+    const calculateDistance = async () => {
+      const res = await axios.get(url);
+      console.log(res.data);
+      const distance = res.data.routes[0].distance / 1000;
+      setDistance(distance);
+    };
+    if (restaurant) {
+      calculateDistance();
+    }
+  }, [restaurant]);
 
   const handleClickTab = (tab: Category) => {
     setTabActive(tab);
@@ -73,6 +98,14 @@ const RestaurantPage = ({ params }: { params: { id: number } }) => {
     };
     mutate(data);
   };
+  const renderModalContent = () => {
+    return (
+     
+        <DistanceMapComponent long={restaurant?.longitude} lat={restaurant?.latitude} />
+        
+    
+    );
+  };
 
   useEffect(() => {
     setTabActive(restaurant?.categories[0]);
@@ -80,8 +113,14 @@ const RestaurantPage = ({ params }: { params: { id: number } }) => {
 
   if (isLoading) return <></>;
   else {
-    const { name, description, imageUrl, rating, numReviews, categories } =
-      restaurant as Restaurant;
+    const {
+      name,
+      description,
+      imageUrl,
+      rating,
+      numReviews,
+      categories,
+    } = restaurant as Restaurant;
 
     return (
       <>
@@ -99,19 +138,42 @@ const RestaurantPage = ({ params }: { params: { id: number } }) => {
                 />
               </div>
               <div className="mt-6">
-                <h3 className="font-semibold md:text-2xl text-lg">{name}</h3>
-                <p className="text-neutral-500 md:text-base text-sm py-2">
-                  {description}
-                </p>
-                <div className="flex items-center gap-3">
-                  <span className="md:text-2xl text-lg font-semibold">
-                    {rating}
-                  </span>
-                  <Rate defaultValue={rating} allowHalf disabled />
-                  <span className="text-neutral-500 ">•</span>
-                  <span className="text-neutral-500 md:text-base text-sm">
-                    {reviews?.length || 0} Reviews
-                  </span>
+                <div className="flex items-start justify-between">
+                  <div>
+                    <h3 className="font-semibold md:text-2xl text-lg">
+                      {name}
+                    </h3>
+                    <p className="text-neutral-500 md:text-base text-sm py-2">
+                      {description}
+                    </p>
+                    <div className="flex items-center gap-3">
+                      <span className="md:text-2xl text-lg font-semibold">
+                        {rating}
+                      </span>
+                      <Rate defaultValue={rating} allowHalf disabled />
+                      <span className="text-neutral-500 ">•</span>
+                      <span className="text-neutral-500 md:text-base text-sm">
+                        {reviews?.length || 0} Reviews
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex gap-2 items-center">
+                    <span className="font-semibold text-lg">{distance.toFixed(2)} km</span>
+                    <ModalShowDistance
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+            renderTrigger={(openModal) => (
+              <div
+                onClick={openModal}
+                className=" cursor-pointer px-4 max-w-[300px] rounded-3xl border border-gray-400 flex gap-2 items-center"
+              >
+                    <Map1 size="45" color="#2b52ff" variant="Bold" className="cursor-pointer" />
+              </div>
+            )}
+            modalTitle="Distance"
+            renderContent={renderModalContent}
+          />
+                  </div>
                 </div>
               </div>
             </div>
@@ -131,17 +193,16 @@ const RestaurantPage = ({ params }: { params: { id: number } }) => {
             </Nav>
             {dishesLoading ? (
               <div className="flex items-center justify-center">
-                 <CircularProgress />
+                <CircularProgress />
               </div>
-             
-           ) : (
+            ) : (
               <div className="grid gap-6 sm:grid-cols-2 sm:py-2 md:gap-8 md:grid-cols-3 lg:grid-cols-4 xl:md:grid-cols-5">
                 {dishes &&
                   dishes.map((dish, index) => (
                     <DishCard11 key={index} dish={dish} />
                   ))}
               </div>
-            )} 
+            )}
 
             {/* {tabActive.id === 0 ? <>
                         <MySlider
