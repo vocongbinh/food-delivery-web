@@ -24,7 +24,8 @@ import {
   getJettonBalance,
 } from "@/utils/jetton";
 import { useTonConnect } from "../../../hooks/useTonConnect";
-import { useTonAddress } from "@tonconnect/ui-react";
+import { connector } from "@/utils/tonConnectInstance";
+import { toUserFriendlyAddress } from '@tonconnect/sdk';
 import { VouchersApi } from "@/apis/vouchers";
 export interface CardVoucherProps {
   className?: string;
@@ -51,12 +52,14 @@ const CardVoucher: FC<CardVoucherProps> = ({
   } = voucher;
   const IS_AUDIO = false;
   const { sender, connected } = useTonConnect();
-  const userFriendlyAddress = useTonAddress();
+
   const exchangeVoucher = async (value: number) => {
     if (!connected) {
       toast.error("Please connect your wallet first.");
       return;
     } else {
+      const rawAddress = connector.wallet!.account.address;
+      const userFriendlyAddress = toUserFriendlyAddress(rawAddress);
       const jettonWalletAddress = await getJettonAddress(userFriendlyAddress);
       const balance = await getJettonBalance(jettonWalletAddress);
       if (value > balance) {
