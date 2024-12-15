@@ -1,5 +1,9 @@
-import {TonConnectUI, TonAddressItem} from '@tonconnect/ui'
+import TonConnect from '@tonconnect/sdk';
 
-export const tonConnectUI = new TonConnectUI({
-    manifestUrl: 'https://vocongbinh.github.io/food-delivery-TMA/tonconnect-manifest.json',
-});
+export const connector = new TonConnect(
+    {
+        manifestUrl: 'https://vocongbinh.github.io/food-delivery-TMA/tonconnect-manifest.json'
+    }
+);
+
+connector.restoreConnection();

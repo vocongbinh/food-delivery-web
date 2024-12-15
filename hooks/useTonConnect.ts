@@ -1,13 +1,14 @@
 
 
 import { Sender, SenderArguments } from "ton-core";
-import { tonConnectUI } from "@/utils/tonConnectInstance";
+import { connector } from "@/utils/tonConnectInstance";
 import dynamic from "next/dynamic";
 export function useTonConnect(): { sender: Sender; connected: boolean } {
+  
   return {
     sender: {
       send: async (args: SenderArguments) => {
-        tonConnectUI.sendTransaction({
+        connector.sendTransaction({
           messages: [
             {
               address: args.to.toString(),
@@ -19,6 +20,6 @@ export function useTonConnect(): { sender: Sender; connected: boolean } {
         });
       },
     },
-    connected: tonConnectUI.connected,
+    connected: connector.connected,
   };
 }
