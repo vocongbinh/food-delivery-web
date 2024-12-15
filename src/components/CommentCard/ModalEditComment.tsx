@@ -1,6 +1,6 @@
 "use client";
 
-import React, { FC, useEffect, useRef } from "react";
+import React, { FC, useEffect, useRef, useState } from "react";
 import NcModal from "@/components/NcModal/NcModal";
 import SingleCommentForm from "@/app/(singles)/SingleCommentForm";
 import { ReviewsApi } from "@/apis/reviews";
@@ -19,7 +19,7 @@ const ModalEditComment: FC<ModalEditCommentProps> = ({
   restaurantId,
   onCloseModalEditComment,
 }) => {
-  
+  const [rating, setRating] = useState<number>(0);
   const { mutate } = useCustomMutation({
     key: "reviews",
     id,
@@ -52,6 +52,8 @@ const ModalEditComment: FC<ModalEditCommentProps> = ({
   const renderContent = () => {
     return (
       <SingleCommentForm
+        rating={rating}
+        setRating={setRating}
         className="mt-0"
         onClickCancel={onCloseModalEditComment}
         onClickSubmit={handleSubmit}

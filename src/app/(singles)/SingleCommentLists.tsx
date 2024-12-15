@@ -1,6 +1,5 @@
 import React, { FC } from "react";
 import ButtonPrimary from "@/components/Button/ButtonPrimary";
-import CommentCard from "@/components/CommentCard/CommentCard";
 import ReviewCard from "@/components/CommentCard/ReviewCard ";
 import { Review } from "@/types/review";
 

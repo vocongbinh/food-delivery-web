@@ -1,4 +1,4 @@
-import { DishesApi } from "@/apis/orders";
+import { DishesApi } from "@/apis/dishes";
 import { DISH_KEY } from "@/contains/react_query_keys";
 import { Dish } from "@/types";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
