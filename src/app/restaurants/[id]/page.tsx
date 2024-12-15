@@ -59,6 +59,13 @@ const RestaurantPage = ({ params }: { params: { id: number } }) => {
     queryKey: ["reviews", params.id],
     queryFn: () => ReviewsApi.getReviews(params.id),
   });
+
+  const { data: exchangedVoucher } = useQuery({
+    queryKey: ["voucher", "exchanged"],
+    queryFn: () => DiscountsApi.getActiveDiscounts(),
+  });
+  
+  
   const { data: vouchers } = useQuery({
     queryKey: ["vouchers", params.id],
     queryFn: () => DiscountsApi.getDiscounts(params.id),
@@ -68,20 +75,25 @@ const RestaurantPage = ({ params }: { params: { id: number } }) => {
     queryFn: () =>
       DishesApi.getDishesByCategory(params.id, tabActive?.id || 1, 1, 10),
   });
+
+  const isExchanged = (voucherId: number) => {
+    return (exchangedVoucher || []).some(voucher => voucher.productDiscount.id == voucherId)
+  }
+
+  
   
 
   useEffect(() => {
-
-    const accessToken = process.env.NEXT_PUBLIC_MAP_TOKEN || "";
-    const url = `https://api.mapbox.com/directions/v5/mapbox/driving/${location.longitude}%2C${location.latitude}%3B${restaurant?.longitude}%2C${restaurant?.latitude}?alternatives=true&geometries=geojson&language=en&overview=full&steps=true&access_token=${accessToken}`;
-    const calculateDistance = async () => {
+    const calculateDistance = async (restaurant: Restaurant) => {
+      const accessToken = process.env.NEXT_PUBLIC_MAP_TOKEN || "";
+      const url = `https://api.mapbox.com/directions/v5/mapbox/driving/${location.longitude},${location.latitude};${restaurant?.longitude},${restaurant?.latitude}?geometries=geojson&access_token=${accessToken}`;
       const res = await axios.get(url);
       console.log(res.data);
       const distance = res.data.routes[0].distance / 1000;
       setDistance(distance);
     };
-    if (restaurant) {
-      calculateDistance();
+    if (restaurant !== undefined) {
+      calculateDistance(restaurant);
     }
   }, [restaurant]);
 
@@ -236,16 +248,16 @@ const RestaurantPage = ({ params }: { params: { id: number } }) => {
                         </div>
                     </> : tabActive.id === 1 ? <SectionAppNews blogs={blogs} heading="News" /> : <div className="p-4 bg-white rounded-3xl"><BlocksRenderer content={app.updatedInformation || []} /></div>} */}
             <div className="mt-10">
-              <h2 className="text-lg font-semibold">Vouchers</h2>
+              <h2 className="font-semibold text-2xl">Vouchers</h2>
               <div className="mt-8 lg:mt-10 grid md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
                 {vouchers?.map((voucher, index) => (
-                  <CardVoucher key={index} voucher={voucher} />
+                  <CardVoucher key={index} voucher={voucher} isExchanged={isExchanged(voucher.id)} />
                 ))}
               </div>
             </div>
             <div
               id="comments"
-              className="scroll-mt-20 p-4 bg-white rounded-3xl"
+              className="scroll-mt-20 p-4 bg-white rounded-3xl mt-10"
             >
               <h3 className="text-xl font-semibold  text-center text-neutral-800 dark:text-neutral-200">
                 Reviews ({reviews?.length || 0})

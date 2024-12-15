@@ -56,7 +56,7 @@ class Endpoint {
       //   token = localStorage.getItem("token") || ""
       // }
       if (token) {
-        config.headers.token = `Bearer ${token}`;
+        config.headers.Authorization = `Bearer ${token}`;
       }
       return config;
     });

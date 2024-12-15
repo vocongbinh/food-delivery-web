@@ -1,6 +1,6 @@
 import { Restaurant } from "@/types";
 import { CartItem } from "@/types/cartItem";
-import { Voucher } from "@/types/voucher";
+import { Voucher, VoucherUser } from "@/types/voucher";
 import { apiGet, apiPut } from "@/utils/api-request";
 
 export class DiscountsApi {
@@ -16,5 +16,8 @@ export class DiscountsApi {
     return await apiPut(`/carts/${data.id}?quantity=${data.quantity}`, {
       id: data.id,
     });
+  }
+  static async getActiveDiscounts(): Promise<VoucherUser[]> {
+    return await apiGet(`/vouchers?status=ACTIVE`);
   }
 }
