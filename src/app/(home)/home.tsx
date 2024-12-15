@@ -16,7 +16,7 @@ import ButtonPrimary from "@/components/Button/ButtonPrimary";
 import RestaurantCart from "@/components/Cart/RestaurantCart";
 import Chatbot from "@/components/Chatbot/Chatbot";
 import SectionRecommendedDish from "@/components/Sections/SectionRecommendedDish";
-import { DishesApi } from "@/apis/dish";
+import { DishesApi } from "@/apis/dishes";
 import StatisticComponent from "@/components/StatisticComponent/StatisticComponent";
 import { RecommendedDish } from "@/types/recommendedDish";
 

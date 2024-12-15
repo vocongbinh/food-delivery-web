@@ -21,7 +21,7 @@ import {
   FormControl,
 } from "@mui/material";
 import { AuthsApi } from "@/apis/auths";
-import { DishesApi } from "@/apis/dish";
+import { DishesApi } from "@/apis/dishes";
 const converter = require("number-to-words");
 const activitiesMark = [
   {
