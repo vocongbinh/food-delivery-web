@@ -1,5 +1,5 @@
 import { MediaData } from "@/data/types";
-import http from "./http";
+import { http } from "./http";
 import axios from "axios";
 
 export function getStrapiURL(path = "") {

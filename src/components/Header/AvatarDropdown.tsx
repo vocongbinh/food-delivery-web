@@ -10,6 +10,8 @@ import { signOut, useSession } from "next-auth/react";
 import { useCustomQuery } from "@/hooks/useCustomQuery";
 import { getStrapiMedia } from "@/utils/apiHelpers";
 import { User } from "@/data/types";
+import { setCookie } from "cookies-next";
+import { Route } from "next";
 export default function AvatarDropdown() {
 const isBrowser = typeof window !== "undefined" && typeof localStorage !== "undefined";
   const { data } = useCustomQuery<User>({
@@ -71,7 +73,7 @@ const isBrowser = typeof window !== "undefined" && typeof localStorage !== "unde
 
                     {/* ------------------ 1 --------------------- */}
                     <Link
-                      href={"/settings"}
+                      href={"/settings" as Route}
                       className="flex items-center p-2 -m-3 transition duration-150 ease-in-out rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-700 focus:outline-none focus-visible:ring focus-visible:ring-orange-500 focus-visible:ring-opacity-50"
                       onClick={() => close()}
                     >
@@ -296,7 +298,7 @@ const isBrowser = typeof window !== "undefined" && typeof localStorage !== "unde
                       href={"/#"}
                       className="flex items-center p-2 -m-3 transition duration-150 ease-in-out rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-700 focus:outline-none focus-visible:ring focus-visible:ring-orange-500 focus-visible:ring-opacity-50"
                       onClick={() => {
-                        localStorage.removeItem("token");
+                        setCookie('token', '', { maxAge: -1 });
                         signOut({ callbackUrl: "/" });
                         close()
                       }}

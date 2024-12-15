@@ -5,7 +5,7 @@ const ButtonLogin = () => {
 
     return (
         <Link href="/login">
-            <Button className="!hidden md:!flex border font-semibold border-primary-500 text-primary-500" pattern="white" sizeClass="px-6 py-2">
+            <Button className="!hidden md:!flex border font-semibold border-primary-500 text-primary-500 whitespace-nowrap" pattern="white" sizeClass="px-6 py-2">
                 <span>Log In</span>
             </Button>
 

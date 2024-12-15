@@ -1,15 +1,17 @@
 import React, { FC } from "react";
-import Card2 from "@/components/Card2/Card2";
+import DishCard2 from "@/components/DishCart2/DishCart2";
 import { PostDataType } from "@/data/types";
-import Card6 from "@/components/Card6/Card6";
+import DishCard6 from "@/components/DishCart6/DishCard6";
 import { ArrowRightIcon } from "@heroicons/react/24/solid";
 import Button from "../Button/Button";
 import Heading from "../Heading/Heading";
+import { Dish } from "@/types";
 export interface SectionDishOfType2Props {
   posts: PostDataType[];
   heading?: string;
   subHeading?: string;
   className?: string;
+  dishes: Dish[];
 }
 
 const SectionDishOfType2: FC<SectionDishOfType2Props> = ({
@@ -17,6 +19,7 @@ const SectionDishOfType2: FC<SectionDishOfType2Props> = ({
   heading = "Latest Articles 🎈 ",
   subHeading,
   className = "",
+  dishes,
 }) => {
   return (
     <div className={`nc-SectionDishOfType2 ${className}`}>
@@ -25,20 +28,26 @@ const SectionDishOfType2: FC<SectionDishOfType2Props> = ({
           {heading}
         </Heading>
         <div className="h-12 flex">
-          < Button className="!hidden md:!flex " pattern="white" sizeClass="px-6">
+          <Button
+            className="!hidden md:!flex "
+            pattern="white"
+            sizeClass="px-6"
+          >
             <span>View all</span>
             <ArrowRightIcon className="ms-3 w-6 h-6 rtl:rotate-180" />
           </Button>
         </div>
       </div>
-      {!posts.length && <span>Nothing we found!</span>}
+      {!dishes.length && <span>Nothing we found!</span>}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
-        {posts[0] && <Card2 size="large" post={posts[0]} />}
+        {dishes[0] && (
+          <DishCard2 size="large" post={posts[0]} dish={dishes[0]} />
+        )}
         <div className="grid gap-6 md:gap-8">
-          {posts
+          {dishes
             .filter((_, i) => i < 4 && i > 0)
             .map((item, index) => (
-              <Card6 key={index} post={item} />
+              <DishCard6 key={index} post={posts[0]} />
             ))}
         </div>
       </div>

@@ -1,21 +1,23 @@
 import { Category } from "./category";
 import { DishType } from "./dishType";
+import { GroupOption } from "./groupOption";
 import { Restaurant } from "./restaurant";
 
-export interface Dish {
-    id: number;
-    restaurant: Restaurant;
-    category: Category;
-    name: string;
-    price: number;
-    description: string;
-    imageUrl: string;
-    status: DishStatus;
-    dishType: DishType;
-}
-export enum DishStatus {
-    DELETED = 'DELETED',
-    ACTIVE = 'ACTIVE',
-    INACTIVE = 'INACTIVE',
-    CREATED = 'CREATED'
-}
+export type Dish = {
+  id: number;
+  name: string;
+  price: number;
+  description: string;
+  imageUrl?: string;
+  status?: string;
+  category: Category;
+  dishType: DishType;
+  options: GroupOption[];
+  restaurant: { id: number; name: string };
+};
+
+export type DishRequest = Omit<Dish, "category" | "dishType" | "restaurant"> & {
+  categoryId: Category["id"];
+  dishTypeId: DishType["id"];
+  restaurantId: Restaurant["id"];
+};

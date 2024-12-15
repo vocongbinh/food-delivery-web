@@ -3,6 +3,7 @@ import React from "react";
 import { getPrefetchQuery } from "@/hooks/useCustomQuery";
 import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
 import SiteHeader from "@/app/SiteHeader";
+import Chatbot from "../Chatbot/Chatbot";
 
 export default async function DefaultHeader() {
     const queryClient = new QueryClient();
@@ -25,6 +26,7 @@ export default async function DefaultHeader() {
     return (
         <HydrationBoundary state={dehydrate(queryClient)}>
             <SiteHeader />
+            <Chatbot/>
         </HydrationBoundary>
 
     );

@@ -112,9 +112,9 @@ export const MEGAMENU_TEMPLATES: NavItemType[] = [
     href: "/#",
     name: "Other Pages",
     children: [
-      { id: randomId(), href: "/dashboard", name: "Dashboard" },
-      { id: randomId(), href: "/about", name: "About" },
-      { id: randomId(), href: "/contact", name: "Contact us" },
+      { id: randomId(), href: "/dashboard" as Route, name: "Dashboard" },
+      { id: randomId(), href: "/about" as Route, name: "About" },
+      { id: randomId(), href: "/contact" as Route, name: "Contact us" },
       {
         id: randomId(),
         href: "/login",
@@ -280,13 +280,13 @@ const OTHER_PAGE_CHILD: NavItemType[] = [
   // about pages ----------------
   {
     id: randomId(),
-    href: "/about",
+    href: "/about" as Route,
     name: "Other Pages",
     type: "dropdown",
     children: [
       {
         id: randomId(),
-        href: "/about",
+        href: "/hihi" as Route,
         name: "About",
       },
       {
@@ -318,38 +318,37 @@ const OTHER_PAGE_CHILD: NavItemType[] = [
   },
 ];
 
-export const 
-NAVIGATION_DEMO_2: NavItemType[] = [
-  {
-    id: randomId(),
-    href: "/" as Route,
-    name: "Home",
-  },
+export const NAVIGATION_DEMO_2: NavItemType[] = [
+  // {
+  //   id: randomId(),
+  //   href: "/" as Route,
+  //   name: "Home",
+  // },
   // single pages ----------------
   {
     id: randomId(),
     href: "/categories" as Route,
     name: "Categories",
-    type: "dropdown",
-    children: [
-      {
-        id: randomId(),
-        href: "/categories/food" as Route,
-        name: "Food",
-      },
-      {
-        id: randomId(),
-        href: "/categories/drink" as Route,
-        name: "Drink",
-      },
-    ],
+    // type: "dropdown",
+    // children: [
+    //   {
+    //     id: randomId(),
+    //     href: "/categories/food" as Route,
+    //     name: "Food",
+    //   },
+    //   {
+    //     id: randomId(),
+    //     href: "/categories/drink" as Route,
+    //     name: "Drink",
+    //   },
+    // ],
   },
   {
     id: randomId(),
     href: "/restaurants" as Route,
     name: "Restaurants",
   },
-   {
+  {
     id: randomId(),
     href: "/my-orders" as Route,
     name: "My Orders",
@@ -359,7 +358,24 @@ NAVIGATION_DEMO_2: NavItemType[] = [
     href: "/about" as Route,
     name: "About Us",
   },
-  // {
+  {
+    id: randomId(),
+    href: "/admin" as Route,
+    name: "Admin",
+    type: "dropdown",
+    children: [
+      {
+        id: randomId(),
+        href: "/admin/7/food/add" as Route,
+        name: "Food",
+      },
+      {
+        id: randomId(),
+        href: "/admin/restaurant" as Route,
+        name: "Drink",
+      },
+    ],
+  }, // {
   //   id: randomId(),
   //   href: "/Use" as Route,
   //   name: "use",

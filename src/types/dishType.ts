@@ -1,7 +1,7 @@
-import { Dish } from "./dish"
+import { Dish } from "./dish";
 
 export interface DishType {
-    id: string
-    name: string
-    dishes: Dish[]
+  id: number;
+  name: string;
+  dishes: Dish[];
 }

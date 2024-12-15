@@ -1,3 +1,6 @@
+import { getCookie } from "cookies-next";
+import { createSupabaseClient } from "./supabase";
+import { v4 as uuidv4 } from "uuid";
 
 export const HOST = process.env.NEXT_PUBLIC_HOST;
 export const API_HOST = process.env.NEXT_PUBLIC_HOST + "/api";
@@ -19,11 +22,11 @@ const getRequestHeaders = async (
   method: string,
   isFormData?: boolean
 ): Promise<any> => {
-  const token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiaW5oIHZvIiwiaWF0IjoxNzI1NzgyMDg1LCJleHAiOjE3MjY5OTE2ODV9.u0aDtJlJs1AnjQ8cxNxOFxLjODQ6UYVJY9H5AP6vJBM"
+  const token = getCookie("token");
 
   const headers = new Headers();
   if (token) {
-    headers.append("token", "Bearer " + token);
+    headers.append("Authorization", `Bearer ${token}`);
   }
   if (!isFormData) {
     headers.append("Content-Type", "application/json");
@@ -57,7 +60,7 @@ const apiFetch = async (
 ) => {
   try {
     init = init || {};
-    init.cache = 'no-store';  
+    init.cache = "no-store";
     const response = await fetch(input, init);
     const result = await response.json();
     if (!response.ok || response.status != 200) {
@@ -122,8 +125,19 @@ export const apiPatch = async (query: string, body: any) => {
 
 export const apiGet = async (query: string, body?: any) => {
   const headers = await getRequestHeaders("GET");
+  console.log(headers);
   return await apiFetch(getRequestUrl(query, body), {
     method: "GET",
     headers,
   });
+};
+
+export const apiUploadImage = async (file: File, bucketName: string) => {
+  const supabase = createSupabaseClient();
+
+  const { data, error } = await supabase.storage
+    .from(bucketName)
+    .upload(uuidv4(), file);
+  if (error) throw error;
+  return data?.fullPath;
 };

@@ -8,21 +8,23 @@ import PostTypeFeaturedIcon from "@/components/PostTypeFeaturedIcon/PostTypeFeat
 import MediaAudio from "./MediaAudio";
 import Link from "next/link";
 import Image from "next/image";
+import { Dish } from "@/types";
 
 export interface PostFeaturedMediaProps {
   className?: string;
   post: PostDataType;
   isHover?: boolean;
+  dish?: Dish;
 }
 
 const PostFeaturedMedia: FC<PostFeaturedMediaProps> = ({
   className = "w-full h-full",
   post,
   isHover = false,
+  dish,
 }) => {
   const { featuredImage, postType, videoUrl, galleryImgs, audioUrl, id, href } =
     post;
-
   const isPostMedia = () => postType === "video" || postType === "audio";
 
   const renderGallerySlider = () => {

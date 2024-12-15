@@ -6,6 +6,7 @@ import Image from "next/image";
 import Badge from "../Badge/Badge";
 import Link from "next/link";
 import { DishType } from "@/types/dishType";
+import { Route } from "next";
 export interface CardCategoryProps {
   className?: string;
   dishType: DishType;
@@ -15,10 +16,13 @@ export interface CardCategoryProps {
 const CardCategory: FC<CardCategoryProps> = ({ className = "h-full", dishType, index }) => {
   const { dishes, name} = dishType;
   const [isHover, setIsHover] = useState(false);
-  const images = dishes.map(dish => dish.imageUrl);
+  const images = dishes.map(dish => {
+    const dishImgs = dish.imageUrl?.split(",");
+    return dishImgs![0]
+  });
   const itemClassName = "lg:w-16 w-14 lg:h-16 h-14 border border-white rounded-full border-2 transition duration-300";
   return (
-    <Link href={`/categories/${name}`}>
+    <Link href={`/categories/${name}` as Route}>
        <div
       className={`nc-CardCategory h-[35vh] rounded-3xl bg-white group hover:bg-opacity-50 flex flex-col p-4 items-center cursor-pointer ${className}`}
       onMouseEnter={() => setIsHover(true)}

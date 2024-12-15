@@ -9,4 +9,5 @@ export interface User {
     mealPerDay: number;
     weightLoss: string;
     avatarUrl: string | null;
+    gender: string;
 }
