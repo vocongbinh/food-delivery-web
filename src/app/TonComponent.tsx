@@ -1,14 +1,19 @@
 
 "use client"
 import React, { ReactNode } from 'react'
-import * as TonUI from "@tonconnect/ui-react"
+import dynamic from 'next/dynamic';
 const TonComponent = ({children}: {children:ReactNode}) => {
+  
+  const TonConnectUIProvider = dynamic(() =>
+    import('@tonconnect/ui-react').then((mod) => mod.TonConnectUIProvider),
+    { ssr: false }
+  );
   const manifestUrl =
     "https://vocongbinh.github.io/food-delivery-TMA/tonconnect-manifest.json";
   return (
-    <TonUI.TonConnectUIProvider manifestUrl={manifestUrl}>
+    <TonConnectUIProvider manifestUrl={manifestUrl}>
     {children}
-     </TonUI.TonConnectUIProvider>
+     </TonConnectUIProvider>
   )
 }
 
