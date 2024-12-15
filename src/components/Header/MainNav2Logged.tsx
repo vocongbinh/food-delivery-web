@@ -19,6 +19,7 @@ import Button from "../Button/Button";
 import ButtonPrimary from "../Button/ButtonPrimary";
 import MapComponent from "../MapComponent/MapComponent";
 import {Location} from 'iconsax-react'
+import dynamic from 'next/dynamic';
 export interface MainNav2LoggedProps {}
 
 interface Location {
@@ -33,6 +34,10 @@ const MainNav2Logged: FC<MainNav2LoggedProps> = () => {
   const { address, setAddress, setLocation } = useAddressContext();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState<string>("");
+  const TonConnectButton = dynamic(() =>
+      import('@tonconnect/ui-react').then((mod) => mod.TonConnectButton),
+      { ssr: false }
+    );
   React.useEffect(() => {
     // Function to get the user's location
     const getLocation = async () => {
@@ -107,7 +112,7 @@ const MainNav2Logged: FC<MainNav2LoggedProps> = () => {
             <ButtonLogin />
           )}
           {/* <SearchModal /> */}
-          <TonConnect.TonConnectButton className="ml-4" />
+          <TonConnectButton className="ml-4" />
         </div>
       </div>
     );
