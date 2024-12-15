@@ -15,20 +15,22 @@ interface Location {
 interface ContextValue {
   address: string;
   setAddress: (value: string) => void;
-  location: Location | undefined;
-  setLocation: Dispatch<SetStateAction<Location | undefined>>;
+  location: Location ;
+  setLocation: Dispatch<SetStateAction<Location >>;
 }
+const initialLocation: Location = {latitude: 0, longitude: 0}
 
 export const AddressContext = createContext<ContextValue>({
   address: "",
   setAddress: () => { },
-  location: undefined,
+  location: {latitude: 0, longitude: 0},  
   setLocation: () => { },
 });
 
+
 const AddressProvider = ({ children }: { children: ReactNode }) => {
   const [address, setAddress] = useState("");
-  const [location, setLocation] = useState<Location>();
+  const [location, setLocation] = useState<Location>(initialLocation);
   
   return (
     <AddressContext.Provider

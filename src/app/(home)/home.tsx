@@ -17,8 +17,11 @@ import RestaurantCart from "@/components/Cart/RestaurantCart";
 import Chatbot from "@/components/Chatbot/Chatbot";
 import SectionRecommendedDish from "@/components/Sections/SectionRecommendedDish";
 import { DishesApi } from "@/apis/dishes";
+import StatisticComponent from "@/components/StatisticComponent/StatisticComponent";
+import { RecommendedDish } from "@/types/recommendedDish";
 
 const Home = () => {
+  const recommendedDishes: RecommendedDish[] = JSON.parse(localStorage.getItem("recommendedDishes") || "");
   const { data: dishTypes } = useQuery({
     queryKey: [DISH_TYPE_KEY],
     queryFn: () => DishTypesApi.getDishTypes(),
@@ -101,6 +104,7 @@ const Home = () => {
           />
         </div>
       </div>
+      < StatisticComponent data={recommendedDishes[0]} />
       <div className="grid grid-cols-8 gap-4 px-10">
         <div className="lg:col-span-6 col-span-4">{renderDishOfType()}</div>
         <RestaurantCart />

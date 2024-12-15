@@ -106,7 +106,7 @@ const SingleContent: FC<SingleContentProps> = ({}) => {
 
         {/* COMMENTS LIST */}
         <div className="max-w-screen-md mx-auto">
-          <SingleCommentLists />
+          {/* <SingleCommentLists /> */}
           <div ref={endedAnchorRef}></div>
         </div>
       </div>

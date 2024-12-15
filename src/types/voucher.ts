@@ -1,5 +1,6 @@
 import { Dish } from "./dish";
 import { Restaurant } from "./restaurant";
+import { User } from "./user";
 
 export interface Voucher {
   id: number;
@@ -34,6 +35,15 @@ export interface VoucherRequest {
   discountType: DiscountType;
   image: string;
   exchangeRate: number;
+}
+
+export interface VoucherUser {
+    id: number;
+    user: User;
+    productDiscount: Voucher;
+    status: string;
+    remainingUsage: number;
+
 }
 
 // DiscountType Enum

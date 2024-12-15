@@ -3,7 +3,7 @@ import TabList, { TabValue } from "../TabList/TabList";
 import FilterListBox from "../FilterListBox/FilterListBox";
 import StatisticCard, { StatisticCardProps } from "../StatisticCard/StatisticCard";
 import { Clock, ChartSquare } from "iconsax-react";
-import SectionStatistic from "@/app/about/SectionStatistic";
+// import SectionStatistic from "@/app/about/SectionStatistic";
 interface SectionStatisticAppProps {
     className: string;
 }
@@ -58,8 +58,8 @@ const SectionStatisticApp: FC<SectionStatisticAppProps> = ({ className }) => {
         <div className="flex justify-between items-center py-6">
             <TabList className="bg-neutral-200" onClickTab={() => { }} tabValues={tabValues} />
             <div className="flex gap-4">
-                <FilterListBox lists={[{ name: "Dropdown 1" }]} />
-                <FilterListBox lists={[{ name: "Dropdown 1" }]} />
+                {/* <FilterListBox lists={[{ name: "Dropdown 1" }]} />
+                <FilterListBox lists={[{ name: "Dropdown 1" }]} /> */}
             </div>
         </div>
         <div className="grid gap-6 grid-cols-2 md:grid-cols-4 bg-white rounded-2xl mb-6">

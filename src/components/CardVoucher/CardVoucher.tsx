@@ -17,6 +17,7 @@ import Button from "@mui/material/Button";
 import DialogAlert from "../DialogAlert/DialogAlert";
 import ButtonPrimary from "../Button/ButtonPrimary";
 import { toast } from "react-toastify";
+import DefaultVoucherImg from "@/images/default_voucher.jpg";
 import {
   prepareJettonTransfer,
   getJettonAddress,
@@ -38,6 +39,7 @@ const CardVoucher: FC<CardVoucherProps> = ({
   voucher,
   isAdmin,
   ratio = "aspect-w-3 xl:aspect-w-4 aspect-h-3",
+  isExchanged,
 }) => {
   const {
     id,
@@ -53,24 +55,31 @@ const CardVoucher: FC<CardVoucherProps> = ({
   const { sender, connected } = useTonConnect();
   const userFriendlyAddress = useTonAddress();
   const exchangeVoucher = async (value: number) => {
+
     const jettonWalletAddress = await getJettonAddress(userFriendlyAddress);
     const balance = await getJettonBalance(jettonWalletAddress);
 
     if (!connected) {
       toast.error("Please connect your wallet first.");
       return;
-    } else if (value > balance) {
-      toast.error("Insufficient balance.");
-      return;
     } else {
-      const message = prepareJettonTransfer(
-        jettonWalletAddress.toString(),
-        "0QAY0-nximDrQIdBrH4r8RpJz9WtVANal49taOGX6u5LHXIH",
-        1
-      );
-      sender.send(message);
+      const jettonWalletAddress = await getJettonAddress(userFriendlyAddress);
+      const balance = await getJettonBalance(jettonWalletAddress);
+      if (value > balance) {
+        toast.error("Insufficient balance.");
+        return;
+      } else {
+        const message = prepareJettonTransfer(
+          jettonWalletAddress.toString(),
+          "0QAY0-nximDrQIdBrH4r8RpJz9WtVANal49taOGX6u5LHXIH",
+          1
+        );
+        await sender.send(message);
+        VouchersApi.receiveVoucher({ code: couponCode, productDiscountId: id });
+      }
     }
   };
+  console.log("isExchanged", voucher.couponCode, isExchanged);
 
   const renderListenButtonDefault = (state?: "playing") => {
     return (
@@ -95,7 +104,7 @@ const CardVoucher: FC<CardVoucherProps> = ({
           fill
           alt=""
           sizes="(max-width: 600px) 480px, 800px"
-          src={image}
+          src={image || DefaultVoucherImg}
           className="object-cover"
         />
         <span className="bg-neutral-900 bg-opacity-30"></span>
@@ -141,20 +150,18 @@ const CardVoucher: FC<CardVoucherProps> = ({
               {formatDate(validFrom)} - {formatDate(validTo)}
             </span>
           </span>
-          {!isAdmin && (
-            <div className="flex items-end justify-between mt-auto">
-              <ButtonPrimary
-                className="opacity-25"
-                onClick={async () => {
-                  // exchangeVoucher(exchangeRate);
-                  VouchersApi.receiveVoucher({
-                    code: couponCode,
-                    productDiscountId: id,
-                  });
-                }}
-              >
-                Exchange With {exchangeRate} DFT
-              </ButtonPrimary>
+
+          <div className="flex items-end justify-between mt-auto">
+            <ButtonPrimary
+              className="opacity-25"
+              onClick={async () => {
+                // exchangeVoucher(exchangeRate);
+                VouchersApi.receiveVoucher({ code: couponCode, productDiscountId: id });
+
+              }}
+            >
+              Exchange With {exchangeRate} DFT
+            </ButtonPrimary>
 
               <DialogAlert isOpen={true}>
                 <PostCardSaveAction className="relative" />

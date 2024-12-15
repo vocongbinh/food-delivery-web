@@ -1,6 +1,7 @@
 import { getFormData } from "./../../utils/api-request";
 import { Restaurant } from "@/types/restaurant";
 import { apiGet, apiPost, apiDelete, apiPatch } from "@/utils/api-request";
+import endpoint from "@/utils/http";
 
 export class RestaurantsApi {
   static async postRestaurant(
@@ -16,6 +17,28 @@ export class RestaurantsApi {
   static async getOwnRestaurants(): Promise<Restaurant[]> {
     const response = await apiGet("/restaurants/owner");
     return response;
+  }
+
+  static async getRestaurantsByDistance({
+    latitude,
+    longitude,
+    distance = 5,
+    keyword = "",
+  }: {
+    latitude: number;
+    longitude: number;
+    distance: number;
+    keyword: string;
+  }): Promise<Restaurant[]> {
+    const response = await endpoint.get(`/restaurants/distance`, {
+      params: {
+        latitude,
+        longitude,
+        distance,
+        keyword,
+      },
+    });
+    return response.data;
   }
 
   static async getRestaurantById(id: Restaurant["id"]): Promise<Restaurant> {

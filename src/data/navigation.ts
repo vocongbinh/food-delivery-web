@@ -112,9 +112,9 @@ export const MEGAMENU_TEMPLATES: NavItemType[] = [
     href: "/#",
     name: "Other Pages",
     children: [
-      { id: randomId(), href: "/dashboard", name: "Dashboard" },
-      { id: randomId(), href: "/about", name: "About" },
-      { id: randomId(), href: "/contact", name: "Contact us" },
+      { id: randomId(), href: "/dashboard" as Route, name: "Dashboard" },
+      { id: randomId(), href: "/about" as Route, name: "About" },
+      { id: randomId(), href: "/contact" as Route, name: "Contact us" },
       {
         id: randomId(),
         href: "/login",
@@ -280,13 +280,13 @@ const OTHER_PAGE_CHILD: NavItemType[] = [
   // about pages ----------------
   {
     id: randomId(),
-    href: "/about",
+    href: "/about" as Route,
     name: "Other Pages",
     type: "dropdown",
     children: [
       {
         id: randomId(),
-        href: "/hihi",
+        href: "/hihi" as Route,
         name: "About",
       },
       {

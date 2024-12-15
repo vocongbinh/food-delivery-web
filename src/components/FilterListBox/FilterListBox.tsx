@@ -8,20 +8,25 @@ import Button from "../Button/Button";
 
 export interface FilterListBoxProps {
   className?: string;
-  lists: { name: string }[];
+  lists: { name: string, value: number }[];
+  selected: { name: string, value: number };
+  setSelected: (value: { name: string, value: number }) => void;
 }
 
 const FilterListBox: FC<FilterListBoxProps> = ({
   className = "",
   lists,
+  selected,
+  setSelected
+  
 }) => {
-  const [selected, setSelected] = useState(lists[0]);
+  // const [selected, setSelected] = useState(lists[0]);
   return (
     <div className={`nc-FilterListBox flex-shrink-0 ${className}`}>
       <Listbox value={selected} onChange={setSelected}>
         <div className="relative">
           <Listbox.Button as={"div"}>
-            <button className="bg-neutral-200 rounded-xl flex py-2 px-4 sm:px-6 text-sm font-medium">
+            <button className="bg-neutral-200 rounded-xl flex py-2 px-4 sm:px-6 font-medium">
               {selected.name}
               <ChevronDownIcon
                 className="w-4 h-4 ms-2 -me-1"

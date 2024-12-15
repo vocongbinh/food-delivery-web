@@ -26,7 +26,7 @@ const getRequestHeaders = async (
 
   const headers = new Headers();
   if (token) {
-    headers.append("Authorization", "Bearer " + token);
+    headers.append("Authorization", `Bearer ${token}`);
   }
   if (!isFormData) {
     headers.append("Content-Type", "application/json");
