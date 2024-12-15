@@ -4,7 +4,7 @@ import { Sender, SenderArguments } from "ton-core";
 import { connector } from "@/utils/tonConnectInstance";
 import dynamic from "next/dynamic";
 export function useTonConnect(): { sender: Sender; connected: boolean } {
-  
+  console.log("useTonConnect", connector.connected);
   return {
     sender: {
       send: async (args: SenderArguments) => {

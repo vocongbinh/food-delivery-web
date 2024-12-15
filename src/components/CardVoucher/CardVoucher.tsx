@@ -54,12 +54,14 @@ const CardVoucher: FC<CardVoucherProps> = ({
   const { sender, connected } = useTonConnect();
 
   const exchangeVoucher = async (value: number) => {
+
     if (!connected) {
       toast.error("Please connect your wallet first.");
       return;
     } else {
       const rawAddress = connector.wallet!.account.address;
       const userFriendlyAddress = toUserFriendlyAddress(rawAddress);
+      console.log("userFriendlyAddress", userFriendlyAddress);
       const jettonWalletAddress = await getJettonAddress(userFriendlyAddress);
       const balance = await getJettonBalance(jettonWalletAddress);
       if (value > balance) {
@@ -71,8 +73,9 @@ const CardVoucher: FC<CardVoucherProps> = ({
           "0QAY0-nximDrQIdBrH4r8RpJz9WtVANal49taOGX6u5LHXIH",
           1
         );
-        await sender.send(message);
-        VouchersApi.receiveVoucher({ code: couponCode, productDiscountId: id });
+        console.log("message", message);
+        sender.send(message);
+        // VouchersApi.receiveVoucher({ code: couponCode, productDiscountId: id });
       }
     }
   };
