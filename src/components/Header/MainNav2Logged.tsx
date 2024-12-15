@@ -9,7 +9,7 @@ import NotifyDropdown from "./NotifyDropdown";
 import ButtonLogin from "../ButtonLogin/ButtonLogin";
 import { getSession, useSession } from "next-auth/react";
 import { useAuthContext } from "@/contexts/auth/auth-context";
-import { TonConnectButton } from "@tonconnect/ui-react";
+import * as TonConnect from "@tonconnect/ui-react";
 import { getCookie } from "cookies-next";
 import { MapApi } from "@/apis/map";
 import { MapPinIcon } from "@heroicons/react/24/solid";
@@ -106,7 +106,7 @@ const MainNav2Logged: FC<MainNav2LoggedProps> = () => {
             <ButtonLogin />
           )}
           {/* <SearchModal /> */}
-          <TonConnectButton className="ml-4" />
+          <TonConnect.TonConnectButton className="ml-4" />
         </div>
       </div>
     );
