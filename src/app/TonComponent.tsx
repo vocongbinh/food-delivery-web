@@ -9,7 +9,7 @@ const TonComponent = ({children}: {children:ReactNode}) => {
     { ssr: false }
   );
   const manifestUrl =
-    "https://vocongbinh.github.io/food-delivery-TMA/tonconnect-manifest.json";
+    'https://food-delivery-web-beryl.vercel.app/tonconnect-manifest.json'
   return (
     <TonConnectUIProvider manifestUrl={manifestUrl}>
     {children}
