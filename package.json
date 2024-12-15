@@ -73,7 +73,6 @@
     "react-markdown": "^9.0.1",
     "react-player": "^2.13.0",
     "react-quill": "^2.0.0",
-    "react-simple-chatbot": "^0.6.1",
     "react-swipeable": "^7.0.1",
     "react-toastify": "^10.0.6",
     "react-use": "^17.4.0",
@@ -85,6 +84,7 @@
     "ton-core": "^0.53.0",
     "ton-crypto": "^3.2.0",
     "typescript": "5.2.2",
+    "use-debounce": "^10.0.4",
     "uuid": "^11.0.2",
     "yup": "^1.4.0",
     "zod": "^3.23.8"

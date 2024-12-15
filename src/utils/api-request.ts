@@ -22,7 +22,6 @@ const getRequestHeaders = async (
   method: string,
   isFormData?: boolean
 ): Promise<any> => {
-
   const token = getCookie("token");
 
   const headers = new Headers();
@@ -61,7 +60,7 @@ const apiFetch = async (
 ) => {
   try {
     init = init || {};
-    init.cache = 'no-store';  
+    init.cache = "no-store";
     const response = await fetch(input, init);
     const result = await response.json();
     if (!response.ok || response.status != 200) {

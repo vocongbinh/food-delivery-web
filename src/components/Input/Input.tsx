@@ -15,6 +15,7 @@ export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   showEye?: boolean;
   validate?: boolean;
   label?: string;
+  preIcon?: React.ReactElement;
 }
 
 // eslint-disable-next-line react/display-name
@@ -32,6 +33,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       children,
       label,
       type = "text",
+      preIcon,
       ...args
     },
     ref
@@ -55,6 +57,10 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             className={`block w-full border-neutral-200 focus:border-primary-300 focus:ring focus:ring-primary-200/50 dark:border-neutral-500 dark:focus:ring-primary-500/30 dark:bg-neutral-900 ${rounded} ${colorClass} ${fontClass} ${sizeClass} ${className}`}
             {...args}
           />
+          <div className="absolute inset-y-0 right-0 flex items-center pr-3">
+            {preIcon ?? preIcon}
+          </div>
+
           {showEye && (
             <button
               type="button"

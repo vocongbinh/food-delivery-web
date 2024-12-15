@@ -26,7 +26,7 @@ import CardVoucher from "@/components/CardVoucher/CardVoucher";
 import { Alert, CircularProgress, Pagination, Snackbar } from "@mui/material";
 import { ReviewsApi } from "@/apis/reviews";
 import { ReviewForm } from "@/types/review";
-import { DishesApi } from "@/apis/dish";
+import { DishesApi } from "@/apis/dishes";
 import DishCard11 from "@/components/DishCard11/DishCard11";
 import { Map1 } from "iconsax-react";
 import axios from "axios";
@@ -231,7 +231,7 @@ const RestaurantPage = ({ params }: { params: { id: number } }) => {
                         </div>
                         <SectionStatisticApp className="p-6 bg-white rounded-3xl mb-10" />
                         <SectionCharts className="p-6 bg-white rounded-3xl mb-10" />
-    
+
                         <div
                             id="comments"
                             className="scroll-mt-20 p-4 bg-white rounded-3xl"

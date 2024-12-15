@@ -1,4 +1,4 @@
-import { AuthRequest, AuthResponse, Restaurant } from "@/types";
+import { AuthRequest, AuthResponse, Restaurant, UserInfo } from "@/types";
 import { apiPut, getFormData } from "../../utils/api-request";
 import { Dish, DishRequest } from "@/types/dish";
 import { apiGet, apiPost, apiDelete, apiPatch } from "@/utils/api-request";
@@ -9,8 +9,8 @@ export class AuthsApi {
     return await apiPost("/auth/sign-in", request);
   }
 
-  static async getAuths(id: Restaurant["id"]): Promise<Dish[]> {
-    const response = await apiGet(`/dishes/restaurant/${id}`);
+  static async getUserProfile(): Promise<UserInfo> {
+    const response = await apiGet(`/auth/profile`);
     return response;
   }
 

@@ -26,11 +26,12 @@ const Home = () => {
     queryKey: [DISH_TYPE_KEY],
     queryFn: () => DishTypesApi.getDishTypes(),
   });
+
   const { data: dishes } = useQuery({
     queryKey: ["Recommend-dish"],
     queryFn: () => DishesApi.getRecommendedDishes(24),
   });
-  console.log(dishes)
+  console.log(dishes);
   const landingSection = () => {
     return (
       <div className="nc-PageHomeDemo3 relative">
@@ -77,7 +78,6 @@ const Home = () => {
         <Heading className="ml-3">My cart is herer</Heading>
         <div className="mt-10 p-4 flex flex-col overflow-hidden justify-start rounded-3xl bg-white h-80 w-full">
           {/* <div>Cart is empty now</div> */}
-          <DishCartItem dish={dish} />
           <DishCartItem dish={dish} />
           <div className="flex justify-between mt-3">
             <div>Total</div>

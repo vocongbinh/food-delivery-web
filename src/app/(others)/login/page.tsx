@@ -12,7 +12,9 @@ import { AuthRequest } from "@/types/auth";
 import { useLogin } from "@/react-query/auth";
 import { setCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
+import { useAuthContext } from "@/contexts/auth/auth-context";
 const PageLogin = ({}) => {
+  const { token } = useAuthContext();
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const login = useLogin();

@@ -1,5 +1,11 @@
 export const DISH_TYPE_KEY = "dishtype";
 export const RESTAURANT_CART_KEY = "restaurantCartKey";
+export const USER_CART_KEY = "userCartKey";
 export const CATEGORY_KEY = "category";
 export const DISH_KEY = "dish";
 export const LIST_DISH_KEY = "dish";
+export const VOUCHER_KEY = "VOUCHER_KEY";
+export const LIST_VOUCHER_KEY = "LIST_VOUCHER_KEY";
+export const CART_ITEM_KEY = "CART_ITEM_KEY";
+export const USER_PROFILE = "USER_PROFILE";
+export const GROUP_OPTION_KEY = "GROUP_OPTION_KEY";
