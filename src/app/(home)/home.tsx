@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import SectionDishOfType from "@/components/SectionDishOfType/SectionDishOfType";
 import { DEMO_POSTS_AUDIO } from "@/data/posts";
@@ -19,9 +19,13 @@ import SectionRecommendedDish from "@/components/Sections/SectionRecommendedDish
 import { DishesApi } from "@/apis/dishes";
 import StatisticComponent from "@/components/StatisticComponent/StatisticComponent";
 import { RecommendedDish } from "@/types/recommendedDish";
-
 const Home = () => {
-  const recommendedDishes: RecommendedDish[] = JSON.parse(localStorage.getItem("recommendedDishes") || "");
+  const recommendedDishes: RecommendedDish[] = useMemo(()=> {
+    if (localStorage && localStorage.getItem("recommendedDishes")) {
+      return JSON.parse(localStorage.getItem("recommendedDishes") as string);
+    }
+    return []
+  },[localStorage]) 
   const { data: dishTypes } = useQuery({
     queryKey: [DISH_TYPE_KEY],
     queryFn: () => DishTypesApi.getDishTypes(),
@@ -105,7 +109,7 @@ const Home = () => {
           />
         </div>
       </div>
-      < StatisticComponent data={recommendedDishes[0]} />
+      {/* < StatisticComponent data={recommendedDishes[0]} />/ */}
       <div className="grid grid-cols-8 gap-4 px-10">
         <div className="lg:col-span-6 col-span-4">{renderDishOfType()}</div>
         <RestaurantCart />
