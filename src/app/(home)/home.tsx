@@ -19,13 +19,15 @@ import SectionRecommendedDish from "@/components/Sections/SectionRecommendedDish
 import { DishesApi } from "@/apis/dishes";
 import StatisticComponent from "@/components/StatisticComponent/StatisticComponent";
 import { RecommendedDish } from "@/types/recommendedDish";
+import { useAuthContext } from "@/contexts/auth/auth-context";
 const Home = () => {
-  const recommendedDishes: RecommendedDish[] = useMemo(()=> {
+  const { token } = useAuthContext()
+  const recommendedDishes: RecommendedDish[] = useMemo(() => {
     if (localStorage && localStorage.getItem("recommendedDishes")) {
       return JSON.parse(localStorage.getItem("recommendedDishes") as string);
     }
     return []
-  },[localStorage]) 
+  }, [localStorage])
   const { data: dishTypes } = useQuery({
     queryKey: [DISH_TYPE_KEY],
     queryFn: () => DishTypesApi.getDishTypes(),
@@ -97,7 +99,7 @@ const Home = () => {
   return (
     <>
       <div className="dark bg-neutral-900 dark:bg-black dark:bg-opacity-20 text-neutral-100">
-        <div className="relative container">
+        {token !== "" && <div className="relative container">
           <SectionRecommendedDish
             className="py-16 lg:py-28"
             headingIsCenter
@@ -107,7 +109,8 @@ const Home = () => {
             dishes={dishes || []}
             gridClass="md:grid-cols-2 lg:grid-cols-3"
           />
-        </div>
+        </div>}
+
       </div>
       {/* < StatisticComponent data={recommendedDishes[0]} />/ */}
       <div className="grid grid-cols-8 gap-4 px-10">
