@@ -2,6 +2,7 @@
 
 import { Sender, SenderArguments } from "ton-core";
 import { connector } from "@/utils/tonConnectInstance";
+import { useTonConnectUI } from "@tonconnect/ui-react";
 import dynamic from "next/dynamic";
 export function useTonConnect(): { sender: Sender; connected: boolean } {
   console.log("useTonConnect", connector.connected);
