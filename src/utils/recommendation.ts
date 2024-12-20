@@ -2,6 +2,7 @@ import { User } from "@/types/user";
 import { recommendEndpoint } from "./http";
 import axios from "axios";
 import { parse } from "node-html-parser";
+import { UserInfo } from "@/types";
 
 class ImageFinder {
   static async getImagesLinks(searchTerm: string): Promise<string> {
@@ -103,7 +104,7 @@ export const getMealsPerc = (numberOfMeal: number): MealPerc => {
   }
 };
 class RecommendController {
-  static caloriesCalculator(user: User): number {
+  static caloriesCalculator(user: UserInfo): number {
     const activities = [
       "Little/no exercise",
       "Light exercise",
@@ -118,12 +119,12 @@ class RecommendController {
     return maintainCalories;
   }
 
-  static calculateBmr(user: User): number {
+  static calculateBmr(user: UserInfo): number {
     let bmr: number;
     if (user.gender === "male") {
-      bmr = 10 * user.weight + 6.25 * user.height - 5 * user.age + 5;
+      bmr = 10 * user.weight! + 6.25 * user.height! - 5 * user.age! + 5;
     } else {
-      bmr = 10 * user.weight + 6.25 * user.height - 5 * user.age - 161;
+      bmr = 10 * user.weight! + 6.25 * user.height! - 5 * user.age! - 161;
     }
     console.log(bmr);
     return bmr;
@@ -133,13 +134,13 @@ class RecommendController {
     return min + Math.random() * (max - min);
   }
 
-  static async generateRecommendations(user: User): Promise<any> {
+  static async generateRecommendations(user: UserInfo): Promise<any> {
     console.log(user.weightLoss);
     const totalCalories =
-      getWeightLoss(user.weightLoss) * this.caloriesCalculator(user);
+      getWeightLoss(user.weightLoss!) * this.caloriesCalculator(user);
     console.log(totalCalories);
     const recommendations: any[] = [];
-    const mealsCaloriesPerc = getMealsPerc(user.mealPerDay);
+    const mealsCaloriesPerc = getMealsPerc(user.mealPerDay!);
     for (const [key, value] of Object.entries(mealsCaloriesPerc)) {
       const mealCalories = value * totalCalories;
 

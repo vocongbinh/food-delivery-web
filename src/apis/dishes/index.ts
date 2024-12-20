@@ -47,8 +47,8 @@ export class DishesApi {
     });
     return res.data;
   }
-  static async getRecommendedDishes(id: User["id"]) {
-    const user = await  AuthsApi.getUserById(id);
+  static async getRecommendedDishes() {
+    const user = await  AuthsApi.getUserProfile();
     const res = await RecommendController.generateRecommendations(user);
     let recommendedDishes: RecommendedDish[] = [];
     console.log("save local storage")

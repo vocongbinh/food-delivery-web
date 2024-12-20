@@ -35,7 +35,7 @@ const Home = () => {
 
   const { data: dishes } = useQuery({
     queryKey: ["Recommend-dish"],
-    queryFn: () => DishesApi.getRecommendedDishes(24),
+    queryFn: () => DishesApi.getRecommendedDishes(),
   });
   console.log(dishes);
   const landingSection = () => {

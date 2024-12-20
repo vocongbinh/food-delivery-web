@@ -119,7 +119,7 @@ const InformationPage = ({}) => {
   const handleContinue = async () => {
     // await AuthsApi.updateUser(information, 24);
     console.log("ff")
-    const data = await DishesApi.getRecommendedDishes(24);
+    const data = await DishesApi.getRecommendedDishes();
     console.log(data)
   };
 
