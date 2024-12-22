@@ -18,7 +18,7 @@ import DialogAlert from "../DialogAlert/DialogAlert";
 import ButtonPrimary from "../Button/ButtonPrimary";
 import { toast } from "react-toastify";
 import DefaultVoucherImg from "@/images/default_voucher.jpg";
-import { useTonAddress, useTonConnectUI } from '@tonconnect/ui-react';
+import { useTonAddress, useTonConnectUI } from "@tonconnect/ui-react";
 import {
   prepareJettonTransfer,
   getJettonAddress,
@@ -26,9 +26,10 @@ import {
 } from "@/utils/jetton";
 import { useTonConnect } from "../../../hooks/useTonConnect";
 // import { connector } from "@/utils/tonConnectInstance";
-import { toUserFriendlyAddress } from '@tonconnect/sdk';
+import { toUserFriendlyAddress } from "@tonconnect/sdk";
 import { VouchersApi } from "@/apis/vouchers";
 import { Route } from "next";
+import { useAuthContext } from "@/contexts/auth/auth-context";
 export interface CardVoucherProps {
   className?: string;
   voucher: Voucher;
@@ -41,7 +42,6 @@ const CardVoucher: FC<CardVoucherProps> = ({
   voucher,
   isAdmin,
   ratio = "aspect-w-3 xl:aspect-w-4 aspect-h-3",
-  isExchanged,
 }) => {
   const {
     id,
@@ -57,8 +57,9 @@ const CardVoucher: FC<CardVoucherProps> = ({
   const { sender, connected } = useTonConnect();
   const userFriendlyAddress = useTonAddress();
   const [tonConnectUI] = useTonConnectUI();
+  const { userInfo } = useAuthContext();
   const exchangeVoucher = async (value: number) => {
-    console.log(tonConnectUI.connected)
+    console.log(tonConnectUI.connected);
     if (!tonConnectUI.connected) {
       toast.error("Please connect your wallet first.");
       return;
@@ -79,11 +80,13 @@ const CardVoucher: FC<CardVoucherProps> = ({
         );
         console.log("message", message);
         await sender.send(message);
-        await VouchersApi.receiveVoucher({ code: couponCode, productDiscountId: id });
+        await VouchersApi.receiveVoucher({
+          code: couponCode,
+          productDiscountId: id,
+        });
       }
     }
   };
-  console.log("isExchanged", voucher.couponCode, isExchanged);
 
   const renderListenButtonDefault = (state?: "playing") => {
     return (
@@ -154,18 +157,20 @@ const CardVoucher: FC<CardVoucherProps> = ({
               {formatDate(validFrom)} - {formatDate(validTo)}
             </span>
           </span>
-
-          <div className="flex items-end justify-between mt-auto">
-            <ButtonPrimary
-              className="opacity-25"
-              onClick={async () => {
-                // exchangeVoucher(exchangeRate);
-                VouchersApi.receiveVoucher({ code: couponCode, productDiscountId: id });
-
-              }}
-            >
-              Exchange With {exchangeRate} DFT
-            </ButtonPrimary>
+          {isAdmin && (
+            <div className="flex items-end justify-between mt-auto">
+              <ButtonPrimary
+                className="opacity-25"
+                onClick={async () => {
+                  // exchangeVoucher(exchangeRate);
+                  VouchersApi.receiveVoucher({
+                    code: couponCode,
+                    productDiscountId: id,
+                  });
+                }}
+              >
+                Exchange With {exchangeRate} DFT
+              </ButtonPrimary>
 
               <DialogAlert isOpen={true}>
                 <PostCardSaveAction className="relative" />
