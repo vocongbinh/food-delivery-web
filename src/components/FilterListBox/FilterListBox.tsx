@@ -6,27 +6,29 @@ import { Listbox, Transition } from "@/app/headlessui";
 import { CheckIcon, ChevronDownIcon } from "@heroicons/react/24/solid";
 import Button from "../Button/Button";
 
-export interface FilterListBoxProps {
+export interface FilterListBoxProps<T extends { name: string }> {
   className?: string;
-  lists: { name: string, value: number }[];
-  selected: { name: string, value: number };
-  setSelected: (value: { name: string, value: number }) => void;
+  lists: T[];
+  selected: T
+  setSelected: (value: T) => void;
+  onChange?: () => void;
 }
 
-const FilterListBox: FC<FilterListBoxProps> = ({
+const FilterListBox = <T extends { name: string; },>({
   className = "",
   lists,
   selected,
-  setSelected
-  
-}) => {
+  setSelected,
+  onChange = () => { }
+
+}: FilterListBoxProps<T>) => {
   // const [selected, setSelected] = useState(lists[0]);
   return (
     <div className={`nc-FilterListBox flex-shrink-0 ${className}`}>
-      <Listbox value={selected} onChange={setSelected}>
+      <Listbox value={selected} onChange={(value) => { setSelected(value); onChange(); }}>
         <div className="relative">
           <Listbox.Button as={"div"}>
-            <button className="bg-neutral-200 rounded-xl flex py-2 px-4 sm:px-6 font-medium">
+            <button className="bg-neutral-200 rounded-xl flex items-center py-2 px-4 sm:px-6 font-medium">
               {selected.name}
               <ChevronDownIcon
                 className="w-4 h-4 ms-2 -me-1"
@@ -45,10 +47,9 @@ const FilterListBox: FC<FilterListBoxProps> = ({
                 <Listbox.Option
                   key={index}
                   className={({ active }) =>
-                    `${
-                      active
-                        ? "text-primary-700 dark:text-neutral-200 bg-primary-50 dark:bg-neutral-700"
-                        : ""
+                    `${active
+                      ? "text-primary-700 dark:text-neutral-200 bg-primary-50 dark:bg-neutral-700"
+                      : ""
                     } cursor-default select-none relative py-2 ps-10 pe-4`
                   }
                   value={item}
@@ -56,9 +57,8 @@ const FilterListBox: FC<FilterListBoxProps> = ({
                   {({ selected }) => (
                     <>
                       <span
-                        className={`${
-                          selected ? "font-medium" : "font-normal"
-                        } block truncate`}
+                        className={`${selected ? "font-medium" : "font-normal"
+                          } block truncate`}
                       >
                         {item.name}
                       </span>

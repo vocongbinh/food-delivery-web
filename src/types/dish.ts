@@ -14,7 +14,15 @@ export type Dish = {
   dishType: DishType;
   options: GroupOption[];
   restaurant: { id: number; name: string };
+  createdAt: Date;
+  updatedAt: Date;
 };
+
+export const enum DishClassification {LATEST = "LATEST", BEST_SELLER = "BEST_SELLER", RELATED = "RELATED"}
+
+
+
+
 
 export type DishRequest = Omit<Dish, "category" | "dishType" | "restaurant"> & {
   categoryId: Category["id"];

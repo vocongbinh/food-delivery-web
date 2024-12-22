@@ -1,6 +1,8 @@
+import { Dish, DishClassification } from "@/types";
 import { getFormData } from "../../utils/api-request";
 import { DishType } from "@/types/dishType";
 import { apiGet, apiPost, apiDelete, apiPatch } from "@/utils/api-request";
+import { light } from "@mui/material/styles/createPalette";
 const DISH_TYPE_ROUTE = "/dish_types";
 export class DishTypesApi {
   static async postDishType(request: Omit<DishType, "id">): Promise<string> {
@@ -29,5 +31,20 @@ export class DishTypesApi {
 
   static async deleteManyDishTypes(ids: DishType["id"][]): Promise<number> {
     return await apiDelete(`${DISH_TYPE_ROUTE}/many`, ids);
+  }
+
+  static async getDishesOfDishType({id, page, dishClassification, priceSort}: {id: DishType["id"], page: number, dishClassification?: DishClassification, priceSort?: string}): Promise<Dish[]> {
+    const params: { limit: number; page: number; dishClassification?: DishClassification; priceSort?: string } = {
+      limit: 10,
+      page,
+    }
+    if(dishClassification) {
+      params.dishClassification = dishClassification;
+    }
+    if(priceSort) {
+      params.priceSort = priceSort;
+    }
+
+    return await apiGet(`${DISH_TYPE_ROUTE}/dishes/${id}`, params);
   }
 }
