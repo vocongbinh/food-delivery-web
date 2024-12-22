@@ -9,7 +9,7 @@ import NotifyDropdown from "./NotifyDropdown";
 import ButtonLogin from "../ButtonLogin/ButtonLogin";
 import { getSession, useSession } from "next-auth/react";
 import { useAuthContext } from "@/contexts/auth/auth-context";
-import { TonConnectButton } from "@tonconnect/ui-react";
+import * as TonConnect from "@tonconnect/ui-react";
 import { getCookie } from "cookies-next";
 import { MapApi } from "@/apis/map";
 import { MapPinIcon } from "@heroicons/react/24/solid";
@@ -20,6 +20,7 @@ import ButtonPrimary from "../Button/ButtonPrimary";
 import MapComponent from "../MapComponent/MapComponent";
 import { NAVIGATION_DEMO_2 } from "@/data/navigation";
 import { Location } from "iconsax-react";
+import dynamic from "next/dynamic";
 export interface MainNav2LoggedProps {}
 
 interface Location {
@@ -34,6 +35,10 @@ const MainNav2Logged: FC<MainNav2LoggedProps> = () => {
   const { address, setAddress, setLocation } = useAddressContext();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState<string>("");
+  const TonConnectButton = dynamic(
+    () => import("@tonconnect/ui-react").then((mod) => mod.TonConnectButton),
+    { ssr: false }
+  );
   React.useEffect(() => {
     // Function to get the user's location
     const getLocation = async () => {
@@ -63,7 +68,6 @@ const MainNav2Logged: FC<MainNav2LoggedProps> = () => {
     setIsOpen(false);
     setAddress(inputValue);
   };
-
   const renderContent = () => {
     return (
       <div className="h-20 flex justify-between">

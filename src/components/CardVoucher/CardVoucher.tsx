@@ -18,13 +18,15 @@ import DialogAlert from "../DialogAlert/DialogAlert";
 import ButtonPrimary from "../Button/ButtonPrimary";
 import { toast } from "react-toastify";
 import DefaultVoucherImg from "@/images/default_voucher.jpg";
+import { useTonAddress, useTonConnectUI } from '@tonconnect/ui-react';
 import {
   prepareJettonTransfer,
   getJettonAddress,
   getJettonBalance,
 } from "@/utils/jetton";
 import { useTonConnect } from "../../../hooks/useTonConnect";
-import { useTonAddress } from "@tonconnect/ui-react";
+// import { connector } from "@/utils/tonConnectInstance";
+import { toUserFriendlyAddress } from '@tonconnect/sdk';
 import { VouchersApi } from "@/apis/vouchers";
 import { Route } from "next";
 export interface CardVoucherProps {
@@ -54,15 +56,16 @@ const CardVoucher: FC<CardVoucherProps> = ({
   const IS_AUDIO = false;
   const { sender, connected } = useTonConnect();
   const userFriendlyAddress = useTonAddress();
+  const [tonConnectUI] = useTonConnectUI();
   const exchangeVoucher = async (value: number) => {
-
-    const jettonWalletAddress = await getJettonAddress(userFriendlyAddress);
-    const balance = await getJettonBalance(jettonWalletAddress);
-
-    if (!connected) {
+    console.log(tonConnectUI.connected)
+    if (!tonConnectUI.connected) {
       toast.error("Please connect your wallet first.");
       return;
     } else {
+      // const rawAddress = connector.wallet!.account.address;
+      // const userFriendlyAddress = toUserFriendlyAddress(rawAddress);
+      console.log("userFriendlyAddress", userFriendlyAddress);
       const jettonWalletAddress = await getJettonAddress(userFriendlyAddress);
       const balance = await getJettonBalance(jettonWalletAddress);
       if (value > balance) {
@@ -74,8 +77,9 @@ const CardVoucher: FC<CardVoucherProps> = ({
           "0QAY0-nximDrQIdBrH4r8RpJz9WtVANal49taOGX6u5LHXIH",
           1
         );
+        console.log("message", message);
         await sender.send(message);
-        VouchersApi.receiveVoucher({ code: couponCode, productDiscountId: id });
+        await VouchersApi.receiveVoucher({ code: couponCode, productDiscountId: id });
       }
     }
   };

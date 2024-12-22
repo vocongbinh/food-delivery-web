@@ -64,8 +64,8 @@ const RestaurantPage = ({ params }: { params: { id: number } }) => {
     queryKey: ["voucher", "exchanged"],
     queryFn: () => DiscountsApi.getActiveDiscounts(),
   });
-  
-  
+
+
   const { data: vouchers } = useQuery({
     queryKey: ["vouchers", params.id],
     queryFn: () => DiscountsApi.getDiscounts(params.id),
@@ -80,22 +80,30 @@ const RestaurantPage = ({ params }: { params: { id: number } }) => {
     return (exchangedVoucher || []).some(voucher => voucher.productDiscount.id == voucherId)
   }
 
-  
-  
+
+
 
   useEffect(() => {
     const calculateDistance = async (restaurant: Restaurant) => {
       const accessToken = process.env.NEXT_PUBLIC_MAP_TOKEN || "";
       const url = `https://api.mapbox.com/directions/v5/mapbox/driving/${location.longitude},${location.latitude};${restaurant?.longitude},${restaurant?.latitude}?geometries=geojson&access_token=${accessToken}`;
-      const res = await axios.get(url);
-      console.log(res.data);
-      const distance = res.data.routes[0].distance / 1000;
-      setDistance(distance);
+      let distance = 10
+      try {
+        const res = await axios.get(url);
+        console.log(res.data);
+        distance = res.data.routes[0].distance / 1000;
+
+      }
+      catch (e) {
+        console.log(e)
+        setDistance(distance);
+
+      }
     };
-    if (restaurant !== undefined) {
+    if (restaurant && location && restaurant.longitude !== null && restaurant.latitude !== null) {
       calculateDistance(restaurant);
     }
-  }, [restaurant]);
+  }, [restaurant, location]);
 
   const handleClickTab = (tab: Category) => {
     setTabActive(tab);
@@ -112,10 +120,10 @@ const RestaurantPage = ({ params }: { params: { id: number } }) => {
   };
   const renderModalContent = () => {
     return (
-     
-        <DistanceMapComponent long={restaurant?.longitude} lat={restaurant?.latitude} />
-        
-    
+
+      <DistanceMapComponent long={restaurant?.longitude} lat={restaurant?.latitude} />
+
+
     );
   };
 
@@ -172,19 +180,19 @@ const RestaurantPage = ({ params }: { params: { id: number } }) => {
                   <div className="flex gap-2 items-center">
                     <span className="font-semibold text-lg">{distance.toFixed(2)} km</span>
                     <ModalShowDistance
-            isOpen={isOpen}
-            setIsOpen={setIsOpen}
-            renderTrigger={(openModal) => (
-              <div
-                onClick={openModal}
-                className=" cursor-pointer px-4 max-w-[300px] rounded-3xl border border-gray-400 flex gap-2 items-center"
-              >
-                    <Map1 size="45" color="#2b52ff" variant="Bold" className="cursor-pointer" />
-              </div>
-            )}
-            modalTitle="Distance"
-            renderContent={renderModalContent}
-          />
+                      isOpen={isOpen}
+                      setIsOpen={setIsOpen}
+                      renderTrigger={(openModal) => (
+                        <div
+                          onClick={openModal}
+                          className=" cursor-pointer px-4 max-w-[300px] rounded-3xl border border-gray-400 flex gap-2 items-center"
+                        >
+                          <Map1 size="45" color="#2b52ff" variant="Bold" className="cursor-pointer" />
+                        </div>
+                      )}
+                      modalTitle="Distance"
+                      renderContent={renderModalContent}
+                    />
                   </div>
                 </div>
               </div>

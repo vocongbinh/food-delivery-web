@@ -16,4 +16,6 @@ export type UserInfo = {
   mealPerDay: number | null;
   weightLoss: string | null;
   avatarUrl: string;
+  age: number | null;
+  gender: string | null;
 };

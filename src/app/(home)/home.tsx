@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import SectionDishOfType from "@/components/SectionDishOfType/SectionDishOfType";
 import { DEMO_POSTS_AUDIO } from "@/data/posts";
@@ -19,9 +19,15 @@ import SectionRecommendedDish from "@/components/Sections/SectionRecommendedDish
 import { DishesApi } from "@/apis/dishes";
 import StatisticComponent from "@/components/StatisticComponent/StatisticComponent";
 import { RecommendedDish } from "@/types/recommendedDish";
-
+import { useAuthContext } from "@/contexts/auth/auth-context";
 const Home = () => {
-  const recommendedDishes: RecommendedDish[] = JSON.parse(localStorage.getItem("recommendedDishes") || "");
+  const { token } = useAuthContext()
+  const recommendedDishes: RecommendedDish[] = useMemo(() => {
+    if (localStorage && localStorage.getItem("recommendedDishes")) {
+      return JSON.parse(localStorage.getItem("recommendedDishes") as string);
+    }
+    return []
+  }, [localStorage])
   const { data: dishTypes } = useQuery({
     queryKey: [DISH_TYPE_KEY],
     queryFn: () => DishTypesApi.getDishTypes(),
@@ -29,7 +35,7 @@ const Home = () => {
 
   const { data: dishes } = useQuery({
     queryKey: ["Recommend-dish"],
-    queryFn: () => DishesApi.getRecommendedDishes(24),
+    queryFn: () => DishesApi.getRecommendedDishes(),
   });
   const landingSection = () => {
     return (
@@ -92,7 +98,7 @@ const Home = () => {
   return (
     <>
       <div className="dark bg-neutral-900 dark:bg-black dark:bg-opacity-20 text-neutral-100">
-        <div className="relative container">
+        {token !== "" && <div className="relative container">
           <SectionRecommendedDish
             className="py-16 lg:py-28"
             headingIsCenter
@@ -102,9 +108,10 @@ const Home = () => {
             dishes={dishes || []}
             gridClass="md:grid-cols-2 lg:grid-cols-3"
           />
-        </div>
+        </div>}
+
       </div>
-      < StatisticComponent data={recommendedDishes[0]} />
+      {/* < StatisticComponent data={recommendedDishes[0]} />/ */}
       <div className="grid grid-cols-8 gap-4 px-10">
         <div className="lg:col-span-6 col-span-4">{renderDishOfType()}</div>
         <RestaurantCart />

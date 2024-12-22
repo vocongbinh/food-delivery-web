@@ -1,8 +1,12 @@
-import { Sender, SenderArguments } from "ton-core";
-import { useTonConnectUI } from "@tonconnect/ui-react";
 
+
+import { Sender, SenderArguments } from "ton-core";
+// import { connector } from "@/utils/tonConnectInstance";
+import { useTonConnectUI } from "@tonconnect/ui-react";
+// import dynamic from "next/dynamic";
 export function useTonConnect(): { sender: Sender; connected: boolean } {
-  const [tonConnectUI] = useTonConnectUI();
+  // console.log("useTonConnect", connector.connected);
+  const [tonConnectUI] = useTonConnectUI()
   return {
     sender: {
       send: async (args: SenderArguments) => {

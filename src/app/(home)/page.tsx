@@ -63,7 +63,7 @@ export default async function PageHome() {
       }),
       queryClient.prefetchQuery({
         queryKey: ["recommend-dish"],
-        queryFn: () => DishesApi.getRecommendedDishes(24),
+        queryFn: () => DishesApi.getRecommendedDishes(),
       }),
       queryClient.prefetchQuery(
         getPrefetchQuery({
