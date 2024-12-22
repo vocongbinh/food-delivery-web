@@ -33,7 +33,7 @@ const CardRecommendMeta: FC<CardRecommendMetaProps> = ({
           </h2>
 
           <h2 className="flex mt-1.5">
-            <span className="block text-neutral-700 hover:text-black dark:text-neutral-300 dark:hover:text-white font-medium">
+            <span className="block text-neutral-700 hover:text-black dark:text-neutral-300 dark:hover:text-white font-medium line-clamp-2">
               {description}
             </span>
           </h2>

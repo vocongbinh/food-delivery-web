@@ -33,10 +33,10 @@ const RestaurantsPage = () => {
     queryFn: () =>
       RestaurantsApi.getRestaurantsByDistance(
         {
-            latitude: location.latitude,
-            longitude: location.longitude,
-            distance: distance.value,
-            keyword: searchText
+          latitude: location.latitude,
+          longitude: location.longitude,
+          distance: distance.value,
+          keyword: searchText
         }
       ),
   });
@@ -86,19 +86,19 @@ const RestaurantsPage = () => {
         >
           Restaurants
         </Heading1>
-        
-      
+
+
         <div className="flex items-center gap-2">
-        <AutoComplete
-      popupMatchSelectWidth={252}
-      style={{ width: 300 }}
-      options={options}
-      onSelect={onSelect}
-      onSearch={handleSearch}
-      size="large"
-    >
-      <Input.Search size="large" placeholder="input here" enterButton />
-    </AutoComplete>
+          <AutoComplete
+            popupMatchSelectWidth={252}
+            style={{ width: 300 }}
+            options={options}
+            onSelect={onSelect}
+            onSearch={handleSearch}
+            size="large"
+          >
+            <Input.Search size="large" placeholder="input here" enterButton />
+          </AutoComplete>
           <FilterListBox
             className="h-full"
             lists={distanceList}
@@ -107,11 +107,11 @@ const RestaurantsPage = () => {
           />
         </div>
       </div>
-      { !restaurants && (
-          <Flex align="center" gap="middle" className="justify-center">
-            <Spin size="large" />
-          </Flex>
-        )}
+      {!restaurants && (
+        <Flex align="center" gap="middle" className="justify-center">
+          <Spin size="large" />
+        </Flex>
+      )}
       <div className={`grid gap-6 md:gap-8 md:grid-cols-2 lg:grid-cols-3`}>
         {(restaurants || []).map((restaurant) => (
           <CardRestaurant key={restaurant.id} restaurant={restaurant} />
