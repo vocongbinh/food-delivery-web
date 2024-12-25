@@ -104,13 +104,13 @@ const InformationPage = ({}) => {
       case 25:
         return "Light exercise";
       case 50:
-        return "Moderate exercise";
+        return "Moderate exercise (3-5 days/week)";
       case 75:
-        return "Very active";
+        return "Very active (6-7 days/week)";
       case 100:
-        return "Extra active";
+        return "Extra active (very active & physical job)";
       default:
-        return "No exercise";
+        return "Little/no exercise";
     }
   };
   const [isLoading, setIsLoading] = useState(false);

@@ -141,6 +141,7 @@ class RecommendController {
     console.log(totalCalories);
     const recommendations: any[] = [];
     const mealsCaloriesPerc = getMealsPerc(user.mealPerDay!);
+    console.log(mealsCaloriesPerc);
     for (const [key, value] of Object.entries(mealsCaloriesPerc)) {
       const mealCalories = value * totalCalories;
 

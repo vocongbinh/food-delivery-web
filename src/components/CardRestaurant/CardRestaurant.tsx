@@ -1,12 +1,6 @@
 "use client";
 
 import React, { FC, useState } from "react";
-import PostCardSaveAction from "@/components/PostCardSaveAction/PostCardSaveAction";
-import { PostDataType } from "@/data/types";
-import CategoryBadgeList from "@/components/CategoryBadgeList/CategoryBadgeList";
-import PostCardLikeAndComment from "@/components/PostCardLikeAndComment/PostCardLikeAndComment";
-import PostCardMeta from "@/components/PostCardMeta/PostCardMeta";
-import PostFeaturedMedia from "@/components/PostFeaturedMedia/PostFeaturedMedia";
 import Link from "next/link";
 import { Restaurant } from "@/types/restaurant";
 import Image from "next/image";
@@ -51,7 +45,7 @@ const CardRestaurant: FC<CardRestaurantProps> = ({
         </div>
       </div>
       <Link
-        href={isAdmin ? `/restaurants/${id}` : `/admin/restaurant/${id}`}
+        href={!isAdmin ? `/restaurants/${id}` : `/admin/restaurant/${id}`}
         className="absolute inset-0"
       ></Link>
       <div className="p-4 flex flex-col space-y-3">
