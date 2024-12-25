@@ -24,6 +24,7 @@ import {
   useAddDishMutation,
   useUpdateDishMutation,
 } from "@/react-query/dishes";
+import { useRouter } from "next/navigation";
 
 const FoodDetailInfor = ({
   dish,
@@ -31,20 +32,22 @@ const FoodDetailInfor = ({
 }: {
   restaurantId: number;
   dish?: Dish;
-  saveDish: (dish: DishRequest) => void;
 }) => {
+  const router = useRouter();
   const [image, setImage] = useState<any>(dish?.imageUrl);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isUploadImage, setUploadImage] = useState(false);
 
   const onSubmit = (data: DishRequest) => {
     console.log("call submit");
+    router.back();
     setIsSubmitting(true);
     if (dish) {
       updateDish.mutate(
         { ...data, id: dish!.id },
         {
           onSuccess: () => {
+            router.back();
             console.log("success");
           },
           onError: () => {
@@ -61,6 +64,7 @@ const FoodDetailInfor = ({
         {
           onSuccess: () => {
             console.log("success");
+            router.back();
           },
           onError: () => {
             console.log("error");
@@ -101,7 +105,6 @@ const FoodDetailInfor = ({
   console.log(errors);
   const updateDish = useUpdateDishMutation();
   const addDish = useAddDishMutation();
-
   return (
     <div className="bg-white max-w-2xl w-full p-4 mx-auto">
       <form

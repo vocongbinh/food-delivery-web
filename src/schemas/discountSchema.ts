@@ -2,7 +2,7 @@ import { DiscountType } from "@/types/voucher";
 import { z } from "zod";
 
 export const VoucherRequestSchema = z.object({
-  restaurantId: z.number(),
+  restaurantId: z.any(),
   name: z.string(),
   description: z.string(),
   discountValue: z.number(),

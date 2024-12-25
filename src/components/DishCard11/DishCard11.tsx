@@ -55,7 +55,7 @@ const DishCard11: FC<DishCard11Props> = ({
         ) : (
           <span className="text-xs text-neutral-500">{dish?.price}</span>
         )} */}
-        <h3 className="nc-card-title block text-base font-semibold text-neutral-900 dark:text-neutral-100">
+        <h3 className="nc-card-title block text-base font-semibold text-neutral-900 dark:text-neutral-100 flex-row">
           <h5 className="line-clamp-2" title={dish?.name}>
             {dish?.name}
           </h5>

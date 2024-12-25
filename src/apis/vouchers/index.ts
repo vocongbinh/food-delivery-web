@@ -19,6 +19,6 @@ export class VouchersApi {
   }
 
   static async putVoucher(request: VoucherRequest): Promise<Voucher> {
-    return await apiPut(`/discounts/${request.id}`, request);
+    return await apiPut(`/discounts`, request);
   }
 }

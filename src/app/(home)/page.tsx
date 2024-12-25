@@ -76,7 +76,6 @@ export default async function PageHome() {
         })
       ),
     ]);
-    console.log("All queries prefetched");
   } catch (error) {
     console.error("Error prefetching queries:", error);
   }

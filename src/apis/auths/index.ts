@@ -29,7 +29,6 @@ export class AuthsApi {
   }
 
   static async putAuths(request: DishRequest): Promise<Dish> {
-    console.log("put");
     return await apiPut(`/dishes/${request.id}`, request);
   }
 

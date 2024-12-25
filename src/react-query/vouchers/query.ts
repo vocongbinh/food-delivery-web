@@ -1,12 +1,12 @@
-import { DishesApi } from "@/apis/dishes";
-import { DISH_KEY } from "@/contains/react_query_keys";
-import { Dish } from "@/types";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { VouchersApi } from "@/apis/vouchers";
+import { VOUCHER_KEY } from "@/contains/react_query_keys";
+import { Dish, Voucher } from "@/types";
+import { useQuery } from "@tanstack/react-query";
 
-export const useGetDishQuery = (dishId: Dish["id"]) => {
+export const useGetVoucherQuery = (voucherId: Voucher["id"]) => {
   return useQuery({
-    queryKey: [DISH_KEY, dishId],
-    queryFn: () => DishesApi.getDishById(dishId),
-    enabled: dishId != null,
+    queryKey: [VOUCHER_KEY, voucherId],
+    queryFn: () => VouchersApi.getVoucherById(voucherId),
+    enabled: voucherId != null,
   });
 };

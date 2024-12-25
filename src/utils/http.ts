@@ -13,7 +13,7 @@ class Http {
     this.instance.interceptors.request.use((config) => {
       let token = "";
       if (typeof window !== "undefined") {
-        token = localStorage.getItem("token") || ""
+        token = localStorage.getItem("token") || "";
       }
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
@@ -29,7 +29,6 @@ export const coinEndpoint = axios.create({
   timeout: 10000,
   headers: {
     "Content-Type": "application/json",
-   
   },
 });
 

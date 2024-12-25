@@ -9,3 +9,5 @@ export const LIST_VOUCHER_KEY = "LIST_VOUCHER_KEY";
 export const CART_ITEM_KEY = "CART_ITEM_KEY";
 export const USER_PROFILE = "USER_PROFILE";
 export const GROUP_OPTION_KEY = "GROUP_OPTION_KEY";
+export const OWN_RESTAURANTS = "OWN_RESTAURANTS";
+export const LIST_ORDER_KEY = "LIST_ORDER_KEY";

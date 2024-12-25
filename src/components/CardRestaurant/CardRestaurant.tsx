@@ -16,6 +16,7 @@ export interface CardRestaurantProps {
   restaurant: Restaurant;
   ratio?: string;
   hiddenAuthor?: boolean;
+  isAdmin?: boolean;
 }
 
 const CardRestaurant: FC<CardRestaurantProps> = ({
@@ -23,8 +24,9 @@ const CardRestaurant: FC<CardRestaurantProps> = ({
   restaurant,
   hiddenAuthor = false,
   ratio = "aspect-w-4 aspect-h-3",
+  isAdmin = false,
 }) => {
-  const { name, description, imageUrl, id  } = restaurant;
+  const { name, description, imageUrl, id } = restaurant;
 
   const [isHover, setIsHover] = useState(false);
 
@@ -39,16 +41,19 @@ const CardRestaurant: FC<CardRestaurantProps> = ({
         className={`block flex-shrink-0 relative w-full rounded-t-3xl overflow-hidden z-10 ${ratio}`}
       >
         <div>
-        <Image
-          alt="featured"
-          fill
-          className="object-cover"
-          src={imageUrl}
-          sizes="(max-width: 600px) 480px, 800px"
-        />
+          <Image
+            alt="featured"
+            fill
+            className="object-cover"
+            src={imageUrl}
+            sizes="(max-width: 600px) 480px, 800px"
+          />
         </div>
       </div>
-      <Link href={`/restaurants/${id}`} className="absolute inset-0"></Link>
+      <Link
+        href={isAdmin ? `/restaurants/${id}` : `/admin/restaurant/${id}`}
+        className="absolute inset-0"
+      ></Link>
       <div className="p-4 flex flex-col space-y-3">
         <h3 className="nc-card-title block text-base font-semibold text-neutral-900 dark:text-neutral-100">
           <span className="line-clamp-2" title={name}>
@@ -56,9 +61,8 @@ const CardRestaurant: FC<CardRestaurantProps> = ({
           </span>
         </h3>
         <span className="line-clamp-2 text-sm text-neutral-500" title={name}>
-            {description}
-          </span>
-       
+          {description}
+        </span>
       </div>
     </div>
   );

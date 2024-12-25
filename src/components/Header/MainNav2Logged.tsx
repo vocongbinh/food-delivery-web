@@ -18,8 +18,9 @@ import ModalChangeAddress from "../ModalChangeAddress/ModalChangeAddress";
 import Button from "../Button/Button";
 import ButtonPrimary from "../Button/ButtonPrimary";
 import MapComponent from "../MapComponent/MapComponent";
-import {Location} from 'iconsax-react'
-import dynamic from 'next/dynamic';
+import { NAVIGATION_DEMO_2 } from "@/data/navigation";
+import { Location } from "iconsax-react";
+import dynamic from "next/dynamic";
 export interface MainNav2LoggedProps {}
 
 interface Location {
@@ -34,10 +35,10 @@ const MainNav2Logged: FC<MainNav2LoggedProps> = () => {
   const { address, setAddress, setLocation } = useAddressContext();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState<string>("");
-  const TonConnectButton = dynamic(() =>
-      import('@tonconnect/ui-react').then((mod) => mod.TonConnectButton),
-      { ssr: false }
-    );
+  const TonConnectButton = dynamic(
+    () => import("@tonconnect/ui-react").then((mod) => mod.TonConnectButton),
+    { ssr: false }
+  );
   React.useEffect(() => {
     // Function to get the user's location
     const getLocation = async () => {
@@ -47,8 +48,8 @@ const MainNav2Logged: FC<MainNav2LoggedProps> = () => {
             setLocation({
               latitude: position.coords.latitude,
               longitude: position.coords.longitude,
-            })
-           
+            });
+
             const address = await MapApi.getAddress(
               position.coords.longitude,
               position.coords.latitude
@@ -67,8 +68,6 @@ const MainNav2Logged: FC<MainNav2LoggedProps> = () => {
     setIsOpen(false);
     setAddress(inputValue);
   };
-
-
   const renderContent = () => {
     return (
       <div className="h-20 flex justify-between">
@@ -84,9 +83,9 @@ const MainNav2Logged: FC<MainNav2LoggedProps> = () => {
             renderTrigger={(openModal) => (
               <div
                 onClick={openModal}
-                className=" cursor-pointer px-4 max-w-[300px] rounded-3xl border border-gray-400 flex gap-2 items-center"
+                className=" cursor-pointer px-2 max-w-[300px] rounded-3xl border border-gray-400 flex gap-2 items-center"
               >
-                <Location size="32" color="#2b52ff"  variant="Bold"/>
+                <Location size="32" color="#2b52ff" variant="Bold" />
                 {/* <MapPinIcon className="w-10 h-10 text-primary-500" /> */}
                 <span className="overflow-hidden text-ellipsis whitespace-nowrap">
                   {address}
@@ -99,7 +98,7 @@ const MainNav2Logged: FC<MainNav2LoggedProps> = () => {
         </div>
 
         <div className="flex-[2] hidden lg:flex justify-center mx-4">
-          <Navigation />
+          <Navigation navigations={NAVIGATION_DEMO_2} />
         </div>
 
         <div className="flex-1 flex items-center justify-end text-slate-700 dark:text-slate-100">

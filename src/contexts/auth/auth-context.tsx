@@ -13,23 +13,25 @@ interface ContextValue {
   token: string;
   setToken: (value: string) => void;
   isLogin: () => boolean;
+  userInfo: UserInfo | undefined;
 }
 
 export const AuthContext = createContext<ContextValue>({
   token: "",
   setToken: () => {},
   isLogin: () => false,
+  userInfo: undefined,
 });
 
 const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [token, setToken] = useState("");
-  const { data: userProfile } = useUserProfile(token);
+  const { data: userInfo } = useUserProfile(token);
   useEffect(() => {
     const value = getCookie("token") || "";
     setToken(value);
   }, [token]);
   const isLogin = () => {
-    if (userProfile) return true;
+    if (userInfo) return true;
     return false;
   };
   return (
@@ -38,6 +40,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
         token,
         setToken,
         isLogin,
+        userInfo,
       }}
     >
       {children}

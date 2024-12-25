@@ -6,15 +6,16 @@ export async function uploadImage(file: File): Promise<string> {
 
   const fileName = `${Date.now()}_${file.name}`; // Unique file name
   const { error } = await supabase.storage
-    .from('upload-image') // Replace with your bucket name
+    .from('dish') // Replace with your bucket name
     .upload(fileName, file);
 
   if (error) { console.log(error) };
 
   // Get the public URL of the uploaded file
   const { data } = supabase.storage
-    .from('your-bucket-name')
+    .from('dish')
     .getPublicUrl(fileName);
+    console.log(data.publicUrl);
 
   return  data.publicUrl;
 }

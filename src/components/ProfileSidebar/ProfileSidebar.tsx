@@ -17,12 +17,12 @@ const ProfileSidebar = () => {
   const pathname = usePathname();
 
   return (
-    <nav className="w-60 flex flex-col space-y-1">
+    <nav className="w-60 flex flex-col space-y-1 bg-white">
       {menuItems.map((item) => (
         <Link
           key={item.href}
           href={item.href as Route}
-          className={`px-4 py-2 rounded-lg text-sm ${
+          className={`px-4 py-2 rounded-lg text-base ${
             pathname === item.href
               ? 'bg-neutral-100 font-semibold'
               : 'text-neutral-600 hover:bg-neutral-50'

@@ -19,7 +19,7 @@ const MainNav1: FC<MainNav1Props> = ({}) => {
 
           <div className="flex justify-center lg:justify-start flex-1 items-center space-x-4 sm:space-x-10 2xl:space-x-14 rtl:space-x-reverse">
             <Logo />
-            <Navigation className="hidden lg:flex" />
+            <Navigation className="hidden lg:flex" navigations={[]} />
           </div>
 
           <div className="flex-1 flex items-center justify-end text-neutral-700 dark:text-neutral-100 space-x-1 rtl:space-x-reverse">

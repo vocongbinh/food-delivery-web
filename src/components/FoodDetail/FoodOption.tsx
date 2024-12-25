@@ -47,7 +47,6 @@ const FoodOption = ({
   });
 
   const option = watch(); // Watch the entire form state
-  console.log(errors);
   const [currentItem, setCurrentItem] = useState<GroupOptionItemRequest>({
     name: "",
     price: 0,
