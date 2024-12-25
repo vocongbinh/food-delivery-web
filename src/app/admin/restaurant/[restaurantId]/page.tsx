@@ -49,10 +49,18 @@ const RestaurantPage = ({ params }: { params: { restaurantId: number } }) => {
     queryKey: ["restaurants", restaurantId],
     queryFn: () => RestaurantsApi.getRestaurantById(restaurantId),
   });
+  const { data: exchangedVoucher } = useQuery({
+    queryKey: ["voucher", "exchanged"],
+    queryFn: () => DiscountsApi.getActiveDiscounts(),
+  });
+
   const { data: reviews } = useQuery({
     queryKey: ["reviews", restaurantId],
     queryFn: () => ReviewsApi.getReviews(restaurantId),
   });
+  const isExchanged = (voucherId: number) => {
+    return (exchangedVoucher || []).some(voucher => voucher.productDiscount.id == voucherId)
+  }
   const { data: vouchers } = useQuery({
     queryKey: [LIST_VOUCHER_KEY, restaurantId],
     queryFn: () => DiscountsApi.getDiscounts(restaurantId),
@@ -180,7 +188,7 @@ const RestaurantPage = ({ params }: { params: { restaurantId: number } }) => {
               <h2 className="text-lg font-semibold">Vouchers</h2>
               <div className="mt-8 lg:mt-10 grid md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
                 {vouchers?.map((voucher, index) => (
-                  <CardVoucher isAdmin={true} key={index} voucher={voucher} />
+                  <CardVoucher isExchanged={isExchanged(voucher.id)} isAdmin={true} key={index} voucher={voucher} />
                 ))}
               </div>
             </div>

@@ -16,7 +16,9 @@ export type TypeKeys =
   | "users/me"
   | "settings"
   |"restaurants"
-  | "news-categories";
+  | "news-categories"
+  |"auth"
+  | "user-wishlist";
 export const getQueryFunction = async <T extends BaseData>({
   key,
   urlParamsObject,
