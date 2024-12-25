@@ -11,23 +11,74 @@ import http from '@/utils/http'
 import { useCustomMutation } from '@/hooks/useCustomMutation'
 import { useQuery } from '@tanstack/react-query'
 import { AuthsApi } from '@/apis/auths'
+import { UserInfo } from '@/types'
+import { Dropdown, MenuProps, Select, Space, Typography } from 'antd'
+import { uploadImage } from '@/utils/imageHelper'
+import { toast } from 'react-toastify'
 
+const activityItems: { value: string, label: string }[] = [
+    {
+        value: 'Little/no exercise',
+        label: 'Little/no exercise',
+    },
+    {
+        value: 'Light exercise',
+        label: 'Light exercise',
+    },
+    {
+        value: 'Moderate exercise',
+        label: 'Moderate exercise',
+    },
+    {
+        value: 'Very active',
+        label: 'Very active',
+    },
+    {
+        value: 'Extra active',
+        label: 'Extra active',
+    }
+];
+const weightLossItems: { value: string, label: string }[] = [
+    {
+        value: 'Maintain weight',
+        label: 'Maintain weight',
+    },
+    {
+        value: 'Mild weight loss',
+        label: 'Mild weight loss',
+    },
+    {
+        value: 'Weight loss',
+        label: 'Weight loss',
+    },
+    {
+        value: 'Extreme weight loss',
+        label: 'Extreme weight loss',
+    }
+]
 const ProfilePage = () => {
-    const {data: profile} = useQuery({queryKey: ["profile"], queryFn: () => AuthsApi.getUserProfile()})
+    const { data: profile } = useQuery({ queryKey: ["profile"], queryFn: () => AuthsApi.getUserProfile() })
     const [image, setImage] = useState<string>("/default-avatar.png");
     const [file, setFile] = useState<File>();
+    const [weightLoss, setWeightLoss] = useState<string>("");
+    const [activity, setActivity] = useState<string>("");
     const [username, setUsername] = useState<string>("");
     const uploadRef = createRef<HTMLInputElement>();
     const { mutate } = useCustomMutation({ key: "auth", type: "update" })
+
     const handleUpload = () => {
         uploadRef.current?.click();
     }
+
     useEffect(() => {
         if (profile) {
             setImage(profile.avatarUrl || "/default-avatar.png")
             setUsername(profile.username)
+            setWeightLoss(profile.weightLoss || "")
+            setActivity(profile.activity || "")
         }
     }, [profile])
+
     const handleImageUpload = async (event: ChangeEvent<HTMLInputElement>) => {
         const fileInput = event.target;
 
@@ -62,48 +113,115 @@ const ProfilePage = () => {
             console.error("something went wrong, check your console.");
         }
     };
+
     const handleChangeUsername = (e: React.ChangeEvent<HTMLInputElement>) => {
         setUsername(e.target.value)
     }
+
+    const handleChangeWeightLoss = (value: string) => {
+        setWeightLoss(value)
+    }
+
+    const handleChangeActivity = (value: string) => {
+        setActivity(value)
+    }
+
     const handleSave = async () => {
-        let data: { username: string; avatar?: number } = {
-            username: username
+        let data: Partial<UserInfo> = {
+            username: username,
+            weightLoss: weightLoss,
+            activity: activity
         };
-        let imageId;
+        let image: string = "";
         if (file) {
-            imageId = await uploadImageToStrapi(file)
+            image = await uploadImage(file)
         }
-        if (imageId) {
-            data["avatar"] = imageId;
+        if (image) {
+        data["avatarUrl"] = image;
         }
         mutate(data);
+        toast.success("Profile updated successfully")
     }
+
     return (
-        <div className='w-1/2'>
-            <h2 className='font-semibold text-4xl'>Profile</h2>
-            <div className='flex gap-4 mt-8 flex-col'>
-                <h3 className='text-sm font-semibold'>Avatar</h3>
-                <Input onChange={handleImageUpload} ref={uploadRef} className='hidden' type='file' accept="image/*" />
-                <div className='flex gap-4'>
-                    <div className='relative w-[80px] h-[80px]'>
-                        <Image alt="avatar" fill className='rounded-full' objectFit='cover' src={image} />
+        <div className='w-full max-w-3xl mx-auto pb-10'>
+            {/* Cover Image */}
+            <div className='relative w-full h-48 bg-gradient-to-r from-blue-200 to-yellow-100 rounded-b-lg'></div>
+
+            {/* Profile Section */}
+            <div className='px-8 -mt-20'>
+                <div className='flex justify-between items-start mb-8'>
+                    <div className='flex items-end'>
+                        <div className='relative w-[150px] h-[150px] border-4 border-white rounded-full overflow-hidden'>
+                            <Image
+                                alt="avatar"
+                                fill
+                                className='rounded-full'
+                                style={{ objectFit: 'cover' }}
+                                src={image}
+                            />
+                        </div>
                     </div>
-                    <div className='my-auto'>
-                        <Button onClick={handleUpload} pattern='white' className='border border-neutral-200'>
+                </div>
+                <div className="flex items-start justify-between">
+                    <div className='mb-8'>
+                        <h1 className='text-3xl font-bold mb-2'>Profile</h1>
+                        <p className='text-gray-600'>Update your photo and personal details</p>
+                    </div>
+                    <ButtonPrimary onClick={handleSave} className='px-8'>Save</ButtonPrimary>
+
+                </div>
+
+
+                <Input onChange={handleImageUpload} ref={uploadRef} className='hidden' type='file' accept="image/*" />
+
+                <div className='space-y-6'>
+                    <div>
+                        <label className='block text-sm font-medium text-gray-700 mb-2'>Username</label>
+                        <Input
+                            value={username}
+                            onChange={handleChangeUsername}
+                            rounded='rounded-lg'
+                            placeholder="Enter your username"
+                        />
+                    </div>
+
+                    <div>
+                        <label className='block text-sm font-medium text-gray-700 mb-2'>Weight Loss</label>
+                        <Select
+                            className="w-full"
+                            defaultValue={weightLossItems[0].value}
+                            onChange={handleChangeWeightLoss}
+                            options={weightLossItems}
+                        />
+                    </div>
+
+                    <div>
+                        <label className='block text-sm font-medium text-gray-700 mb-2'>Activity Level</label>
+                        <Select
+                            className="w-full"
+                            defaultValue={activityItems[0].value}
+                            onChange={handleChangeActivity}
+                            options={activityItems}
+                        />
+                    </div>
+
+                    <div className='flex items-center gap-4'>
+                        <label className='block text-sm font-medium text-gray-700'>Your Photo</label>
+                        <Button
+                            onClick={handleUpload}
+                            pattern='white'
+                            className='border border-gray-300 hover:bg-gray-50'
+                        >
                             <PhotoIcon className='w-5 h-5' />
-                            <span className='text-sm font-semibold ml-2'>Change avatar</span>
+                            <span className='ml-2'>Update</span>
                         </Button>
+                        <button className='text-sm text-gray-600 hover:text-gray-900'>Delete</button>
                     </div>
                 </div>
             </div>
-            <div className='flex flex-col gap-4 mt-4'>
-                <h3 className='text-sm font-semibold'>User name</h3>
-                <Input colorClass="bg-neutral-100" value={username} onChange={handleChangeUsername} rounded='rounded-lg' />
-            </div>
-            <ButtonPrimary onClick={handleSave} className='mt-4'>Save</ButtonPrimary>
         </div>
     )
 }
 
 export default ProfilePage
-

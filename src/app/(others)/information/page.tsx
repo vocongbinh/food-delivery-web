@@ -45,7 +45,6 @@ const activitiesMark = [
     label: "Extra active",
   },
 ];
-
 const goalsMark = [
   {
     value: 0,
@@ -107,9 +106,9 @@ const InformationPage = ({}) => {
         return "Light exercise";
       case 50:
         return "Moderate exercise";
-      case 4:
+      case 75:
         return "Very active";
-      case 5:
+      case 100:
         return "Extra active";
       default:
         return "No exercise";
