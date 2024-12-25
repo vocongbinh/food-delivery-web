@@ -26,16 +26,16 @@ const activityItems: { value: string, label: string }[] = [
         label: 'Light exercise',
     },
     {
-        value: 'Moderate exercise',
-        label: 'Moderate exercise',
+        value: 'Moderate exercise (3-5 days/week)',
+        label: 'Moderate exercise (3-5 days/week)',
     },
     {
-        value: 'Very active',
-        label: 'Very active',
+        value: 'Very active (6-7 days/week)',
+        label: 'Very active (6-7 days/week)',
     },
     {
-        value: 'Extra active',
-        label: 'Extra active',
+        value: 'Extra active (very active & physical job)',
+        label: 'Extra active (very active & physical job)',
     }
 ];
 const weightLossItems: { value: string, label: string }[] = [
@@ -58,6 +58,7 @@ const weightLossItems: { value: string, label: string }[] = [
 ]
 const Profile = ({user}: {user: UserInfo}) => {
     const profile = user;
+    console.log(profile)
     const [image, setImage] = useState<string>("/default-avatar.png");
     const [file, setFile] = useState<File>();
     const [weightLoss, setWeightLoss] = useState<string>("");
@@ -191,7 +192,7 @@ const Profile = ({user}: {user: UserInfo}) => {
                         <label className='block text-sm font-medium text-gray-700 mb-2'>Weight Loss</label>
                         <Select
                             className="w-full !h-[42px]"
-                            defaultValue={weightLossItems[0].value}
+                            defaultValue={profile.weightLoss || weightLossItems[0].value}
                             onChange={handleChangeWeightLoss}
                             options={weightLossItems}
                         />
@@ -201,7 +202,7 @@ const Profile = ({user}: {user: UserInfo}) => {
                         <label className='block text-sm font-medium text-gray-700 mb-2'>Activity Level</label>
                         <Select
                             className="w-full !h-[42px]"
-                            defaultValue={activityItems[0].value}
+                            defaultValue={profile.activity || activityItems[0].value}
                             onChange={handleChangeActivity}
                             options={activityItems}
                         />

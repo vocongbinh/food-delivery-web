@@ -37,6 +37,7 @@ import { SalesSummary } from "@/components/SaleComponent/SaleComponent";
 import { TopProducts } from "@/components/TopProducts/TopProducts";
 import LevelChart from "@/components/LevelChart/LevelChart";
 import FulfilmentChart from "@/components/FulfilmentChart/FulfilmentChart";
+import Spinner from "@/components/Spinner/Spinner";
 export interface TabProps {
   id: number;
   name: string;
@@ -177,9 +178,7 @@ const RestaurantPage = ({ params }: { params: { restaurantId: number } }) => {
               ))}
             </Nav>
             {dishesLoading ? (
-              <div className="flex items-center justify-center">
-                <CircularProgress />
-              </div>
+              <Spinner/>
             ) : (
               <div className="grid gap-6 sm:grid-cols-2 sm:py-2 md:gap-8 md:grid-cols-3 lg:grid-cols-4 xl:md:grid-cols-5">
                 {dishes &&
