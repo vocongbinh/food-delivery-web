@@ -1,6 +1,7 @@
 import { OrdersApi } from "@/apis/orders";
-import { LIST_DISH_KEY } from "@/contains/react_query_keys";
+import { LIST_DISH_KEY, USER_CART_KEY } from "@/contains/react_query_keys";
 import { DishRequest } from "@/types";
+import { OrderRequest } from "@/types/order";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export const useAddOrderMutation = () => {
@@ -10,6 +11,9 @@ export const useAddOrderMutation = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: [LIST_DISH_KEY],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [USER_CART_KEY],
       });
     },
   });

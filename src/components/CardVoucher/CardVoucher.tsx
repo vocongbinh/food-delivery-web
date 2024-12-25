@@ -157,7 +157,7 @@ const CardVoucher: FC<CardVoucherProps> = ({
               {formatDate(validFrom)} - {formatDate(validTo)}
             </span>
           </span>
-          {isAdmin && (
+          {!isAdmin && (
             <div className="flex items-end justify-between mt-auto">
               <ButtonPrimary
                 className="opacity-25"
