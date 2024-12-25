@@ -14,21 +14,13 @@ const VoucherBadge: FC<VoucherBadgeProps> = ({
   itemClass,
   voucher,
 }) => {
-  console.log(voucher.discountType)
-  const name = voucher.discountValue + " " + (voucher.discountType === DiscountType.PERCENTAGE ? "%" : "TON");
+  const name =
+    voucher.discountValue +
+    " " +
+    (voucher.discountType === DiscountType.PERCENTAGE ? "%" : "TON");
   return (
-    <div
-      className={`nc-VoucherBadge ${className}`}
-      data-nc-id="VoucherBadge"
-    >
-     
-        <Badge
-          className={itemClass}
-          name={name}
-          href={"/"}
-          color={"red"}
-        />
-      
+    <div className={`nc-VoucherBadge ${className}`} data-nc-id="VoucherBadge">
+      <Badge className={itemClass} name={name} href={"/"} color={"red"} />
     </div>
   );
 };

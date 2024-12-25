@@ -394,3 +394,74 @@ export const NAVIGATION_DEMO_2: NavItemType[] = [
   //   ],
   // },
 ];
+export const ADMIN_NAVIGATION: NavItemType[] = [
+  // {
+  //   id: randomId(),
+  //   href: "/" as Route,
+  //   name: "Home",
+  // },
+  // single pages ----------------
+  {
+    id: randomId(),
+    href: "/categories" as Route,
+    name: "Categories",
+    // type: "dropdown",
+    // children: [
+    //   {
+    //     id: randomId(),
+    //     href: "/categories/food" as Route,
+    //     name: "Food",
+    //   },
+    //   {
+    //     id: randomId(),
+    //     href: "/categories/drink" as Route,
+    //     name: "Drink",
+    //   },
+    // ],
+  },
+  {
+    id: randomId(),
+    href: "/admin/restaurants" as Route,
+    name: "Restaurants",
+  },
+  {
+    id: randomId(),
+    href: "/about" as Route,
+    name: "About Us",
+  },
+  {
+    id: randomId(),
+    href: "/admin" as Route,
+    name: "Admin",
+    type: "dropdown",
+    children: [
+      {
+        id: randomId(),
+        href: "/admin/7/food/add" as Route,
+        name: "Food",
+      },
+      {
+        id: randomId(),
+        href: "/admin/restaurant" as Route,
+        name: "Drink",
+      },
+    ],
+  }, // {
+  //   id: randomId(),
+  //   href: "/Use" as Route,
+  //   name: "use",
+  //   type: "dropdown",
+  //   children: [
+  //     {
+  //       id: randomId(),
+  //       href: "/nominators" as Route,
+  //       name: "Staking",
+  //     },
+  //     {
+  //       id: randomId(),
+  //       href: "/pay" as Route,
+  //       name: "TON App Pay",
+  //     },
+  //   ],
+  // },
+];

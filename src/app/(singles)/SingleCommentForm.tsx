@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { FC, RefObject } from "react";
 import ButtonPrimary from "@/components/Button/ButtonPrimary";
 import ButtonSecondary from "@/components/Button/ButtonSecondary";
@@ -16,7 +16,7 @@ export interface SingleCommentFormProps {
   defaultValue?: string;
   rows?: number;
   rating: number;
-  setRating: React.Dispatch<React.SetStateAction<number>>
+  setRating: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const SingleCommentForm: FC<SingleCommentFormProps> = ({
@@ -29,25 +29,32 @@ const SingleCommentForm: FC<SingleCommentFormProps> = ({
   defaultValue = "",
   rows = 4,
 }) => {
-  const {token} = useAuthContext();
+  const { token } = useAuthContext();
   const [text, setText] = React.useState("");
   const handleCancel = () => {
-    setText("")
-  }
-  console.log(text)
+    setText("");
+  };
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (textareaRef.current) {
       onClickSubmit();
-      setText("")
-      setRating(0)
+      setText("");
+      setRating(0);
     }
   };
 
-
   return (
-    <form action="#" className={`nc-SingleCommentForm ${className}`} onSubmit={handleSubmit}>
-       <Rate defaultValue={0} value={rating} onChange={(e) => setRating(e)} allowHalf />
+    <form
+      action="#"
+      className={`nc-SingleCommentForm ${className}`}
+      onSubmit={handleSubmit}
+    >
+      <Rate
+        defaultValue={0}
+        value={rating}
+        onChange={(e) => setRating(e)}
+        allowHalf
+      />
       <Textarea
         placeholder="Enter review text"
         ref={textareaRef}
@@ -57,19 +64,34 @@ const SingleCommentForm: FC<SingleCommentFormProps> = ({
         rows={rows}
       />
 
-      {token == "" ?
-        <span className="text-sm"><Link href="/login" className="text-blue-600 font-semibold">Sign in</Link> to leave a review</span> :
+      {token == "" ? (
+        <span className="text-sm">
+          <Link href="/login" className="text-blue-600 font-semibold">
+            Sign in
+          </Link>{" "}
+          to leave a review
+        </span>
+      ) : (
         <div className="mt-2 justify-between flex">
-          <span className="text-sm">Write a comment and rate app to submit a review</span>
+          <span className="text-sm">
+            Write a comment and rate app to submit a review
+          </span>
           <div className="flex gap-2">
-            {text.trim() !== "" && <Button onClick={handleCancel} pattern="white" className="border border-red-500 text-red-500">Cancel</Button>}
+            {text.trim() !== "" && (
+              <Button
+                onClick={handleCancel}
+                pattern="white"
+                className="border border-red-500 text-red-500"
+              >
+                Cancel
+              </Button>
+            )}
             <ButtonPrimary type="submit" className="rounded-full">
               Post Review
-            </ButtonPrimary></div>
-        </div>}
-
-
-
+            </ButtonPrimary>
+          </div>
+        </div>
+      )}
     </form>
   );
 };

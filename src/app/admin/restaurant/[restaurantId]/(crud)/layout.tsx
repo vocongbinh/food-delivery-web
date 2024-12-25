@@ -1,7 +1,12 @@
 import SectionSubscribe2 from "@/components/SectionSubscribe2/SectionSubscribe2";
 import React, { FC, ReactNode } from "react";
 
-const LayoutPage = ({ children }: { children: ReactNode }) => {
+const LayoutPage = ({
+  children,
+}: {
+  children: ReactNode;
+  params: { restaurantId: number };
+}) => {
   return (
     <div className={`nc-LayoutPage relative`}>
       <div

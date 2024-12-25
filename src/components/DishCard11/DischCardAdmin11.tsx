@@ -13,25 +13,26 @@ import FoodFeaturedMedia from "../DishFeaturedMedia/FoodFeaturedMedia";
 import MinusIcon from "@heroicons/react/24/solid/MinusIcon";
 import PlusIcon from "@heroicons/react/24/solid/PlusIcon";
 import DishCartAction from "../Cart/DishCartAction";
+import { Route } from "next";
 
-export interface DishCard11Props {
+export interface DishCardAdmin11Props {
   className?: string;
   ratio?: string;
   hiddenAuthor?: boolean;
   dish?: Dish;
 }
 
-const DishCard11: FC<DishCard11Props> = ({
+const DishCardAdmin11: FC<DishCardAdmin11Props> = ({
   className = "h-full",
   hiddenAuthor = false,
   ratio = "aspect-w-4 aspect-h-3",
   dish,
 }) => {
   const [isHover, setIsHover] = useState(false);
-
+  const link = ``;
   return (
     <div
-      className={`nc-DishCard11 relative flex flex-col group rounded-3xl overflow-hidden bg-white dark:bg-neutral-900 h-full ${className}`}
+      className={`nc-DishCardAdmin11 relative flex flex-col group rounded-3xl overflow-hidden bg-white dark:bg-neutral-900 h-full ${className}`}
       onMouseEnter={() => setIsHover(true)}
       onMouseLeave={() => setIsHover(false)}
       //
@@ -55,16 +56,24 @@ const DishCard11: FC<DishCard11Props> = ({
         ) : (
           <span className="text-xs text-neutral-500">{dish?.price}</span>
         )} */}
-        <h3 className="nc-card-title block text-base font-semibold text-neutral-900 dark:text-neutral-100 flex-row">
+        <div className="nc-card-title block text-base font-semibold text-neutral-900 dark:text-neutral-100 flex-grow flex-1 bg-gray-50">
           <h5 className="line-clamp-2" title={dish?.name}>
             {dish?.name}
           </h5>
-        </h3>
-        <div className="flex items-end justify-between mt-auto">
-          <PostCardLikeAndComment className="relative" />
-          <PostCardSaveAction dishId={dish!.id} className="relative" />
         </div>
-        <DishCartAction dish={dish} />
+        <div className="flex-shrink-0 flex items-end justify-between mt-auto">
+          <PostCardLikeAndComment className="relative" />
+          <PostCardSaveAction className="relative" />
+        </div>
+        <Link
+          href={
+            `/admin/restaurant/${dish?.restaurant?.id}/food/${dish?.id}` as Route
+          }
+          onClick={() => {}}
+          className="text-sm text-center hover:bg-gray-50 flex-shrink-0 font-normal rounded-xl border  py-2"
+        >
+          Details
+        </Link>
         {/* <div className="flex items-end justify-between mt-auto">
           <h3 className="line-clamp-2 font-medium">{dish?.price}</h3>
           <div className="flex gap-4">
@@ -82,4 +91,4 @@ const DishCard11: FC<DishCard11Props> = ({
   );
 };
 
-export default DishCard11;
+export default DishCardAdmin11;

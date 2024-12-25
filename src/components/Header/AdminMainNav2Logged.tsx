@@ -9,7 +9,7 @@ import NotifyDropdown from "./NotifyDropdown";
 import ButtonLogin from "../ButtonLogin/ButtonLogin";
 import { getSession, useSession } from "next-auth/react";
 import { useAuthContext } from "@/contexts/auth/auth-context";
-import * as TonConnect from "@tonconnect/ui-react";
+import { TonConnectButton } from "@tonconnect/ui-react";
 import { getCookie } from "cookies-next";
 import { MapApi } from "@/apis/map";
 import { MapPinIcon } from "@heroicons/react/24/solid";
@@ -18,27 +18,21 @@ import ModalChangeAddress from "../ModalChangeAddress/ModalChangeAddress";
 import Button from "../Button/Button";
 import ButtonPrimary from "../Button/ButtonPrimary";
 import MapComponent from "../MapComponent/MapComponent";
-import { NAVIGATION_DEMO_2 } from "@/data/navigation";
-import { Location } from "iconsax-react";
-import dynamic from "next/dynamic";
-export interface MainNav2LoggedProps {}
+import { ADMIN_NAVIGATION } from "@/data/navigation";
+export interface AdminMainNav2LoggedProps {}
 
 interface Location {
   latitude: number;
   longitude: number;
 }
 
-const MainNav2Logged: FC<MainNav2LoggedProps> = () => {
+const AdminMainNav2Logged: FC<AdminMainNav2LoggedProps> = () => {
   const { token } = useAuthContext();
   const { data } = useSession();
   const session = data as any;
   const { address, setAddress, setLocation } = useAddressContext();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState<string>("");
-  const TonConnectButton = dynamic(
-    () => import("@tonconnect/ui-react").then((mod) => mod.TonConnectButton),
-    { ssr: false }
-  );
   React.useEffect(() => {
     // Function to get the user's location
     const getLocation = async () => {
@@ -68,6 +62,7 @@ const MainNav2Logged: FC<MainNav2LoggedProps> = () => {
     setIsOpen(false);
     setAddress(inputValue);
   };
+
   const renderContent = () => {
     return (
       <div className="h-20 flex justify-between">
@@ -85,9 +80,8 @@ const MainNav2Logged: FC<MainNav2LoggedProps> = () => {
                 onClick={openModal}
                 className=" cursor-pointer px-2 max-w-[300px] rounded-3xl border border-gray-400 flex gap-2 items-center"
               >
-                <Location size="32" color="#2b52ff" variant="Bold" />
-                {/* <MapPinIcon className="w-10 h-10 text-primary-500" /> */}
-                <span className="overflow-hidden text-ellipsis whitespace-nowrap">
+                <MapPinIcon className="w-7 h-7 text-primary-500" />
+                <span className="overflow-hidden text-ellipsis whitespace-nowrap text-sm">
                   {address}
                 </span>
               </div>
@@ -98,7 +92,7 @@ const MainNav2Logged: FC<MainNav2LoggedProps> = () => {
         </div>
 
         <div className="flex-[2] hidden lg:flex justify-center mx-4">
-          <Navigation navigations={NAVIGATION_DEMO_2} />
+          <Navigation navigations={ADMIN_NAVIGATION} />
         </div>
 
         <div className="flex-1 flex items-center justify-end text-slate-700 dark:text-slate-100">
@@ -128,10 +122,10 @@ const MainNav2Logged: FC<MainNav2LoggedProps> = () => {
   };
 
   return (
-    <div className="nc-MainNav2Logged relative z-10 bg-white dark:bg-neutral-900 border-b border-slate-100 dark:border-slate-700">
+    <div className="nc-AdminMainNav2Logged relative z-10 bg-white dark:bg-neutral-900 border-b border-slate-100 dark:border-slate-700">
       <div className="container ">{renderContent()}</div>
     </div>
   );
 };
 
-export default MainNav2Logged;
+export default AdminMainNav2Logged;

@@ -21,13 +21,13 @@ import StatisticComponent from "@/components/StatisticComponent/StatisticCompone
 import { RecommendedDish } from "@/types/recommendedDish";
 import { useAuthContext } from "@/contexts/auth/auth-context";
 const Home = () => {
-  const { token } = useAuthContext()
+  const { userInfo } = useAuthContext();
   const recommendedDishes: RecommendedDish[] = useMemo(() => {
     if (localStorage && localStorage.getItem("recommendedDishes")) {
       return JSON.parse(localStorage.getItem("recommendedDishes") as string);
     }
-    return []
-  }, [localStorage])
+    return [];
+  }, [localStorage]);
   const { data: dishTypes } = useQuery({
     queryKey: [DISH_TYPE_KEY],
     queryFn: () => DishTypesApi.getDishTypes(),
@@ -37,7 +37,6 @@ const Home = () => {
     queryKey: ["Recommend-dish"],
     queryFn: () => DishesApi.getRecommendedDishes(),
   });
-  console.log(dishes);
   const landingSection = () => {
     return (
       <div className="nc-PageHomeDemo3 relative">
@@ -99,23 +98,30 @@ const Home = () => {
   return (
     <>
       <div className="dark bg-neutral-900 dark:bg-black dark:bg-opacity-20 text-neutral-100">
-        {token !== "" && <div className="relative container">
-          <SectionRecommendedDish
-            className="py-16 lg:py-28"
-            headingIsCenter
-            postCardName="card10V2"
-            heading="Discover foods that meet your nutritional needs"
-            subHeading="Hover on the card and preview image 🥡"
-            dishes={dishes || []}
-            gridClass="md:grid-cols-2 lg:grid-cols-3"
-          />
-        </div>}
-
+        {userInfo && (
+          <div className="relative container">
+            <SectionRecommendedDish
+              className="py-16 lg:py-28"
+              headingIsCenter
+              postCardName="card10V2"
+              heading="Discover foods that meet your nutritional needs"
+              subHeading="Hover on the card and preview image 🥡"
+              dishes={dishes || []}
+              gridClass="md:grid-cols-2 lg:grid-cols-3"
+            />
+          </div>
+        )}
       </div>
       {/* < StatisticComponent data={recommendedDishes[0]} />/ */}
-      <div className="grid grid-cols-8 gap-4 px-10">
-        <div className="lg:col-span-6 col-span-4">{renderDishOfType()}</div>
-        <RestaurantCart />
+      <div className="grid grid-cols-4 gap-8 px-10">
+        <div className={userInfo ? "col-span-3" : "col-span-4"}>
+          {renderDishOfType()}
+        </div>
+        {userInfo && (
+          <div className="w-full min-w-[200px] max-w-[300px] ">
+            <RestaurantCart />
+          </div>
+        )}{" "}
         {/* <Chatbot className="fixed bottom-10 right-10"/> */}
       </div>
     </>

@@ -9,7 +9,6 @@ export default function Page({ params }: { params: { restaurantId: number } }) {
   const updateDish = useUpdateDishMutation();
 
   function saveDish(groupOption: GroupOptionRequest) {
-    console.log(groupOption);
     // updateDish.mutate(dish);
   }
 
