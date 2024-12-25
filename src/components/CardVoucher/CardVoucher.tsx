@@ -35,12 +35,15 @@ export interface CardVoucherProps {
   voucher: Voucher;
   ratio?: string;
   isAdmin?: boolean;
+  isExchanged: boolean;
+  
 }
 
 const CardVoucher: FC<CardVoucherProps> = ({
   className = "h-full",
   voucher,
   isAdmin,
+  isExchanged,
   ratio = "aspect-w-3 xl:aspect-w-4 aspect-h-3",
 }) => {
   const {
@@ -157,12 +160,13 @@ const CardVoucher: FC<CardVoucherProps> = ({
               {formatDate(validFrom)} - {formatDate(validTo)}
             </span>
           </span>
-          {isAdmin && (
+          {!isAdmin && (
             <div className="flex items-end justify-between mt-auto">
               <ButtonPrimary
-                className="opacity-25"
+                disabled={isExchanged}
+                className={`${isExchanged ? "opacity-25" : "bg-primary-500"}`}
                 onClick={async () => {
-                  // exchangeVoucher(exchangeRate);
+                  exchangeVoucher(exchangeRate);
                   VouchersApi.receiveVoucher({
                     code: couponCode,
                     productDiscountId: id,
