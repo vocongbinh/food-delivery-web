@@ -71,7 +71,6 @@ const Home = () => {
         className="mt-10"
         key={dishType.id}
         heading={dishType.name}
-        subHeading="Delicious"
         posts={DEMO_POSTS_AUDIO.filter((_, i) => i > 3 && i < 10)}
         dishes={dishType.dishes}
       />
@@ -80,8 +79,8 @@ const Home = () => {
     const dish = dishTypes?.[0].dishes?.[0];
     return (
       <div className="mt-10 col-span-4 lg:col-span-2 flex gap-2 flex-col">
-        <Heading className="ml-3">My cart is herer</Heading>
-        <div className="mt-10 p-4 flex flex-col overflow-hidden justify-start rounded-3xl bg-white h-80 w-full">
+        <Heading className="ml-3">My Cart Is Here</Heading>
+        <div className="md:mt-14 mt-10 p-4 flex flex-col overflow-hidden justify-start rounded-3xl bg-white h-80 w-full">
           {/* <div>Cart is empty now</div> */}
           <DishCartItem dish={dish} />
           <div className="flex justify-between mt-3">

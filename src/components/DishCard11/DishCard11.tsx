@@ -34,7 +34,7 @@ const DishCard11: FC<DishCard11Props> = ({
       className={`nc-DishCard11 relative flex flex-col group rounded-3xl overflow-hidden bg-white dark:bg-neutral-900 h-full ${className}`}
       onMouseEnter={() => setIsHover(true)}
       onMouseLeave={() => setIsHover(false)}
-      //
+    //
     >
       <div
         className={`block flex-shrink-0 relative w-full rounded-t-3xl overflow-hidden z-10 ${ratio}`}
@@ -55,10 +55,8 @@ const DishCard11: FC<DishCard11Props> = ({
         ) : (
           <span className="text-xs text-neutral-500">{dish?.price}</span>
         )} */}
-        <h3 className="nc-card-title block text-base font-semibold text-neutral-900 dark:text-neutral-100 flex-row">
-          <h5 className="line-clamp-2" title={dish?.name}>
-            {dish?.name}
-          </h5>
+        <h3 className="nc-card-title block text-base font-semibold text-neutral-900 dark:text-neutral-100 flex-row line-clamp-2 h-[3rem]">
+          {dish?.name}
         </h3>
         <div className="flex items-end justify-between mt-auto">
           <PostCardLikeAndComment className="relative" />

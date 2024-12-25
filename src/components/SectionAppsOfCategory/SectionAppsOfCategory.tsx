@@ -34,7 +34,7 @@ const SectionAppsOfCategory: FC<SectionAppsOfCategoryProps> = ({
     <div className={`nc-SectionAppsOfCategory ${className}`}>
 
       <div className={`flex justify-between`}>
-        <Heading desc={subHeading} isCenter={headingIsCenter}>
+        <Heading isCenter={headingIsCenter}>
           {heading}
         </Heading>
         <div className="h-12 flex">
