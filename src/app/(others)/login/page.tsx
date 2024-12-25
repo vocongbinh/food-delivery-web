@@ -13,22 +13,29 @@ import { useLogin } from "@/react-query/auth";
 import { setCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
 import { useAuthContext } from "@/contexts/auth/auth-context";
+import { toast } from "react-toastify";
 const PageLogin = ({}) => {
-  const { token } = useAuthContext();
+  const { token, setToken } = useAuthContext();
   const router = useRouter();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const login = useLogin();
+  const { mutate: login, isPending: isSubmitting } = useLogin();
   const onSubmit = (data: AuthRequest) => {
-    setIsSubmitting(true);
-    login.mutate(
+    login(
       { ...data },
       {
         onSuccess: (res) => {
           setCookie("token", res.token);
-          window.location.href = "/";
+          if (
+            res.user_info.roles.find(
+              (item) => item.role.name == "ROLE_SELLER"
+            ) != null
+          ) {
+            window.location.href = "/admin/restaurant";
+          } else {
+            window.location.href = "/";
+          }
         },
-        onSettled: () => {
-          setIsSubmitting(false);
+        onError: () => {
+          toast.error("User credentials not valid");
         },
       }
     );
@@ -89,7 +96,11 @@ const PageLogin = ({}) => {
               <p className="text-red-500">{errors.username.message}</p>
             )}
           </label>
-          <ButtonPrimary disabled={isSubmitting} type="submit">
+          <ButtonPrimary
+            loading={isSubmitting}
+            disabled={isSubmitting}
+            type="submit"
+          >
             Continue
           </ButtonPrimary>
         </form>

@@ -2,8 +2,14 @@ export type AuthRequest = {
   username: string;
   password: string;
 };
+export type RegisterRequest = {
+  username: string;
+  fullname: string;
+  role: string;
+  password: string;
+};
 export type AuthResponse = {
-  userInfo: UserInfo;
+  user_info: UserInfo;
   token: string;
 };
 export type UserInfo = {
@@ -18,4 +24,13 @@ export type UserInfo = {
   avatarUrl: string;
   age: number | null;
   gender: string | null;
+  roles: UserRole[];
+};
+
+export type UserRole = {
+  id: number;
+  role: {
+    id: number;
+    name: string;
+  };
 };

@@ -24,12 +24,19 @@ import { Category } from "@/types/category";
 import { DiscountsApi } from "@/apis/discounts";
 import CardVoucher from "@/components/CardVoucher/CardVoucher";
 import { Alert, CircularProgress, Pagination, Snackbar } from "@mui/material";
+import Link from "next/link";
+
 import { ReviewsApi } from "@/apis/reviews";
 import { ReviewForm } from "@/types/review";
 import { DishesApi } from "@/apis/dishes";
 import DishCard11 from "@/components/DishCard11/DishCard11";
 import DishCardAdmin11 from "@/components/DishCard11/DischCardAdmin11";
 import { LIST_DISH_KEY, LIST_VOUCHER_KEY } from "@/contains/react_query_keys";
+import { Route } from "next";
+import { SalesSummary } from "@/components/SaleComponent/SaleComponent";
+import { TopProducts } from "@/components/TopProducts/TopProducts";
+import LevelChart from "@/components/LevelChart/LevelChart";
+import FulfilmentChart from "@/components/FulfilmentChart/FulfilmentChart";
 export interface TabProps {
   id: number;
   name: string;
@@ -59,8 +66,10 @@ const RestaurantPage = ({ params }: { params: { restaurantId: number } }) => {
     queryFn: () => ReviewsApi.getReviews(restaurantId),
   });
   const isExchanged = (voucherId: number) => {
-    return (exchangedVoucher || []).some(voucher => voucher.productDiscount.id == voucherId)
-  }
+    return (exchangedVoucher || []).some(
+      (voucher) => voucher.productDiscount.id == voucherId
+    );
+  };
   const { data: vouchers } = useQuery({
     queryKey: [LIST_VOUCHER_KEY, restaurantId],
     queryFn: () => DiscountsApi.getDiscounts(restaurantId),
@@ -126,6 +135,33 @@ const RestaurantPage = ({ params }: { params: { restaurantId: number } }) => {
                 </div>
               </div>
             </div>
+            <div className="container py-10 flex flex-col gap-4">
+              <div className="flex gap-4 items-start">
+                <SalesSummary
+                  className="w-full self-stretch"
+                  title="Today's Sales"
+                  subtitle="Sales Summary"
+                />
+                <div className="flex flex-col w-[35%] py-5 items-start rounded-xl bg-neutral-100 dark:bg-zinc-800">
+                  <h2 className="px-3 text-black dark:text-white text-lg font-semibold">
+                    Level
+                  </h2>
+                  <div className="w-full h-[200px]">
+                    <LevelChart />
+                  </div>
+                </div>
+              </div>
+              <div className="flex gap-4 items-start w-full">
+                <TopProducts className="w-[65%] self-stretch" />
+                <div className="flex flex-col w-full py-5 items-start rounded-xl bg-neutral-100 dark:bg-zinc-800">
+                  <h2 className="px-3 text-black dark:text-white text-lg font-semibold">
+                    Level
+                  </h2>
+                  <FulfilmentChart className="w-full h-[240px]" />
+                </div>
+              </div>
+            </div>
+
             <Nav
               className="sm:space-x-2 my-5 rtl:space-x-reverse"
               containerClassName="relative flex w-full overflow-x-auto text-sm md:text-base"
@@ -185,16 +221,32 @@ const RestaurantPage = ({ params }: { params: { restaurantId: number } }) => {
                         </div>
                     </> : tabActive.id === 1 ? <SectionAppNews blogs={blogs} heading="News" /> : <div className="p-4 bg-white rounded-3xl"><BlocksRenderer content={app.updatedInformation || []} /></div>} */}
             <div className="mt-10">
-              <h2 className="text-lg font-semibold">Vouchers</h2>
+              <div className="flex justify-between items-center">
+                <h2 className="text-lg font-semibold">Vouchers</h2>
+                <Link
+                  href={
+                    `/admin/restaurant/${restaurantId}/discount/add}` as Route
+                  }
+                  onClick={() => {}}
+                  className="text-sm text-center hover:bg-gray-50 bg-white px-2 flex-shrink-0 font-normal rounded-xl border  py-2"
+                >
+                  Add voucher
+                </Link>
+              </div>
               <div className="mt-8 lg:mt-10 grid md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
                 {vouchers?.map((voucher, index) => (
-                  <CardVoucher isExchanged={isExchanged(voucher.id)} isAdmin={true} key={index} voucher={voucher} />
+                  <CardVoucher
+                    isExchanged={isExchanged(voucher.id)}
+                    isAdmin={true}
+                    key={index}
+                    voucher={voucher}
+                  />
                 ))}
               </div>
             </div>
             <div
               id="comments"
-              className="scroll-mt-20 p-4 bg-white rounded-3xl"
+              className="scroll-mt-20 mt-10 p-4 bg-white rounded-3xl"
             >
               <h3 className="text-xl font-semibold  text-center text-neutral-800 dark:text-neutral-200">
                 Reviews ({reviews?.length || 0})
