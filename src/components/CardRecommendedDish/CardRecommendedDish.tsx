@@ -39,7 +39,7 @@ const CardRecommendedDish: FC<CardRecommendedDishProps> = ({ className = "h-full
       </div>
       <div className="absolute top-3 inset-x-3 flex justify-between items-start space-x-4 rtl:space-x-reverse">
         <CategoryBadge dishType={dish.dishType} />
-        <PostCardSaveAction />
+        <PostCardSaveAction dishId={dish.id} />
       </div>
 
       <div className="space-y-2.5 mt-4 px-4">

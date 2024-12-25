@@ -24,9 +24,9 @@ export const useCustomMutation = ({
         case "create":
           return endpoint.post(`/${key}`, data);
         case "update":
-          return endpoint.put(`/${key}/${id}`, data);
+          return endpoint.put(`/${key}/${data.id ?? ""}`, data);
         case "delete":
-          return endpoint.delete(`/${key}/${id}`);
+          return endpoint.delete(`/${key}/${data.id}`);
       }
     },
     onSuccess: () => {

@@ -15,6 +15,7 @@ import dynamic from "next/dynamic";
 import Toastify from "@/components/Toastify/Toastify";
 import AddressProvider from "@/contexts/address/address-context";
 import Script from 'next/script'
+import MUIThemeProvider from "./MUIThemeProvider";
 export const metadata = {
   title: "DFood - Food Delivery App",
   description: "Help you to find and order food from your favorite restaurants",
@@ -25,7 +26,6 @@ const poppins = Poppins({
   display: "swap",
   weight: ["300", "400", "500", "600", "700"],
 });
-
 
 
 
@@ -42,16 +42,16 @@ export default function RootLayout({
           href="https://api.mapbox.com/mapbox-gl-js/v2.8.1/mapbox-gl.css"
           rel="stylesheet"
         />
-       
+
       </Head>
-      
+
       <body className="">
-        <Script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.3.1/mapbox-gl-directions.js"/>
-      <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.3.1/mapbox-gl-directions.css" type="text/css"/>
+        <Script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.3.1/mapbox-gl-directions.js" />
+        <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.3.1/mapbox-gl-directions.css" type="text/css" />
         <ConfigProvider
           theme={{
             token: {
-              fontFamily: "Poppins, sans-serif",
+              fontFamily: '__Poppins_559008',
             },
             components: {
               Switch: {
@@ -61,22 +61,24 @@ export default function RootLayout({
           }}
         >
           <AntdRegistry>
-            <div className="bg-[#f8f8f8] text-base dark:bg-neutral-900/95 text-neutral-900 dark:text-neutral-200">
-              <Providers>
-                <TonComponent>
-                  <SessionProviders>
-                    <AuthProvider>
-                      <AddressProvider>
-                        <DefaultHeader />
-                        {children}
-                        <Footer />
-                        <Toastify />
-                      </AddressProvider>
-                    </AuthProvider>
-                  </SessionProviders>
-                </TonComponent>
-              </Providers>
-            </div>
+            <MUIThemeProvider>
+              <div className="bg-[#f8f8f8] text-base dark:bg-neutral-900/95 text-neutral-900 dark:text-neutral-200">
+                <Providers>
+                  <TonComponent>
+                    <SessionProviders>
+                      <AuthProvider>
+                        <AddressProvider>
+                          <DefaultHeader />
+                          {children}
+                          <Footer />
+                          <Toastify />
+                        </AddressProvider>
+                      </AuthProvider>
+                    </SessionProviders>
+                  </TonComponent>
+                </Providers>
+              </div>
+            </MUIThemeProvider>
           </AntdRegistry>
         </ConfigProvider>
       </body>

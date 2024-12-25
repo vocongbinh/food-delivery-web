@@ -62,7 +62,7 @@ const DishCard11: FC<DishCard11Props> = ({
         </h3>
         <div className="flex items-end justify-between mt-auto">
           <PostCardLikeAndComment className="relative" />
-          <PostCardSaveAction className="relative" />
+          <PostCardSaveAction dishId={dish!.id} className="relative" />
         </div>
         <DishCartAction dish={dish} />
         {/* <div className="flex items-end justify-between mt-auto">

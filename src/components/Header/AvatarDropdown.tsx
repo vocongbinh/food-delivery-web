@@ -73,7 +73,7 @@ const isBrowser = typeof window !== "undefined" && typeof localStorage !== "unde
 
                     {/* ------------------ 1 --------------------- */}
                     <Link
-                      href={"/settings" as Route}
+                      href={"/my-profile"}
                       className="flex items-center p-2 -m-3 transition duration-150 ease-in-out rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-700 focus:outline-none focus-visible:ring focus-visible:ring-orange-500 focus-visible:ring-opacity-50"
                       onClick={() => close()}
                     >
@@ -107,7 +107,7 @@ const isBrowser = typeof window !== "undefined" && typeof localStorage !== "unde
                     </Link>
 
                     {/* ------------------ 2 --------------------- */}
-                    <Link
+                    {/* <Link
                       href={"/my_posts/create"}
                       className="flex items-center p-2 -m-3 transition duration-150 ease-in-out rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-700 focus:outline-none focus-visible:ring focus-visible:ring-orange-500 focus-visible:ring-opacity-50"
                       onClick={() => close()}
@@ -156,11 +156,11 @@ const isBrowser = typeof window !== "undefined" && typeof localStorage !== "unde
                       <div className="ms-4">
                         <p className="text-sm font-medium ">{"My Posts"}</p>
                       </div>
-                    </Link>
+                    </Link> */}
 
                     {/* ------------------ 2 --------------------- */}
                     <Link
-                      href={"/author/demo-slug"}
+                      href={"/wishlist"}
                       className="flex items-center p-2 -m-3 transition duration-150 ease-in-out rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-700 focus:outline-none focus-visible:ring focus-visible:ring-orange-500 focus-visible:ring-opacity-50"
                       onClick={() => {
                         close();

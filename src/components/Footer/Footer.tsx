@@ -122,7 +122,7 @@ export default async function Footer() {
               <SocialsList socials={socials} className="flex items-center space-x-6" />
             </div>
           </div>
-          <p className="text-center text-sm text-neutral-400 mt-2">Copyright © 2024 TonStation </p>
+          <p className="text-center text-sm text-neutral-400 mt-2">Copyright © 2024 DFood </p>
         </div>
       </div>
     </>
