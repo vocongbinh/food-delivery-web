@@ -1,8 +1,15 @@
 import { AuthsApi } from "@/apis/auths";
-import { AuthRequest } from "@/types";
+import { AuthRequest, RegisterRequest } from "@/types";
 import { useMutation } from "@tanstack/react-query";
+
 export const useLogin = () => {
   return useMutation({
-    mutationFn: (dish: AuthRequest) => AuthsApi.login(dish),
+    mutationFn: (val: AuthRequest) => AuthsApi.login(val),
+  });
+};
+
+export const useSignup = () => {
+  return useMutation({
+    mutationFn: (val: RegisterRequest) => AuthsApi.signup(val),
   });
 };

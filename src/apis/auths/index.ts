@@ -1,4 +1,10 @@
-import { AuthRequest, AuthResponse, Restaurant, UserInfo } from "@/types";
+import {
+  AuthRequest,
+  AuthResponse,
+  RegisterRequest,
+  Restaurant,
+  UserInfo,
+} from "@/types";
 import { apiPut, getFormData } from "../../utils/api-request";
 import { Dish, DishRequest } from "@/types/dish";
 import { apiGet, apiPost, apiDelete, apiPatch } from "@/utils/api-request";
@@ -7,6 +13,9 @@ import { User } from "@/types/user";
 export class AuthsApi {
   static async login(request: AuthRequest): Promise<AuthResponse> {
     return await apiPost("/auth/sign-in", request);
+  }
+  static async signup(request: RegisterRequest): Promise<AuthResponse> {
+    return await apiPost("/auth/sign-up", request);
   }
 
   static async getUserProfile(): Promise<UserInfo> {

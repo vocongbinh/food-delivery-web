@@ -16,6 +16,8 @@ import FoodFeaturedMedia from "../DishFeaturedMedia/FoodFeaturedMedia";
 import { useUpsertCartMutation } from "@/react-query/carts";
 import { CartItem } from "@/types/cartItem";
 import { useGetDishGroupOptionsQuery } from "@/react-query/options";
+import { useAuthContext } from "@/contexts/auth/auth-context";
+import { useRouter } from "next/navigation";
 
 export interface DishOptionItem {
   key: string;
@@ -38,36 +40,40 @@ const DishCardDetail: FC<Props> = ({ renderTrigger, dish }) => {
   const [selectedGroupOptions, setSelectedGroupOptions] = useState<
     Record<number, number[]>
   >({});
-
+  const router = useRouter();
   const { data: groupOptions } = useGetDishGroupOptionsQuery(dish.id);
   const upsertCartMutation = useUpsertCartMutation();
-
+  const { userInfo } = useAuthContext();
   // Handle adding to the cart
   const handleUpsertCart = () => {
-    setIsSubmiting(true);
+    if (userInfo == undefined) {
+      router.push("/login");
+    } else {
+      setIsSubmiting(true);
 
-    // Prepare the cartItemGroupOptionRequests based on selected options
-    const cartItemGroupOptionRequests = Object.entries(
-      selectedGroupOptions
-    ).map(([groupOptionId, selectedOptions]) => ({
-      groupOptionId: parseInt(groupOptionId), // Convert to number
-      selectedOptions: selectedOptions,
-    }));
+      // Prepare the cartItemGroupOptionRequests based on selected options
+      const cartItemGroupOptionRequests = Object.entries(
+        selectedGroupOptions
+      ).map(([groupOptionId, selectedOptions]) => ({
+        groupOptionId: parseInt(groupOptionId), // Convert to number
+        selectedOptions: selectedOptions,
+      }));
 
-    // Call the mutation to add to the cart
-    upsertCartMutation.mutate(
-      {
-        quantity: quantity,
-        cartItemGroupOptionRequests,
-        dishId: dish.id,
-      },
-      {
-        onSuccess: () => {
-          setIsSubmiting(false);
-          setOpen(false);
+      // Call the mutation to add to the cart
+      upsertCartMutation.mutate(
+        {
+          quantity: quantity,
+          cartItemGroupOptionRequests,
+          dishId: dish.id,
         },
-      }
-    );
+        {
+          onSuccess: () => {
+            setIsSubmiting(false);
+            setOpen(false);
+          },
+        }
+      );
+    }
   };
 
   return (

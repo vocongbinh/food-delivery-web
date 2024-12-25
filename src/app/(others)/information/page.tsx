@@ -113,12 +113,15 @@ const InformationPage = ({}) => {
         return "No exercise";
     }
   };
-
+  const [isLoading, setIsLoading] = useState(false);
   const handleContinue = async () => {
     // await AuthsApi.updateUser(information, 24);
     console.log("ff");
+    setIsLoading(true);
     const data = await DishesApi.getRecommendedDishes();
     console.log(data);
+    setIsLoading(false);
+    router.push("/");
   };
 
   const renderAgeItem = () => {
@@ -276,7 +279,13 @@ const InformationPage = ({}) => {
               </label>
             </span>
           </label>
-          <ButtonPrimary onClick={handleContinue}>Continue</ButtonPrimary>
+          <ButtonPrimary
+            loading={isLoading}
+            disabled={isLoading}
+            onClick={handleContinue}
+          >
+            Continue
+          </ButtonPrimary>
         </div>
       </div>
     </>

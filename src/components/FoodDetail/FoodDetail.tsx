@@ -25,6 +25,7 @@ import {
   useUpdateDishMutation,
 } from "@/react-query/dishes";
 import { useRouter } from "next/navigation";
+import ButtonPrimary from "../Button/ButtonPrimary";
 
 const FoodDetailInfor = ({
   dish,
@@ -251,13 +252,13 @@ const FoodDetailInfor = ({
           )}
         </div>
         <div className="col-span-2">
-          <button
-            type="submit"
-            className="mt-4 px-4 py-2 bg-blue-600 text-white rounded"
+          <ButtonPrimary
+            loading={isSubmitting}
             disabled={isSubmitting}
+            type="submit"
           >
-            {isSubmitting ? "Submitting..." : "Submit"}
-          </button>
+            Submit
+          </ButtonPrimary>
         </div>
       </form>
     </div>

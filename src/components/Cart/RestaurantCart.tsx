@@ -20,7 +20,7 @@ const RestaurantCart = () => {
   const { isLogin } = useAuthContext();
   const login = isLogin();
   return (
-    <div className="mt-10 col-span-4 lg:col-span-2 flex gap-2 flex-col sticky top-0">
+    <div className="mt-10 col-span-4 lg:col-span-2 flex gap-2 flex-col  top-0">
       <Heading className="ml-3">My cart is herer</Heading>
       <div className="mt-10 p-4 flex flex-col  justify-start rounded-3xl bg-white min-h-fit h-fit w-full overflow-auto">
         {items?.map((item) => (
