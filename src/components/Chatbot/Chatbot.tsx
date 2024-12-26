@@ -8,6 +8,7 @@ import { ChatbotApi } from "@/apis/chatbot";
 import styles from "./Chatbot.module.css";
 import clsx from "clsx";
 import { Popover, Transition } from "@headlessui/react";
+import Image from "next/image";
 interface ChatbotProps {
   className?: string;
 }
@@ -48,16 +49,15 @@ const Chatbot: FC<ChatbotProps> = ({ className = "" }) => {
   };
   return (
     <div className="ControlSelections relative z-40 hidden md:block">
-      <div className="fixed right-3 bottom-3 z-40 flex items-center">
+      <div className="fixed right-10 bottom-6 z-40 flex items-center">
         <Popover className="relative">
           {({ open, close }) => (
             <>
               <Popover.Button
-                className={`p-2.5 bg-white hover:bg-neutral-100 dark:bg-primary-6000 dark:hover:bg-primary-700 rounded-xl shadow-xl border border-neutral-200 dark:border-primary-6000 z-10 focus:outline-none ${
-                  open ? " focus:ring-2 ring-primary-500" : ""
-                }`}
+                className={`w-16 h-16 hover:bg-neutral-100 dark:bg-primary-6000 dark:hover:bg-primary-700 rounded-full shadow-xl border border-neutral-200 dark:border-primary-6000 z-10 focus:outline-none ${open ? " focus:ring-2 ring-primary-500" : ""
+                  }`}
               >
-                <CogIcon className="w-8 h-8" />
+                <Image src="/chatbot.png" alt="chatbot" fill className="rounded-full" />
               </Popover.Button>
               <Transition
                 as={Fragment}
@@ -68,23 +68,28 @@ const Chatbot: FC<ChatbotProps> = ({ className = "" }) => {
                 leaveFrom="opacity-100 translate-y-0"
                 leaveTo="opacity-0 translate-y-1"
               >
-                <Popover.Panel className="absolute bottom-0 right-14 z-10 mt-3 w-screen max-w-sm h-[400px]">
+                <Popover.Panel className="absolute bottom-0 right-20 z-10 mt-3 w-screen max-w-sm h-[450px]">
                   <div
                     className={`w-full h-full rounded-xl ${className} flex flex-col z-10 bg-white`}
                   >
-                    <div className="px-4 py-3 bg-blue-400 rounded-t-xl w-full flex items-center justify-between">
-                      <span className="font-semibold text-white">
-                        {" "}
-                        DFood Chatbot
-                      </span>
+                    <div className="px-4 py-2 bg-gradient-to-r from-blue-800 to-blue-700 rounded-t-xl w-full flex items-center justify-between">
+                      <div className="text-white flex items-center">
+                        <Image src="/chatbot.png" width={50} height={50} alt="" />
+                        <div>
+                          <h2 className="font-semibold">Dfood Chatbot</h2>
+                          <h2 className="text-xs text-neutral-200">24x7 Support Bot</h2>
+                        </div>
+
+
+                      </div>
+
                       <ButtonClose onClick={() => close()} />
                     </div>
                     <div className="flex flex-col gap-4 p-4 flex-1 overflow-auto">
                       {messages.map((message, index) => (
                         <MessageItem
-                          className={`${
-                            message.isUser == true ? "self-end" : "self-start"
-                          } max-w-[84%]`}
+                          className={`${message.isUser == true ? "self-end" : "self-start"
+                            } max-w-[84%]`}
                           key={index}
                           message={message}
                         />
@@ -109,14 +114,14 @@ const Chatbot: FC<ChatbotProps> = ({ className = "" }) => {
                         </div>
                       )}
                     </div>
-                    <div className="rounded-2xl p-2 w-full flex gap-2 items-center justify-between">
+                    <div className="p-2 w-full flex gap-2 items-center justify-between border-t-1 border-neutral-200 shadow-2xl">
                       <input
                         value={inputValue}
                         onChange={handleChange}
                         onKeyDown={handleKeyDown}
                         type="text"
-                        className="w-full focus:outline-none rounded-2xl bg-blue-200 p-2 outline-none border-none"
-                        placeholder="Type a message"
+                        className="w-full focus:outline-none focus:ring-0 focus:border-none outline-none border-none text-sm"
+                        placeholder="Type a message..."
                       />
                       <PaperAirplaneIcon
                         className="w-6 h-6 text-blue-500 hover:text-blue-600 cursor-pointer"
