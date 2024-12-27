@@ -30,10 +30,6 @@ export interface GallerySliderProps {
 }
 const stepItems = [
     {
-        title: "Start",
-
-    },
-    {
         title: "Gender",
     },
     {
@@ -181,6 +177,6 @@ export default function SplashSwipe({
             </div>
         </MotionConfig>
 
-        {!hideStep && <Steps items={stepItems} current={index} direction="horizontal" size="small" labelPlacement="vertical" responsive />}
+        {(!hideStep && index > 0) && <Steps items={stepItems} current={index - 1} direction="horizontal" size="small" labelPlacement="vertical" responsive />}
     </div>)
 }
