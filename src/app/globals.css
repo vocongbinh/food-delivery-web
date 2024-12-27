@@ -2,9 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-.css-dev-only-do-not-override-1u45vmg.ant-steps.ant-steps-label-vertical .ant-steps-item-content {
+/* .css-dev-only-do-not-override-1u45vmg.ant-steps.ant-steps-label-vertical .ant-steps-item-content {
     width: 100px !important;
 }
 .css-dev-only-do-not-override-1u45vmg.ant-steps.ant-steps-label-vertical .ant-steps-item-tail {
     margin-inline-start: 50px !important;
-}
+} */
