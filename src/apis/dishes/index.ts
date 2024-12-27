@@ -1,3 +1,4 @@
+import { Information } from 'iconsax-react';
 import { Restaurant } from "@/types";
 import { apiPut, getFormData } from "../../utils/api-request";
 import { Dish, DishRequest } from "@/types/dish";
@@ -8,6 +9,7 @@ import { RecommendedDish } from "@/types/recommendedDish";
 import endpoint from "@/utils/http";
 import { AuthsApi } from "../auths";
 import qs from "qs";
+import { InformationProps } from '@/contexts/information/information-context';
 
 export class DishesApi {
   static async postDish(request: DishRequest): Promise<Dish> {
@@ -46,10 +48,23 @@ export class DishesApi {
     });
     return res.data;
   }
-  static async getRecommendedDishes() {
-    const user = await AuthsApi.getUserProfile();
-    console.log(user)
-    const res = await RecommendController.generateRecommendations(user);
+  static async getRecommendedDishes(infoData?: InformationProps) {
+    let information: InformationProps;
+    if (infoData) {
+      information = infoData
+    } else {
+      const user = await AuthsApi.getUserProfile();
+      information = {
+        age: user!.age,
+        weight: user!.weight,
+        height: user!.height,
+        activity: user!.activity,
+        weightLoss: user!.weightLoss,
+        mealPerDay: user!.mealPerDay,
+        gender: user.gender
+      }
+    }
+    const res = await RecommendController.generateRecommendations(information);
     let recommendedDishes: RecommendedDish[] = [];
     localStorage.setItem("recommendedDishes", JSON.stringify(res[0]));
     const ids = res[0].map((dish: RecommendedDish) => {

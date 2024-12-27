@@ -20,6 +20,7 @@ import { DishesApi } from "@/apis/dishes";
 import StatisticComponent from "@/components/StatisticComponent/StatisticComponent";
 import { RecommendedDish } from "@/types/recommendedDish";
 import { useAuthContext } from "@/contexts/auth/auth-context";
+import { useInformationContext } from "@/contexts/information/information-context";
 const Home = () => {
   const { userInfo } = useAuthContext();
   const recommendedDishes: RecommendedDish[] = useMemo(() => {
@@ -32,7 +33,7 @@ const Home = () => {
     queryKey: [DISH_TYPE_KEY],
     queryFn: () => DishTypesApi.getDishTypes(),
   });
-
+  const {information} = useInformationContext()
   const { data: dishes } = useQuery({
     queryKey: ["Recommend-dish"],
     queryFn: () => DishesApi.getRecommendedDishes(),

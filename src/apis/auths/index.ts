@@ -11,6 +11,7 @@ import { Dish, DishRequest } from "@/types/dish";
 import { apiGet, apiPost, apiDelete, apiPatch } from "@/utils/api-request";
 import { User } from "@/types/user";
 import RecommendController, { getWeightLoss } from "@/utils/recommendation";
+import endpoint from "@/utils/http";
 
 export class AuthsApi {
   static async login(request: AuthRequest): Promise<AuthResponse> {
@@ -39,7 +40,8 @@ export class AuthsApi {
   }
 
   static async putAuths(request: DishRequest): Promise<Dish> {
-    return await apiPut(`/dishes/${request.id}`, request);
+    const res = await endpoint.put(`/dishes/${request.id}`, request);
+    return res.data;
   }
 
   static async getUserCondition(): Promise<HealthCondition> {

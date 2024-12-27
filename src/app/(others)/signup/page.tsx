@@ -11,6 +11,7 @@ import { RegisterRequest } from "@/types/auth";
 import { useSignup } from "@/react-query/auth";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import { setCookie } from "cookies-next";
 const PageSignUp = ({}) => {
   const { mutate: signUp, isPending: isSubmitting } = useSignup();
   const router = useRouter();
@@ -19,6 +20,7 @@ const PageSignUp = ({}) => {
       { ...data },
       {
         onSuccess: (res) => {
+          setCookie("token", res.token);
           toast.success("Register success!");
           router.push("/information");
         },

@@ -3,6 +3,7 @@ import { recommendEndpoint } from "./http";
 import axios from "axios";
 import { parse } from "node-html-parser";
 import { UserInfo } from "@/types";
+import { InformationProps } from "@/contexts/information/information-context";
 
 class ImageFinder {
   static async getImagesLinks(searchTerm: string): Promise<string> {
@@ -104,7 +105,7 @@ export const getMealsPerc = (numberOfMeal: number): MealPerc => {
   }
 };
 class RecommendController {
-  static caloriesCalculator(user: UserInfo): number {
+  static caloriesCalculator(user: InformationProps): number {
     const activities = [
       "Little/no exercise",
       "Light exercise",
@@ -119,7 +120,7 @@ class RecommendController {
     return maintainCalories;
   }
 
-  static calculateBmr(user: UserInfo): number {
+  static calculateBmr(user: InformationProps): number {
     let bmr: number;
     if (user.gender === "male") {
       bmr = 10 * user.weight! + 6.25 * user.height! - 5 * user.age! + 5;
@@ -134,11 +135,9 @@ class RecommendController {
     return min + Math.random() * (max - min);
   }
 
-  static async generateRecommendations(user: UserInfo): Promise<any> {
-    console.log(user.weightLoss);
+  static async generateRecommendations(user: InformationProps): Promise<any> {
     const totalCalories =
       getWeightLoss(user.weightLoss!) * this.caloriesCalculator(user);
-    console.log(totalCalories);
     const recommendations: any[] = [];
     const mealsCaloriesPerc = getMealsPerc(user.mealPerDay!);
     console.log(mealsCaloriesPerc);

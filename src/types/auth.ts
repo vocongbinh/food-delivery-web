@@ -16,14 +16,14 @@ export type UserInfo = {
   id: number;
   username: string;
   fullname: string;
-  weight: number | null;
-  height: number | null;
+  weight: number;
+  height: number;
   activity: string;
-  mealPerDay: number | null;
-  weightLoss: string | null;
+  mealPerDay: number;
+  weightLoss: string;
   avatarUrl: string;
-  age: number | null;
-  gender: string | null;
+  age: number;
+  gender: string;
   roles: UserRole[];
 };
 
