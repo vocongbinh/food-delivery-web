@@ -32,6 +32,15 @@ module.exports = {
     },
 
     extend: {
+      keyframes: {
+        loading: {
+          '0%, 100%': { opacity: 0 },
+          '50%': { opacity: 1 },
+        },
+      },
+      animation: {
+        loading: 'loading 1.5s infinite',
+      },
       colors: {
         primary: {
           50: customColors("--c-primary-50"),

@@ -48,6 +48,7 @@ export class DishesApi {
   }
   static async getRecommendedDishes() {
     const user = await AuthsApi.getUserProfile();
+    console.log(user)
     const res = await RecommendController.generateRecommendations(user);
     let recommendedDishes: RecommendedDish[] = [];
     localStorage.setItem("recommendedDishes", JSON.stringify(res[0]));

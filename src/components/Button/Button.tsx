@@ -9,7 +9,7 @@ export interface ButtonProps {
   className?: string;
   sizeClass?: string;
   fontSize?: string;
-  pattern?: "primary" | "secondary" | "third" | "white" | "default";
+  pattern?: "primary" | "secondary" | "third" | "white" | "default" | "male" |"female";
   //
   loading?: boolean;
   disabled?: boolean;
@@ -48,6 +48,14 @@ const Button: FC<ButtonProps> = ({
     case "third":
       colors =
         "bg-white dark:bg-neutral-900 ring-1 ring-neutral-300 hover:ring-neutral-400 dark:ring-neutral-700 dark:hover:ring-neutral-500";
+      break;
+    case "male":
+      colors =
+        "bg-blue-100 dark:bg-blue-900  hover:bg-blue-200 text-neutral-900 dark:text-neutral-200";
+        break;
+    case "female":
+      colors =
+        "bg-pink-100 dark:bg-pink-900  hover:bg-pink-200 text-neutral-900 dark:text-neutral-200";
       break;
 
     default:

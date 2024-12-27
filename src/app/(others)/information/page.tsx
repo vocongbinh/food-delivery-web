@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { createContext, useState } from "react";
 import Input from "@/components/Input/Input";
 import ButtonPrimary from "@/components/Button/ButtonPrimary";
 import NcLink from "@/components/NcLink/NcLink";
@@ -22,6 +22,9 @@ import {
 } from "@mui/material";
 import { AuthsApi } from "@/apis/auths";
 import { DishesApi } from "@/apis/dishes";
+import SplashSwipe from "@/components/SplashSwipe/SplashSwipe";
+import { Information } from "iconsax-react";
+import InformationProvider from "@/contexts/information/information-context";
 const converter = require("number-to-words");
 const activitiesMark = [
   {
@@ -79,7 +82,7 @@ const initialInformation: InformationProps = {
   weightLoss: "Maintain weight",
   mealPerDay: 3,
 };
-const InformationPage = ({}) => {
+const InformationPage = ({ }) => {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [information, setInformation] =
@@ -97,22 +100,7 @@ const InformationPage = ({}) => {
       };
     });
   };
-  const getAriaValue = (value: number) => {
-    switch (value) {
-      case 0:
-        return "Little/no exercise";
-      case 25:
-        return "Light exercise";
-      case 50:
-        return "Moderate exercise (3-5 days/week)";
-      case 75:
-        return "Very active (6-7 days/week)";
-      case 100:
-        return "Extra active (very active & physical job)";
-      default:
-        return "Little/no exercise";
-    }
-  };
+
   const [isLoading, setIsLoading] = useState(false);
   const handleContinue = async () => {
     // await AuthsApi.updateUser(information, 24);
@@ -159,136 +147,143 @@ const InformationPage = ({}) => {
     }
     return items;
   };
+  const splashClassName = "bg-gradient-to-r from-blue-200 via-white to-blue-200 p-8 rounded-lg shadow-md"
 
   return (
-    <>
-      <header className="text-center max-w-2xl mx-auto mb-3 sm:mb-16 lg:mb-6 ">
-        <h2 className="text-4xl font-semibold">Update Your Information</h2>
-      </header>
+    // <>
+    //   <header className="text-center max-w-2xl mx-auto mb-3 sm:mb-16 lg:mb-6 ">
+    //     <h2 className="text-4xl font-semibold">Update Your Information</h2>
+    //   </header>
 
-      <div className="max-w-lg mx-auto space-y-2 mt-12">
-        <div className="grid grid-cols-1 gap-10">
-          <label className="flex justify-between">
-            <span className="text-neutral-800 dark:text-neutral-200">
-              What is your age?
-            </span>
-            <FormControl className="w-1/3">
-              <InputLabel id="age">Age</InputLabel>
-              <Select
-                value={information.age}
-                labelId="age"
-                label="Age"
-                onChange={(e) => {
-                  handleChangeInformation("age", e.target.value as number);
-                }}
-              >
-                {renderAgeItem()}
-              </Select>
-            </FormControl>
-          </label>
-          <label className="flex justify-between">
-            <span className="text-neutral-800 dark:text-neutral-200">
-              What is your height?
-            </span>
-            <FormControl className="w-1/3">
-              <InputLabel id="height">Height</InputLabel>
-              <Select
-                value={information.height}
-                labelId="height"
-                label="Height"
-                onChange={(e) => {
-                  handleChangeInformation("height", e.target.value as number);
-                }}
-              >
-                {renderHeightItem()}
-              </Select>
-            </FormControl>
-          </label>
+    //   <div className="max-w-lg mx-auto space-y-2 mt-12">
+    //     <div className="grid grid-cols-1 gap-10">
+    //       <label className="flex justify-between">
+    //         <span className="text-neutral-800 dark:text-neutral-200">
+    //           What is your age?
+    //         </span>
+    //         <FormControl className="w-1/3">
+    //           <InputLabel id="age">Age</InputLabel>
+    //           <Select
+    //             value={information.age}
+    //             labelId="age"
+    //             label="Age"
+    //             onChange={(e) => {
+    //               handleChangeInformation("age", e.target.value as number);
+    //             }}
+    //           >
+    //             {renderAgeItem()}
+    //           </Select>
+    //         </FormControl>
+    //       </label>
+    //       <label className="flex justify-between">
+    //         <span className="text-neutral-800 dark:text-neutral-200">
+    //           What is your height?
+    //         </span>
+    //         <FormControl className="w-1/3">
+    //           <InputLabel id="height">Height</InputLabel>
+    //           <Select
+    //             value={information.height}
+    //             labelId="height"
+    //             label="Height"
+    //             onChange={(e) => {
+    //               handleChangeInformation("height", e.target.value as number);
+    //             }}
+    //           >
+    //             {renderHeightItem()}
+    //           </Select>
+    //         </FormControl>
+    //       </label>
 
-          <label className="flex justify-between">
-            <span className="text-neutral-800 dark:text-neutral-200">
-              What is your weight?
-            </span>
-            <FormControl className="w-1/3">
-              <InputLabel id="weight">Weight</InputLabel>
-              <Select
-                value={information.weight}
-                labelId="weight"
-                label="Weight"
-                onChange={(e) => {
-                  handleChangeInformation("weight", e.target.value as number);
-                }}
-              >
-                {renderWeightItem()}
-              </Select>
-            </FormControl>
-          </label>
-          <label className="block">
-            <span className="text-neutral-800 dark:text-neutral-200">
-              <label className="block">
-                <span className="text-neutral-800 dark:text-neutral-200">
-                  What is your activity level?
-                </span>
-                {/* <ul>
-                  <li>1: Little/no exercise </li>
-                  <li>2: Light exercise</li>
-                  <li>3: Moderate exercise (3-5 days/week)</li>
-                  <li>4: Very active (6-7 days/week)</li>
-                  <li>5: Extra active (very active day & physical job)</li>
-                </ul> */}
-                <Slider
-                  aria-label="activity marks"
-                  defaultValue={25}
-                  getAriaValueText={getAriaValue}
-                  step={25}
-                  valueLabelDisplay="off"
-                  marks={activitiesMark}
-                  onChange={(e, value) => {
-                    handleChangeInformation(
-                      "activity",
-                      activitiesMark.filter(
-                        (activity) => activity.value === value
-                      )[0].label
-                    );
-                  }}
-                />
-              </label>
-            </span>
-          </label>
-          <label className="block">
-            <span className="text-neutral-800 dark:text-neutral-200">
-              <label className="block">
-                <span className="text-neutral-800 dark:text-neutral-200">
-                  What is your goal?
-                </span>
+    //       <label className="flex justify-between">
+    //         <span className="text-neutral-800 dark:text-neutral-200">
+    //           What is your weight?
+    //         </span>
+    //         <FormControl className="w-1/3">
+    //           <InputLabel id="weight">Weight</InputLabel>
+    //           <Select
+    //             value={information.weight}
+    //             labelId="weight"
+    //             label="Weight"
+    //             onChange={(e) => {
+    //               handleChangeInformation("weight", e.target.value as number);
+    //             }}
+    //           >
+    //             {renderWeightItem()}
+    //           </Select>
+    //         </FormControl>
+    //       </label>
+    //       <label className="block">
+    //         <span className="text-neutral-800 dark:text-neutral-200">
+    //           <label className="block">
+    //             <span className="text-neutral-800 dark:text-neutral-200">
+    //               What is your activity level?
+    //             </span>
+    //             {/* <ul>
+    //               <li>1: Little/no exercise </li>
+    //               <li>2: Light exercise</li>
+    //               <li>3: Moderate exercise (3-5 days/week)</li>
+    //               <li>4: Very active (6-7 days/week)</li>
+    //               <li>5: Extra active (very active day & physical job)</li>
+    //             </ul> */}
+    //             <Slider
+    //               aria-label="activity marks"
+    //               defaultValue={25}
+    //               getAriaValueText={getAriaValue}
+    //               step={25}
+    //               valueLabelDisplay="off"
+    //               marks={activitiesMark}
+    //               onChange={(e, value) => {
+    //                 handleChangeInformation(
+    //                   "activity",
+    //                   activitiesMark.filter(
+    //                     (activity) => activity.value === value
+    //                   )[0].label
+    //                 );
+    //               }}
+    //             />
+    //           </label>
+    //         </span>
+    //       </label>
+    //       <label className="block">
+    //         <span className="text-neutral-800 dark:text-neutral-200">
+    //           <label className="block">
+    //             <span className="text-neutral-800 dark:text-neutral-200">
+    //               What is your goal?
+    //             </span>
 
-                <Slider
-                  aria-label="goal marks"
-                  defaultValue={0}
-                  step={100 / 3}
-                  valueLabelDisplay="off"
-                  marks={goalsMark}
-                  color="warning"
-                  onChange={(e, value) => {
-                    handleChangeInformation(
-                      "weightLoss",
-                      goalsMark.filter((goal) => goal.value === value)[0].label
-                    );
-                  }}
-                />
-              </label>
-            </span>
-          </label>
-          <ButtonPrimary
-            loading={isLoading}
-            disabled={isLoading}
-            onClick={handleContinue}
-          >
-            Continue
-          </ButtonPrimary>
-        </div>
+    //             <Slider
+    //               aria-label="goal marks"
+    //               defaultValue={0}
+    //               step={100 / 3}
+    //               valueLabelDisplay="off"
+    //               marks={goalsMark}
+    //               color="warning"
+    //               onChange={(e, value) => {
+    //                 handleChangeInformation(
+    //                   "weightLoss",
+    //                   goalsMark.filter((goal) => goal.value === value)[0].label
+    //                 );
+    //               }}
+    //             />
+    //           </label>
+    //         </span>
+    //       </label>
+    //       <ButtonPrimary
+    //         loading={isLoading}
+    //         disabled={isLoading}
+    //         onClick={handleContinue}
+    //       >
+    //         Continue
+    //       </ButtonPrimary>
+    //     </div>
+    //   </div>
+    // </>
+    <InformationProvider>
+      <div className={`${splashClassName} mx-auto rounded-xl sm:rounded-3xl lg:rounded-[40px] shadow-lg dark:bg-neutral-900`}>
+        <SplashSwipe />
       </div>
-    </>
+    </InformationProvider>
+
   );
 };
 
