@@ -1,5 +1,8 @@
 import SectionSubscribe2 from "@/components/SectionSubscribe2/SectionSubscribe2";
+import SplashSwipe from "@/components/SplashSwipe/SplashSwipe";
+import { Splash } from "next/font/google";
 import React, { FC, ReactNode } from "react";
+import InformationPage from "./information/page";
 
 const LayoutPage = ({ children }: { children: ReactNode }) => {
   return (
@@ -9,9 +12,7 @@ const LayoutPage = ({ children }: { children: ReactNode }) => {
       />
       <div className="relative pt-6 sm:pt-10 pb-16 lg:pt-20 lg:pb-28 lg:w-1/2 w-full mx-auto">
         {/* CONTENT */}
-        <div className="p-5 mx-auto bg-white rounded-xl sm:rounded-3xl lg:rounded-[40px] shadow-lg sm:p-10 lg:p-16 dark:bg-neutral-900">
-          {children}
-        </div>
+        {children}
       </div>
 
       {/* <div className="container pb-16 lg:pb-28">

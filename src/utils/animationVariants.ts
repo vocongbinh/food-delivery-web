@@ -2,7 +2,7 @@ export const variants = (x = 1000, opacity = 0) => ({
   enter: (direction: number) => {
     return {
       x: direction > 0 ? x : -x,
-      opacity,
+      opacity: 0,
     };
   },
   center: {
@@ -12,7 +12,7 @@ export const variants = (x = 1000, opacity = 0) => ({
   exit: (direction: number) => {
     return {
       x: direction < 0 ? x : -x,
-      opacity,
+      opacity: 0,
     };
   },
 });

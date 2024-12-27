@@ -27,6 +27,13 @@ export type UserInfo = {
   roles: UserRole[];
 };
 
+export type HealthCondition = {
+  bmi: number;
+  result: string;
+  calories: { calo: number, type: string, value: string }[];
+  color: string;
+}
+
 export type UserRole = {
   id: number;
   role: {

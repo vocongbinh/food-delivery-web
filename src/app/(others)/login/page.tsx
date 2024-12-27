@@ -53,7 +53,7 @@ const PageLogin = ({}) => {
     formState: { errors },
   } = form;
   return (
-    <>
+    <div className="p-5 mx-auto bg-white rounded-xl sm:rounded-3xl lg:rounded-[40px] shadow-lg sm:p-10 lg:p-16 dark:bg-neutral-900">
       <header className="text-center max-w-2xl mx-auto - mb-3 sm:mb-16 lg:mb-6 ">
         <Heading2>Login</Heading2>
       </header>
@@ -110,7 +110,7 @@ const PageLogin = ({}) => {
           <NcLink href="/signup">Create an account</NcLink>
         </span>
       </div>
-    </>
+    </div>
   );
 };
 

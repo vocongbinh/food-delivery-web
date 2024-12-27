@@ -44,7 +44,7 @@ const PageSignUp = ({}) => {
   } = form;
 
   return (
-    <>
+    <div className="p-5 mx-auto bg-white rounded-xl sm:rounded-3xl lg:rounded-[40px] shadow-lg sm:p-10 lg:p-16 dark:bg-neutral-900">
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="grid grid-cols-1 gap-6"
@@ -103,7 +103,7 @@ const PageSignUp = ({}) => {
         <NcLink href="/login">Sign in</NcLink>
       </span>
       {/* </div> */}
-    </>
+    </div>
   );
 };
 
