@@ -51,7 +51,7 @@ export default function WishListPage() {
         render: (text, record) => {
           const imageUrl = record.imageUrl!.split(", ")[0]
           // eslint-disable-next-line @next/next/no-img-element
-          return <img src={record.imageUrl} alt={imageUrl} className='h-16 w-16 ext-black dark:text-white text-base' />
+          return <img src={imageUrl} alt={imageUrl} className='h-16 w-16 ext-black dark:text-white text-base' />
         }
       },
       {

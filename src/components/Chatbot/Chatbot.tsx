@@ -31,6 +31,7 @@ const Chatbot: FC<ChatbotProps> = ({ className = "" }) => {
     setInputValue("");
     try {
       setLoading(true);
+      console.log(inputValue)
       const resMessage = await ChatbotApi.getMessageRes(inputValue);
       setLoading(false);
       setMessages([
@@ -38,8 +39,8 @@ const Chatbot: FC<ChatbotProps> = ({ className = "" }) => {
         { text: inputValue, isUser: true },
         { text: resMessage, isUser: false },
       ]);
-    } catch (e) {
-      throw new Error("Can't not get response message");
+    } catch (e:any) {
+      throw new Error(e.message);
     }
   };
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
