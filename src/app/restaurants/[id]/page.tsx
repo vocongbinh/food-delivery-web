@@ -2,17 +2,9 @@
 
 import SingleCommentForm from "@/app/(singles)/SingleCommentForm";
 import SingleCommentLists from "@/app/(singles)/SingleCommentLists";
-import ButtonPrimary from "@/components/Button/ButtonPrimary";
-import Media from "@/components/Media";
-import MySlider from "@/components/MySlider";
-import { Application, ReviewFormData } from "@/data/types";
 import { useCustomMutation } from "@/hooks/useCustomMutation";
-import { useCustomQuery } from "@/hooks/useCustomQuery";
-import { getStrapiMedia } from "@/utils/apiHelpers";
-import { retrieveDataFromResponse } from "@/utils/retrieveDataFromResponse";
 import Image from "next/image";
-import { useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Rate, Tooltip } from "antd";
 import Nav from "@/components/Nav/Nav";
 import NavItem from "@/components/NavItem/NavItem";

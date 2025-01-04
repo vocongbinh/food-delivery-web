@@ -6,20 +6,21 @@ import { Fragment } from "react";
 import Avatar from "@/components/Avatar/Avatar";
 import SwitchDarkMode2 from "@/components/SwitchDarkMode/SwitchDarkMode2";
 import Link from "next/link";
-import { signOut, useSession } from "next-auth/react";
-import { useCustomQuery } from "@/hooks/useCustomQuery";
-import { getStrapiMedia } from "@/utils/apiHelpers";
-import { User } from "@/data/types";
+import { signOut } from "next-auth/react";
+import { UserInfo } from "@/types";
 import { setCookie } from "cookies-next";
 import { Route } from "next";
+import { useQuery } from "@tanstack/react-query";
+import { AuthsApi } from "@/apis/auths";
+import { getCookie } from "cookies-next";
 export default function AvatarDropdown() {
 const isBrowser = typeof window !== "undefined" && typeof localStorage !== "undefined";
-  const { data } = useCustomQuery<User>({
-    key: "users/me",opts: {
-      enabled: isBrowser ? (localStorage.getItem("token") ? true : false) : false
-    }
-  });
-  const user = data as User;
+  const {data} = useQuery({
+    queryKey: ["profile"],
+    queryFn: () => AuthsApi.getUserProfile(),
+    enabled: isBrowser ? (getCookie("token") ? true : false) : false
+  })
+  const user = data as UserInfo;
   return (
     <div className="AvatarDropdown ">
       <Popover className="relative">
@@ -63,8 +64,7 @@ const isBrowser = typeof window !== "undefined" && typeof localStorage !== "unde
                 <div className="overflow-hidden rounded-3xl shadow-lg ring-1 ring-black ring-opacity-5">
                   <div className="relative grid grid-cols-1 gap-6 bg-white dark:bg-neutral-800 py-7 px-6">
                     {user && <div className="flex items-center">
-                      <Avatar imgUrl={getStrapiMedia(user.avatar.url) || ""} sizeClass="w-12 h-12" />
-
+                      <Avatar imgUrl={user.avatarUrl || "/default-avatar.png"} sizeClass="w-12 h-12" />
                       <div className="flex-grow ms-3">
                         <h4 className="font-semibold">{user.username}</h4>
                       </div>

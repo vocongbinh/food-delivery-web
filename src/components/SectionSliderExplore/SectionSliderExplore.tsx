@@ -2,8 +2,7 @@
 
 import React, { FC } from "react";
 import Heading from "@/components/Heading/Heading";
-import { Category, PostAuthorType } from "@/data/types";
-import CardAuthorBox2 from "@/components/CardAuthorBox2/CardAuthorBox2";
+import { Category } from "@/data/types";
 import MySlider from "@/components/MySlider";
 import CategoryExplorer from "../CategoryExplorer/CategoryExplorer";
 

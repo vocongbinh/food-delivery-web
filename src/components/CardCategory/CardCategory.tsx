@@ -1,7 +1,5 @@
 "use client";
 import React, { FC, useState } from "react";
-import { Category } from "@/data/types";
-import { getStrapiMedia } from "@/utils/apiHelpers";
 import Image from "next/image";
 import Badge from "../Badge/Badge";
 import Link from "next/link";

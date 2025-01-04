@@ -34,7 +34,7 @@ const SocialsList: FC<SocialsListProps> = ({
           rel="noopener noreferrer"
           title={item.name}
         >
-          <Image src={getStrapiMedia(item.icon) || ""} width={22} height={22} alt=""/>
+          <div dangerouslySetInnerHTML={{ __html: item.icon }}></div>
         </a>
       ))}
     </nav>

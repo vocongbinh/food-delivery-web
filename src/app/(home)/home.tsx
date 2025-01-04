@@ -117,7 +117,7 @@ const Home = () => {
           {renderDishOfType()}
         </div>
         {userInfo && (
-          <div className="w-full min-w-[200px] max-w-[300px] ">
+          <div className="w-full min-w-[200px]">
             <RestaurantCart />
           </div>
         )}{" "}
