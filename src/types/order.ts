@@ -7,7 +7,7 @@ export type OrderRequest = {
   voucherIds: number[];
   paymentMethod: string;
 };
-enum OrderStatus {
+export enum OrderStatus {
   PENDING = 1,
   PROCESSING = 2,
   CANCELED = 3,
@@ -34,7 +34,21 @@ export type Order = {
     groups: OrderLineItem_GroupOption[];
     price: number;
   };
+  created_at: string;
+  updated_at: string;
 };
+
+export type OrderNFT = {
+  orderId: string;
+  image: string;
+  attributes: [
+    {
+      trait_type: string;
+      value: string | number;
+    }
+  ]
+
+}
 
 export type OrderLineItem_Option = {
   optionId: number;
