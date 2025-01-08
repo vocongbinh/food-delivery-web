@@ -82,9 +82,9 @@ order,
             />
           </div>
           
-            <div className="absolute -bottom-2 -right-2 bg-gray-800 text-white text-xs px-1.5 py-0.5 rounded-md">
-              +2
-            </div>
+           {dishes.split(" | ").length - 1 > 0 && <div className="absolute -bottom-2 -right-2 bg-gray-800 text-white text-xs px-1.5 py-0.5 rounded-md">
+              {`+${dishes.split(" | ").length - 1}`}
+            </div>} 
           
         </div>
 
