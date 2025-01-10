@@ -20,6 +20,7 @@ import { DishesApi } from "@/apis/dishes";
 import StatisticComponent from "@/components/StatisticComponent/StatisticComponent";
 import { RecommendedDish } from "@/types/recommendedDish";
 import { useAuthContext } from "@/contexts/auth/auth-context";
+import StripeElement from "@/components/StripeElement/StripeElement";
 const Home = () => {
   const { userInfo } = useAuthContext();
   const recommendedDishes: RecommendedDish[] = useMemo(() => {
@@ -97,6 +98,7 @@ const Home = () => {
   return (
     <>
       <div className="dark bg-neutral-900 dark:bg-black dark:bg-opacity-20 text-neutral-100">
+        <StripeElement/>
         {userInfo && (
           <div className="relative container">
             <SectionRecommendedDish
@@ -123,6 +125,7 @@ const Home = () => {
         )}{" "}
         {/* <Chatbot className="fixed bottom-10 right-10"/> */}
       </div>
+      
     </>
   );
 };
