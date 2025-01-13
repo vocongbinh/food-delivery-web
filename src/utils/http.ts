@@ -40,6 +40,13 @@ export const recommendEndpoint = axios.create({
   },
 });
 
+export const contractEndpoint = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_CONTRACT_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
 class Endpoint {
   instance: AxiosInstance;
   constructor() {

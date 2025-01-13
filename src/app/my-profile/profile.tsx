@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client"
 import React, { ChangeEvent, createRef, useEffect, useState } from 'react'
 import Button from '@/components/Button/Button'
@@ -13,6 +14,8 @@ import { UserInfo } from '@/types'
 import { Dropdown, MenuProps, Select, Space, Typography } from 'antd'
 import { uploadImage } from '@/utils/imageHelper'
 import { toast } from 'react-toastify'
+import { OrdersApi } from '@/apis/orders'
+import { useTonAddress } from '@tonconnect/ui-react'
 
 const activityItems: { value: string, label: string }[] = [
     {
@@ -54,16 +57,17 @@ const weightLossItems: { value: string, label: string }[] = [
         label: 'Extreme weight loss',
     }
 ]
-const Profile = ({user}: {user: UserInfo}) => {
+const Profile = ({ user }: { user: UserInfo }) => {
     const profile = user;
-    console.log(profile)
+    const walletAddress = useTonAddress()
+    const { data: jetton } = useQuery({ queryKey: ["jetton"], queryFn: () => OrdersApi.getJettons(walletAddress) })
     const [image, setImage] = useState<string>("/default-avatar.png");
     const [file, setFile] = useState<File>();
     const [weightLoss, setWeightLoss] = useState<string>("");
     const [activity, setActivity] = useState<string>("");
     const [username, setUsername] = useState<string>("");
     const uploadRef = createRef<HTMLInputElement>();
-    const { mutate } = useCustomMutation({ key: "auth", type: "update", queryKey:["profile"] })
+    const { mutate } = useCustomMutation({ key: "auth", type: "update", queryKey: ["profile"] })
 
     const handleUpload = () => {
         uploadRef.current?.click();
@@ -136,7 +140,7 @@ const Profile = ({user}: {user: UserInfo}) => {
             image = await uploadImage(file)
         }
         if (image) {
-        data["avatarUrl"] = image;
+            data["avatarUrl"] = image;
         }
         console.log(data);
         mutate(data);
@@ -205,7 +209,16 @@ const Profile = ({user}: {user: UserInfo}) => {
                             options={activityItems}
                         />
                     </div>
+                    {jetton && <div>
+                        <label className='block text-sm font-medium text-gray-700 mb-2'>Your Jettons</label>
+                        <div className='flex gap-4 items-center'>
+                        <img src={jetton?.image} alt="" className="w-20 h-20 rounded-full" />
+                        <span className='font-semibold'>{jetton?.balance + " "} {jetton?.symbol}</span>
+                       
 
+                        </div>
+                      
+                    </div>}
                     <div className='flex items-center gap-4'>
                         <label className='block text-sm font-medium text-gray-700'>Your Photo</label>
                         <Button

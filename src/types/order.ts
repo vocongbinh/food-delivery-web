@@ -1,3 +1,4 @@
+import { Dish } from "./dish";
 import { User } from "./user";
 
 export type OrderRequest = {
@@ -60,3 +61,18 @@ export type OrderLineItem_GroupOption = {
   groupOptionName: string;
   selectedOptions: OrderLineItem_Option[];
 };
+
+
+export interface OrderItem {
+  dish: Dish;
+  quantity: number;
+}
+
+export interface OrderOfContract {
+  id: number;
+  orderItems: OrderItem[];
+  image: string;
+  name: string;
+  address: string;
+  phone: string;
+}
