@@ -21,11 +21,29 @@ import { useGetVoucherByRestaurant } from "@/react-query/vouchers";
 import VoucherBox from "@/components/Checkout/VoucherBox";
 import { DiscountType, Voucher } from "@/types";
 import { useRouter } from "next/navigation";
+import StripeElement from "@/components/StripeElement/StripeElement";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe, StripeElementsOptions } from "@stripe/stripe-js/dist";
+import CompletePage from "@/components/CompletePage/CompletePage";
+import CheckoutForm from "@/components/CheckoutForm/CheckoutForm";
+import { OrderContractItemRequest, OrderContractRequest } from "@/types/order";
+const PaymentMethodEnum = {
+  CASH: 1,
+  STRIPE: 2,
+  TON: 3,
+};
+
+const stripePromise = loadStripe(
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || ""
+);
 
 const CheckoutPage: React.FC = () => {
   const { data: cartItems } = useGetCartItemsQuery();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { mutate: createOrderMutation, isPending } = useAddOrderMutation();
+  const [clientSecret, setClientSecret] = useState("");
+  const [isConfirmed, setIsConfirmed] = useState<boolean>(false);
+
   const router = useRouter();
   const restaurants = useMemo(
     () =>
@@ -48,31 +66,95 @@ const CheckoutPage: React.FC = () => {
     defaultValues: {
       address: "",
       note: "",
-      paymentMethod: "cash",
+      paymentMethod: PaymentMethodEnum.STRIPE,
     },
   });
   const {
     register,
     handleSubmit,
     formState: { errors },
-    setValue,
+    watch,
   } = form;
+  const paymentMethod = watch("paymentMethod");
+  const handleTest = async () => {
+    return fetch("/api/create-payment-intent", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        items: [{ id: "xl-tshirt" }],
+        amount: 50,
+        destination: "acct_1QfeqOPGS9DAR4wx",
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => setClientSecret(data.clientSecret));
+  };
+  useEffect(() => {
+    const isConfirmed = !!new URLSearchParams(window.location.search).get(
+      "payment_intent_client_secret"
+    );
+    console.log(isConfirmed);
+    setIsConfirmed(isConfirmed);
+    if (isConfirmed) {
+      fetch("/api/create-payment-intent", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          items: [{ id: "xl-tshirt" }],
+          amount: 50,
+          destination: "acct_1QfeqOPGS9DAR4wx",
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => setClientSecret(data.clientSecret));
+    }
+  }, []);
+  const options: StripeElementsOptions = {
+    clientSecret,
+  };
+
+  useEffect(() => {
+    console.log("ee");
+    console.log(paymentMethod);
+    console.log(PaymentMethodEnum.STRIPE);
+    console.log(Number(paymentMethod) == PaymentMethodEnum.STRIPE);
+    if (Number(paymentMethod) == PaymentMethodEnum.STRIPE) {
+      handleTest();
+    }
+  }, [paymentMethod]);
   const onSubmit = (data: z.infer<typeof OrderRequestSchema>) => {
     setIsSubmitting(true);
-    createOrderMutation(
-      {
-        ...data,
-        cartItemIds: selectedItems?.map((item) => item.id) ?? [],
-        voucherIds: [],
-      },
-      {
-        onSuccess: (res) => {
-          router.back();
+    if (paymentMethod === PaymentMethodEnum.TON) {
+      handleCreateOrderContract({
+        orderItems: selectedItems.map<OrderContractItemRequest>((item) => ({
+          dish: item.dish,
+          quantity: item.quantity,
+        })),
+        image: "",
+        name: "",
+        address: data.address,
+        phone: data.note,
+        vouchers: selectedVoucher ? [selectedVoucher] : [],
+      });
+    } else {
+      createOrderMutation(
+        {
+          ...data,
+          cartItemIds: selectedItems?.map((item) => item.id) ?? [],
+          voucherIds: [],
         },
-        onSettled: (res) => {},
-      }
-    );
+        {
+          onSuccess: (res) => {
+            router.back();
+          },
+          onSettled: (res) => {},
+        }
+      );
+    }
     setIsSubmitting(false);
+  };
+  const handleCreateOrderContract = (orderContract: OrderContractRequest) => {
+    //TODO: generate code for create order contract
   };
   const [activeRestaurant, setActiveRestaurant] = useState<number>(0);
   const [selectedItems, setSelectedItems] = useState<CartItem[]>([]);
@@ -89,6 +171,7 @@ const CheckoutPage: React.FC = () => {
   }, [activeRestaurant]);
   let total =
     restaurants.find((item) => item.id == activeRestaurant)?.total ?? 0;
+
   const getPaymentCard = () => {
     return (
       <div className=" rounded-xl md:border md:border-neutral-100 dark:border-neutral-800 md:p-6 ">
@@ -124,9 +207,17 @@ const CheckoutPage: React.FC = () => {
         </label>
         <label className="block md:col-span-2">
           <Label>Payment method *</Label>
-          <Select className="mt-1  w-full" placeholder="Select payment method">
-            <option value="cash">Cash</option>
-            <option value="zaloPay">Zalo pay</option>
+          <Select
+            {...register("paymentMethod")}
+            className="mt-1  w-full"
+            placeholder="Select payment method"
+          >
+            <option key={PaymentMethodEnum.CASH} value={1}>
+              Cash
+            </option>
+            <option key={PaymentMethodEnum.STRIPE} value={2}>
+              Stripe pay
+            </option>
           </Select>
           {errors.paymentMethod && (
             <p className="text-red-500 text-sm mt-2">
@@ -134,6 +225,11 @@ const CheckoutPage: React.FC = () => {
             </p>
           )}
         </label>
+        {clientSecret && (
+          <Elements options={options} stripe={stripePromise}>
+            {isConfirmed ? <CompletePage /> : <CheckoutForm />}
+          </Elements>
+        )}
         <div className=" border-neutral-200 dark:border-neutral-900 ">
           <dl>
             {restaurants
@@ -294,7 +390,7 @@ const CheckoutPage: React.FC = () => {
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-neutral-500 dark:text-neutral-400">
                       <div className="flex flex-col items-end gap-3">
                         <TrashIcon className="w-5 h-5 cursor-pointer" />
-                        <span> {item.dish.price}</span>
+                        <span> {Utils.formatCurrency(item.dish.price)}</span>
                       </div>
                     </td>
                   </tr>

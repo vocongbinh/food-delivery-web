@@ -4,7 +4,7 @@ import { useState } from "react";
 import {
   PaymentElement,
   useStripe,
-  useElements
+  useElements,
 } from "@stripe/react-stripe-js";
 import { StripePaymentElementOptions } from "@stripe/stripe-js";
 import { Spin } from "antd";
@@ -13,12 +13,11 @@ export default function CheckoutForm() {
   const stripe = useStripe();
   const elements = useElements();
 
-
   const [message, setMessage] = useState<string | undefined>();
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = async (e:any) => {
-    e.preventDefault();
+  const handleSubmit = async (e: any) => {
+    // e.preventDefault();
 
     if (!stripe || !elements) {
       // Stripe.js hasn't yet loaded.
@@ -50,18 +49,27 @@ export default function CheckoutForm() {
     setIsLoading(false);
   };
 
-  const paymentElementOptions:StripePaymentElementOptions = {
+  const paymentElementOptions: StripePaymentElementOptions = {
     layout: "accordion",
   };
 
   return (
-    <form id="payment-form" onSubmit={handleSubmit}>
+    <div id="payment-div" onSubmit={handleSubmit}>
       <PaymentElement id="payment-element" options={paymentElementOptions} />
-      <button disabled={isLoading || !stripe || !elements} id="submit" className="w-full">
-        <div id="button-text" className = "bg-primary-500 text-white p-4 rounded-xl">
+      <button
+        type="button"
+        onClick={handleSubmit}
+        disabled={isLoading || !stripe || !elements}
+        id="submit"
+        className="w-full"
+      >
+        <div
+          id="button-text"
+          className="bg-primary-500 text-white p-4 rounded-xl"
+        >
           {isLoading ? <Spin size="default" /> : "Pay now"}
         </div>
       </button>
-    </form>
+    </div>
   );
 }

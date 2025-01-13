@@ -59,7 +59,6 @@ const MainNav2Logged: FC<MainNav2LoggedProps> = () => {
         );
       }
     };
-
     // Request permission to access location when component mounts
     getLocation();
   }, []);

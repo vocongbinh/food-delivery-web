@@ -11,3 +11,4 @@ export const USER_PROFILE = "USER_PROFILE";
 export const GROUP_OPTION_KEY = "GROUP_OPTION_KEY";
 export const OWN_RESTAURANTS = "OWN_RESTAURANTS";
 export const LIST_ORDER_KEY = "LIST_ORDER_KEY";
+export const MY_ORDER_KEY = "MY_ORDER_KEY";
