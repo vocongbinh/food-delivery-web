@@ -5,9 +5,7 @@ import { apiGet, apiPut } from "@/utils/api-request";
 
 export class DiscountsApi {
   static async getDiscounts(id: Restaurant["id"]): Promise<Voucher[]> {
-    return await apiGet(`/discounts/restaurant/${id}`, {
-      id,
-    });
+    return await apiGet(`/discounts/restaurant/${id}`);
   }
   static async updateCartQuantity(data: {
     id: CartItem["id"];
