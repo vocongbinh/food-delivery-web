@@ -79,8 +79,17 @@ export type OrderContractItemRequest = {
 export type OrderContractRequest = {
   orderItems: OrderContractItemRequest[];
   vouchers: Voucher[];
+};
+export interface OrderItem {
+  dish: Dish;
+  quantity: number;
+}
+
+export interface OrderOfContract {
+  id: number;
+  orderItems: OrderItem[];
   image: string;
   name: string;
   address: string;
   phone: string;
-};
+}

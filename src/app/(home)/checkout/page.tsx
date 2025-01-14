@@ -130,10 +130,6 @@ const CheckoutPage: React.FC = () => {
           dish: item.dish,
           quantity: item.quantity,
         })),
-        image: "",
-        name: "",
-        address: data.address,
-        phone: data.note,
         vouchers: selectedVoucher ? [selectedVoucher] : [],
       });
     } else {

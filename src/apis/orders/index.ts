@@ -2,8 +2,20 @@ import { metadata } from "./../../app/layout";
 import { Restaurant } from "@/types";
 import { apiPut, getFormData } from "../../utils/api-request";
 import { apiGet, apiPost, apiDelete, apiPatch } from "@/utils/api-request";
-import { Order, OrderNFT, OrderRequest, PutOrderRequest } from "@/types/order";
+
+import {
+  Order,
+  OrderNFT,
+  OrderOfContract,
+  OrderRequest,
+  PutOrderRequest,
+} from "@/types/order";
 import axios from "axios";
+
+import { Jetton } from "@/types/jetton";
+import { contractEndpoint } from "@/utils/http";
+import { prepareCreateOrderContractTransfer } from "@/utils/contract";
+import { Address } from "ton-core";
 
 export class OrdersApi {
   static async postOrder(request: OrderRequest): Promise<Order> {
@@ -43,5 +55,20 @@ export class OrdersApi {
       };
     });
     return order;
+  }
+
+  static async getJettons(walletAddress: string) {
+    const res = await axios.get(
+      `https://testnet.tonapi.io/v2/accounts/${walletAddress}/jettons?currencies=ton,usd,rub&supported_extensions=custom_payload`
+    );
+    const jettonData = res.data["balances"][1]["jetton"];
+    const balance = res.data["balances"][1]["balance"] / Math.pow(10, 9);
+    const data: Jetton = { ...jettonData, balance };
+    return data;
+  }
+
+  static async deployOrderContract(data: OrderOfContract) {
+    const res = await contractEndpoint.post("/deploy-order-contract", data);
+    return res.data;
   }
 }
