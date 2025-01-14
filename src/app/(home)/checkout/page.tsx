@@ -27,6 +27,14 @@ import { loadStripe, StripeElementsOptions } from "@stripe/stripe-js/dist";
 import CompletePage from "@/components/CompletePage/CompletePage";
 import CheckoutForm from "@/components/CheckoutForm/CheckoutForm";
 import { OrderContractItemRequest, OrderContractRequest } from "@/types/order";
+import { MetaData, OrdersApi } from "@/apis/orders";
+import { useAddressContext } from "@/contexts/address/address-context";
+import { getTONPrice, prepareCreateOrderContractTransfer } from "@/utils/contract";
+import { Address, toNano } from "ton-core";
+import { useTonConnect } from "../../../../hooks/useTonConnect";
+import { useTonAddress } from "@tonconnect/ui-react";
+import { AuthsApi } from "@/apis/auths";
+import { useQuery } from "@tanstack/react-query";
 const PaymentMethodEnum = {
   CASH: 1,
   STRIPE: 2,
@@ -43,7 +51,10 @@ const CheckoutPage: React.FC = () => {
   const { mutate: createOrderMutation, isPending } = useAddOrderMutation();
   const [clientSecret, setClientSecret] = useState("");
   const [isConfirmed, setIsConfirmed] = useState<boolean>(false);
-
+  const {address: addressOfContext} = useAddressContext()
+  const walletAddress = useTonAddress(true);
+  const {sender} = useTonConnect()
+  const { data: userProfile, isLoading } = useQuery({ queryKey: ["profile"], queryFn: () => AuthsApi.getUserProfile() })
   const router = useRouter();
   const restaurants = useMemo(
     () =>
@@ -75,7 +86,9 @@ const CheckoutPage: React.FC = () => {
     formState: { errors },
     watch,
   } = form;
-  const paymentMethod = watch("paymentMethod");
+  const [paymentMethod, setPaymentMethod] = useState<number>(
+    PaymentMethodEnum.CASH
+  );
   const handleTest = async () => {
     return fetch("/api/create-payment-intent", {
       method: "POST",
@@ -114,20 +127,22 @@ const CheckoutPage: React.FC = () => {
   };
 
   useEffect(() => {
-    console.log("ee");
-    console.log(paymentMethod);
-    console.log(PaymentMethodEnum.STRIPE);
-    console.log(Number(paymentMethod) == PaymentMethodEnum.STRIPE);
     if (Number(paymentMethod) == PaymentMethodEnum.STRIPE) {
       handleTest();
     }
   }, [paymentMethod]);
-  const onSubmit = (data: z.infer<typeof OrderRequestSchema>) => {
+  const onSubmit = async(data: z.infer<typeof OrderRequestSchema>) => {
     setIsSubmitting(true);
     if (paymentMethod === PaymentMethodEnum.TON) {
-      handleCreateOrderContract({
+     await handleCreateOrderContract({
         orderItems: selectedItems.map<OrderContractItemRequest>((item) => ({
-          dish: item.dish,
+          dish: {
+            id: item.dish.id,
+            name: item.dish.name,
+            price: item.dish.price * item.quantity,
+            description: item.dish.description,
+            imageUrl: item.dish.imageUrl || "https://saodieu.vn/media/Bai%20Viet%20-%20T62016/Saodieu%20-%2010%20mon%20an%203.jpg"
+          },
           quantity: item.quantity,
         })),
         vouchers: selectedVoucher ? [selectedVoucher] : [],
@@ -143,14 +158,33 @@ const CheckoutPage: React.FC = () => {
           onSuccess: (res) => {
             router.back();
           },
-          onSettled: (res) => {},
+          onSettled: (res) => { },
         }
       );
     }
     setIsSubmitting(false);
   };
-  const handleCreateOrderContract = (orderContract: OrderContractRequest) => {
-    //TODO: generate code for create order contract
+  const handleCreateOrderContract = async (orderContract: OrderContractRequest) => {
+    const data: MetaData = {
+          address: addressOfContext,
+          orderItems: orderContract.orderItems,
+          name: userProfile?.username || "Default",
+          phone: "0978754723"
+        }
+        const {contract_address, order_id} = await OrdersApi.deployOrderContract();
+        const price = getTONPrice(data.orderItems[0].quantity * data.orderItems[0].dish.price)
+        console.log(contract_address, order_id);
+        const message = prepareCreateOrderContractTransfer(contract_address, {
+          owner: Address.parse("0QDREisYb3hWcNevBoAopiS2UubbDp174WF0_v2XSZd9gcwL"),
+          order_id: order_id,
+          name: data.orderItems[0].dish.name,
+          image: data.orderItems[0].dish.imageUrl,
+          quantity: data.orderItems[0].quantity,
+          price: toNano(price),
+          value: toNano(0.02)
+        })
+        await sender.send(message);
+        await OrdersApi.deployNFT(data, walletAddress, order_id);
   };
   const [activeRestaurant, setActiveRestaurant] = useState<number>(0);
   const [selectedItems, setSelectedItems] = useState<CartItem[]>([]);
@@ -206,13 +240,17 @@ const CheckoutPage: React.FC = () => {
           <Select
             {...register("paymentMethod")}
             className="mt-1  w-full"
+            onChange={(e) => setPaymentMethod(Number(e.target.value))}
             placeholder="Select payment method"
           >
             <option key={PaymentMethodEnum.CASH} value={1}>
               Cash
             </option>
             <option key={PaymentMethodEnum.STRIPE} value={2}>
-              Stripe pay
+              Stripe Payment
+            </option>
+            <option key={PaymentMethodEnum.TON} value={3}>
+              TON Wallet
             </option>
           </Select>
           {errors.paymentMethod && (
@@ -221,7 +259,7 @@ const CheckoutPage: React.FC = () => {
             </p>
           )}
         </label>
-        {clientSecret && (
+        {clientSecret && paymentMethod == PaymentMethodEnum.STRIPE && (
           <Elements options={options} stripe={stripePromise}>
             {isConfirmed ? <CompletePage /> : <CheckoutForm />}
           </Elements>
@@ -261,22 +299,23 @@ const CheckoutPage: React.FC = () => {
               </div>
             )}{" "}
             <div
-              className={`${" dark:bg-neutral-900"}  font-semibold p-1 sm:grid sm:grid-cols-3 sm:gap-4 `}
+              className={`${" dark:bg-neutral-900"}  font-semibold p-1 mt-4 flex justify-between sm:grid sm:grid-cols-3 sm:gap-4 `}
             >
-              <dt className="text-sm  text-neutral-500 dark:text-neutral-300 sm:col-span-2">
+              <dt className="text-neutral-500 dark:text-neutral-300 sm:col-span-2">
                 Total price
               </dt>
-              <dd className="mt-1 text-sm text-neutral-900 dark:text-neutral-200  sm:mt-0 ">
-                {restaurants.reduce((acc, item) => acc + item.total, 0)}đ
+              <dd className="text-right text-primary-900 dark:text-neutral-200 uppercase text-lg">
+                {paymentMethod == PaymentMethodEnum.TON ? `${getTONPrice(restaurants.reduce((acc, item) => acc + item.total, 0))} TON`: `${restaurants.reduce((acc, item) => acc + item.total, 0)} VNĐ` }
               </dd>
             </div>
           </dl>
         </div>
         <ButtonPrimary
+          
           loading={isPending}
           disabled={isPending || selectedItems.length == 0}
           type="submit"
-          className="w-full"
+          className="w-full mt-4 cursor-pointer"
         >
           Order
         </ButtonPrimary>

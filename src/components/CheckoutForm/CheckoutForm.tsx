@@ -65,7 +65,7 @@ export default function CheckoutForm() {
       >
         <div
           id="button-text"
-          className="bg-primary-500 text-white p-4 rounded-xl"
+          className="bg-primary-500 text-white p-4 rounded-full mt-4"
         >
           {isLoading ? <Spin size="default" /> : "Pay now"}
         </div>

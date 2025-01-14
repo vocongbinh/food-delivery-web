@@ -72,7 +72,7 @@ export type OrderLineItem = {
 };
 
 export type OrderContractItemRequest = {
-  dish: Dish;
+  dish: DishOfContract;
   quantity: number;
 };
 
