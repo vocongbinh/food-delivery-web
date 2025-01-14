@@ -19,12 +19,18 @@ export function prepareCreateOrderContractTransfer(contractAddress: string, opts
         .storeUint(opts.quantity, 32)
         .storeCoins(opts.price)
         .endCell()
-    const message: SenderArguments = {
+        const message: SenderArguments = {
         to: address,
         value: toNano(0.02),
         body: transferBody,
 
-    };
-    return message;
+        };
+        return message;
+    
+    }
 
-}
+    export function generateOrderId() {
+        const timestamp = Date.now(); // Lấy thời gian hiện tại
+        const random = Math.floor(Math.random() * 1000); // Số ngẫu nhiên
+        return `ORD-${timestamp}-${random}`; // Kết hợp
+      }

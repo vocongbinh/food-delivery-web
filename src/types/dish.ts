@@ -18,6 +18,14 @@ export type Dish = {
   updatedAt: Date;
 };
 
+export interface DishOfContract {
+  id: number;
+  name: string;
+  price: number;
+  description: string;
+  imageUrl: string;
+}
+
 export const enum DishClassification {LATEST = "LATEST", BEST_SELLER = "BEST_SELLER", RELATED = "RELATED"}
 
 

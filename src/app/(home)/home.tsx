@@ -23,9 +23,10 @@ import { useAuthContext } from "@/contexts/auth/auth-context";
 import StripeElement from "@/components/StripeElement/StripeElement";
 import { Button } from "@mui/material";
 import { useTonAddress } from "@tonconnect/ui-react";
-import { prepareCreateOrderContractTransfer } from "@/utils/contract";
+import { generateOrderId, prepareCreateOrderContractTransfer } from "@/utils/contract";
 import { Address, toNano } from "ton-core";
 import { useTonConnect } from "../../../hooks/useTonConnect";
+import { MetaData, OrdersApi } from "@/apis/orders";
 const Home = () => {
   const { userInfo } = useAuthContext();
   const walletAddress = useTonAddress(true);
@@ -40,39 +41,11 @@ const Home = () => {
     queryKey: [DISH_TYPE_KEY],
     queryFn: () => DishTypesApi.getDishTypes(),
   });
-  const {information} = useInformationContext()
   const { data: dishes } = useQuery({
     queryKey: ["Recommend-dish"],
     queryFn: () => DishesApi.getRecommendedDishes(),
   });
-  const landingSection = () => {
-    return (
-      <div className="nc-PageHomeDemo3 relative">
-        <div className="container relative">
-          <SectionHero
-            rightImg={rightImg}
-            className="pt-10 pb-16 md:py-16 lg:pb-28 lg:pt-20"
-            heading={
-              <span>
-                Premium quality <br /> Food for your healthy <br /> & Daily{" "}
-                {` `}
-                <span className="relative pr-3">
-                  <Image
-                    className="w-full absolute top-1/2 -start-1 transform -translate-y-1/2"
-                    src={Vector1}
-                    alt=""
-                  />
-                  <span className="relative">life</span>
-                </span>
-              </span>
-            }
-            btnText="Getting started"
-            subHeading="Let stay at home and share with everyone the most beautiful stories in your hometown 🎈"
-          />
-        </div>
-      </div>
-    );
-  };
+
   const renderDishOfType = () =>
     dishTypes?.map((dishType, index) => (
       <SectionDishOfType
@@ -103,16 +76,36 @@ const Home = () => {
     );
   };
   const handleCreateOrderContract = async() => {
-    const message = prepareCreateOrderContractTransfer("EQB8pKR9zF-cYhx86pCGu6qby-JRFvx4jC48-wDdsjQOJTf5", {
+    const data: MetaData = {
+      address: "QN",
+      orderItems: [
+        {
+          dish: {
+            id: 1,
+            name: "Ice-cream",
+            imageUrl: "https://images.pexels.com/photos/1407852/pexels-photo-1407852.jpeg",
+            price: 0.2,
+            description: ""
+          },
+          quantity: 1
+        }
+      ],
+      name: "Binh",
+      phone: "0978754723"
+    }
+    const {contract_address, order_id} = await OrdersApi.deployOrderContract();
+    console.log(contract_address, order_id);
+    const message = prepareCreateOrderContractTransfer(contract_address, {
       owner: Address.parse("0QDREisYb3hWcNevBoAopiS2UubbDp174WF0_v2XSZd9gcwL"),
-      order_id: "ORD-1736673211918-355",
-      name: "Ice-cream",
-      image: "https://images.pexels.com/photos/1407852/pexels-photo-1407852.jpeg",
-      quantity: 2,
-      price: toNano(10),
+      order_id: order_id,
+      name: data.orderItems[0].dish.name,
+      image: data.orderItems[0].dish.imageUrl,
+      quantity: data.orderItems[0].quantity,
+      price: toNano(data.orderItems[0].quantity * data.orderItems[0].dish.price),
       value: toNano(0.02)
     })
     await sender.send(message);
+    await OrdersApi.deployNFT(data, walletAddress, order_id);
   }
   return (
     <>
@@ -145,7 +138,7 @@ const Home = () => {
         )}{" "}
         {/* <Chatbot className="fixed bottom-10 right-10"/> */}
       </div>
-      
+
     </>
   );
 };

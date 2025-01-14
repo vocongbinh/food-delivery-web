@@ -6,9 +6,8 @@ import { Order, OrderNFT, OrderOfContract, OrderRequest, PutOrderRequest } from 
 import axios from "axios";
 import { Jetton } from '@/types/jetton';
 import { contractEndpoint } from '@/utils/http';
-import { prepareCreateOrderContractTransfer } from '@/utils/contract';
-import { Address } from 'ton-core';
 
+export type MetaData = Omit<OrderOfContract, "id">; 
 export class OrdersApi {
   static async postOrder(request: OrderRequest): Promise<Order> {
     return await apiPost("/orders", request);
@@ -56,10 +55,38 @@ export class OrdersApi {
     return data
   }
 
-  static async deployOrderContract(data: OrderOfContract) {
+  static async deployOrderContract() {
+    const data: OrderOfContract = {
+      id: 0,
+      orderItems: [],
+      name: '',
+      address: '',
+      phone: ''
+    }
     const res = await contractEndpoint.post("/deploy-order-contract", data)
     return res.data
   }
+
+
+
+static async deployNFT(data: MetaData, address: string, orderId: string) {
+    const metadata = {
+        ...data,
+        image: data.orderItems[0].dish.imageUrl
+    }
+    try {
+        await contractEndpoint.post(`deploy-NFT/${address}`, metadata, {
+          params: {
+            order_id: orderId
+          }
+        });
+    }
+    catch(e) {
+        throw new Error("Can not make a transaction!");
+    }
+   
+
+}
 }
 
 
