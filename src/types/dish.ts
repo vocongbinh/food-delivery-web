@@ -1,9 +1,10 @@
+import { number } from "zod";
 import { Category } from "./category";
 import { DishType } from "./dishType";
 import { GroupOption } from "./groupOption";
 import { Restaurant } from "./restaurant";
 
-export type Dish = {
+export interface Dish {
   id: number;
   name: string;
   price: number;
@@ -16,13 +17,13 @@ export type Dish = {
   restaurant: { id: number; name: string };
   createdAt: Date;
   updatedAt: Date;
-};
+}
 
-export const enum DishClassification {LATEST = "LATEST", BEST_SELLER = "BEST_SELLER", RELATED = "RELATED"}
-
-
-
-
+export const enum DishClassification {
+  LATEST = "LATEST",
+  BEST_SELLER = "BEST_SELLER",
+  RELATED = "RELATED",
+}
 
 export type DishRequest = Omit<Dish, "category" | "dishType" | "restaurant"> & {
   categoryId: Category["id"];

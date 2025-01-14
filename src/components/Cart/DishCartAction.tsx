@@ -5,6 +5,7 @@ import { Dish } from "@/types/dish";
 import { useUpdateCartQuantityMutation } from "@/react-query/carts";
 import { useEffect, useState } from "react";
 import { useDebounce } from "use-debounce";
+import Utils from "@/utils";
 
 const DishCartAction = ({
   cartItem,
@@ -51,7 +52,9 @@ const DishCartAction = ({
     <div className="p-4 flex flex-col space-y-4">
       <div className="flex items-end justify-between mt-auto">
         <h3 className="line-clamp-2 font-medium text-sm">
-          {cartItem ? cartItem.dish?.price : dish?.price}đ
+          {cartItem
+            ? Utils.formatCurrency(cartItem.dish?.price)
+            : Utils.formatCurrency(dish?.price ?? 0)}
         </h3>
         {cartItem && (
           <div className="flex gap-4">

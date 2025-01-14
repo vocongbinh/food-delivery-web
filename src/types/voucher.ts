@@ -21,6 +21,7 @@ export interface Voucher {
   discountType: DiscountType;
   image: string;
   exchangeRate: number;
+  remainingUsed: number;
 }
 export interface VoucherRequest {
   id: number;
@@ -36,14 +37,17 @@ export interface VoucherRequest {
   image: string;
   exchangeRate: number;
 }
+export type ExchangeVoucherRequest = {
+  productDiscountId: number;
+  code: string;
+};
 
 export interface VoucherUser {
-    id: number;
-    user: User;
-    productDiscount: Voucher;
-    status: string;
-    remainingUsage: number;
-
+  id: number;
+  user: User;
+  productDiscount: Voucher;
+  status: string;
+  remainingUsage: number;
 }
 
 // DiscountType Enum

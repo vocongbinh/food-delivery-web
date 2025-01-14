@@ -2,7 +2,9 @@ import { UserVoucherRequest, Voucher, VoucherRequest } from "@/types/voucher";
 import { apiGet, apiPost, apiPut } from "@/utils/api-request";
 
 export class VouchersApi {
-  static async receiveVoucher(data: UserVoucherRequest) {
+  static async receiveVoucher(
+    data: UserVoucherRequest
+  ): Promise<{ productDiscount: Voucher }> {
     return await apiPost("/vouchers", data);
   }
   static async postVoucher(request: VoucherRequest): Promise<Voucher> {

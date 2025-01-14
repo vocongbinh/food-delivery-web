@@ -1,12 +1,13 @@
 import { Dish } from "./dish";
 import { User } from "./user";
+import { Voucher } from "./voucher";
 
 export type OrderRequest = {
   address: string;
   note: string;
   cartItemIds: number[];
   voucherIds: number[];
-  paymentMethod: string;
+  paymentMethod: number;
 };
 export enum OrderStatus {
   PENDING = 1,
@@ -25,7 +26,7 @@ export type OrderLineItem_OptionItem = {
 };
 export type Order = {
   id: number;
-  orderStatus: string;
+  orderStatus: OrderStatus;
   deliveryStatus: string;
   failureMessages: string;
   price: number;
@@ -37,6 +38,7 @@ export type Order = {
   };
   created_at: string;
   updated_at: string;
+  items: OrderLineItem[];
 };
 
 export type OrderNFT = {
@@ -47,9 +49,8 @@ export type OrderNFT = {
       trait_type: string;
       value: string | number;
     }
-  ]
-
-}
+  ];
+};
 
 export type OrderLineItem_Option = {
   optionId: number;
@@ -62,7 +63,23 @@ export type OrderLineItem_GroupOption = {
   selectedOptions: OrderLineItem_Option[];
 };
 
+export type OrderLineItem = {
+  id: number;
+  options: OrderLineItem_GroupOption[];
+  dish: Dish;
+  quantity: number;
+  subtotal: number;
+};
 
+export type OrderContractItemRequest = {
+  dish: Dish;
+  quantity: number;
+};
+
+export type OrderContractRequest = {
+  orderItems: OrderContractItemRequest[];
+  vouchers: Voucher[];
+};
 export interface OrderItem {
   dish: Dish;
   quantity: number;

@@ -13,6 +13,8 @@ export interface VoucherBoxProps {
 import DefaultVoucherImg from "@/images/default_voucher.jpg";
 import image from "next/image";
 import { Radio } from "antd";
+import ButtonPrimary from "../Button/ButtonPrimary";
+import { useExchangeVoucherMutation } from "@/react-query/vouchers";
 
 const VoucherBox: FC<VoucherBoxProps> = ({
   className = "",
@@ -21,6 +23,8 @@ const VoucherBox: FC<VoucherBoxProps> = ({
   onSelect,
 }) => {
   const { displayName, href = "/", avatar, jobName, count } = authors[0];
+  const { mutate: handleExchangeVoucher, isPending: isSubmiting } =
+    useExchangeVoucherMutation();
   return (
     <div
       className={`nc-VoucherBox flex gap-2 border items-center justify-between text-center px-3 py-5 sm:px-2 sm:py-3 rounded-md bg-white dark:bg-neutral-900 ${className}`}
@@ -43,19 +47,42 @@ const VoucherBox: FC<VoucherBoxProps> = ({
           <div
             className={`line-clamp-1 overflow-clip text-xs text-neutral-500 dark:text-neutral-400`}
           >
-            {voucher.couponCode.toString()}
+            {voucher.remainingUsed > 0
+              ? `Remaining used: ${voucher.remainingUsed.toString()}`
+              : `ERate: ${voucher.exchangeRate}`}
+          </div>
+          <div
+            className={`line-clamp-2 overflow-clip text-xs text-neutral-500 dark:text-neutral-400`}
+          >
+            {voucher.description}
           </div>
         </div>
       </div>
       <div>
-        <Radio.Group
-          value={selected}
-          onChange={(val) => {
-            onSelect(voucher);
-          }}
-        >
-          <Radio value={voucher.id}></Radio>
-        </Radio.Group>
+        {voucher.remainingUsed > 0 ? (
+          <Radio.Group
+            value={selected}
+            onChange={(val) => {
+              onSelect(voucher);
+            }}
+          >
+            <Radio value={voucher.id}></Radio>
+          </Radio.Group>
+        ) : (
+          <ButtonPrimary
+            onClick={() =>
+              handleExchangeVoucher({
+                code: voucher.couponCode,
+                productDiscountId: voucher.id,
+              })
+            }
+            disabled={isSubmiting}
+            loading={isSubmiting}
+            className="rounded-md flex-grow"
+          >
+            Exchange
+          </ButtonPrimary>
+        )}{" "}
       </div>
     </div>
   );
