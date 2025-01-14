@@ -83,7 +83,7 @@ export const MEGAMENU_TEMPLATES: NavItemType[] = [
         href: "/archive-3/demo-slug" as Route,
         name: "Category videos",
       },
-    
+
       {
         id: randomId(),
         href: "/author/demo-slug" as Route,
@@ -202,7 +202,6 @@ const OTHER_PAGE_CHILD: NavItemType[] = [
   },
 
   // seach pages ----------------
- 
 
   // author pages ----------------
   {
@@ -327,24 +326,24 @@ export const NAVIGATION_DEMO_2: NavItemType[] = [
   //   href: "/about" as Route,
   //   name: "About Us",
   // },
-  {
-    id: randomId(),
-    href: "/admin" as Route,
-    name: "Admin",
-    type: "dropdown",
-    children: [
-      {
-        id: randomId(),
-        href: "/admin/7/food/add" as Route,
-        name: "Food",
-      },
-      {
-        id: randomId(),
-        href: "/admin/restaurant" as Route,
-        name: "Drink",
-      },
-    ],
-  }, // {
+  // {
+  //   id: randomId(),
+  //   href: "/admin" as Route,
+  //   name: "Admin",
+  //   type: "dropdown",
+  //   children: [
+  //     {
+  //       id: randomId(),
+  //       href: "/admin/7/food/add" as Route,
+  //       name: "Food",
+  //     },
+  //     {
+  //       id: randomId(),
+  //       href: "/admin/restaurant" as Route,
+  //       name: "Drink",
+  //     },
+  //   ],
+  // }, // {
   //   id: randomId(),
   //   href: "/Use" as Route,
   //   name: "use",

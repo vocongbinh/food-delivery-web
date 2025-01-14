@@ -11,6 +11,7 @@ import {
   ChatBubbleLeftEllipsisIcon,
 } from "@heroicons/react/24/solid";
 import { ChatBubbleLeftRightIcon } from "@heroicons/react/24/outline";
+import Utils from "@/utils";
 
 const RestaurantCart = () => {
   const { data: items } = useQuery({
@@ -28,7 +29,12 @@ const RestaurantCart = () => {
             <DishCartItem cartItem={item} key={item.id} />
             <div className="flex justify-between mt-3">
               <div>Total</div>
-              <div className="font-medium ">135.000đ</div>
+              <div className="font-medium ">
+                {Utils.formatCurrency(
+                  (() =>
+                    Math.round(item.dish.price / 1000) * 1000 * item.quantity)()
+                )}
+              </div>
             </div>
           </>
         ))}

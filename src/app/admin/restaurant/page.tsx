@@ -31,7 +31,11 @@ const RestaurantsPage = () => {
       </Heading1>
       <div className={`grid gap-6 md:gap-8 md:grid-cols-2 lg:grid-cols-3`}>
         {(restaurants || []).map((restaurant) => (
-          <CardRestaurant key={restaurant.id} restaurant={restaurant} />
+          <CardRestaurant
+            isAdmin={true}
+            key={restaurant.id}
+            restaurant={restaurant}
+          />
         ))}
       </div>
     </div>

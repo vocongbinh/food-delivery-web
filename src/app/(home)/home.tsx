@@ -111,7 +111,8 @@ const Home = () => {
     <>
       <div className="dark bg-neutral-900 dark:bg-black dark:bg-opacity-20 text-neutral-100">
         {/* <StripeElement/> */}
-        <Button onClick={handleCreateOrderContract} >Checkout</Button>
+
+        <Button onClick={handleCreateOrderContract}>Checkout</Button>
         {userInfo && (
           <div className="relative container">
             <SectionRecommendedDish
