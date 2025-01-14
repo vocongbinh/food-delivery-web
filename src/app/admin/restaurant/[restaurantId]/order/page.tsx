@@ -1,7 +1,7 @@
 "use client";
 import { OrdersApi } from "@/apis/orders";
 import { LIST_ORDER_KEY } from "@/contains/react_query_keys";
-import { Order } from "@/types/order";
+import { Order, OrderStatus } from "@/types/order";
 import { useQuery } from "@tanstack/react-query";
 import { Table, TableProps, Tag } from "antd";
 
@@ -34,10 +34,10 @@ const OrderListPage = ({ params }: { params: { restaurantId: number } }) => {
       dataIndex: "orderStatus",
       render: (_, { orderStatus }) => {
         let color = "green";
-        if (orderStatus === "CANCELED") {
+        if (orderStatus === OrderStatus.CANCELED) {
           color = "volcano";
         }
-        if (orderStatus === "PENDING") {
+        if (orderStatus === OrderStatus.PENDING) {
           color = "geekblue";
         }
 

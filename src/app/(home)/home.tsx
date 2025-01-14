@@ -98,7 +98,7 @@ const Home = () => {
   return (
     <>
       <div className="dark bg-neutral-900 dark:bg-black dark:bg-opacity-20 text-neutral-100">
-        <StripeElement/>
+        {/* <StripeElement/> */}
         {userInfo && (
           <div className="relative container">
             <SectionRecommendedDish
@@ -125,7 +125,6 @@ const Home = () => {
         )}{" "}
         {/* <Chatbot className="fixed bottom-10 right-10"/> */}
       </div>
-      
     </>
   );
 };

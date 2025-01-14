@@ -160,7 +160,7 @@ const CheckoutPage: React.FC = () => {
   const [selectedItems, setSelectedItems] = useState<CartItem[]>([]);
   const [selectedVoucher, setSelectedVoucher] = useState<Voucher | null>(null);
   const { data: vouchers, refetch: refetchVoucher } =
-    useGetVoucherByRestaurant(7);
+    useGetVoucherByRestaurant(activeRestaurant);
   useEffect(() => {
     setSelectedItems(
       selectedItems.filter(
@@ -398,7 +398,7 @@ const CheckoutPage: React.FC = () => {
             </tbody>
           </table>
           {activeRestaurant == restaurant.id && (
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-2 gap-2">
               {vouchers?.map((item) => (
                 <VoucherBox
                   selected={selectedVoucher?.id ?? 0}
