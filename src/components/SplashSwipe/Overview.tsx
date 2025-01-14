@@ -13,7 +13,7 @@ export default function Overview() {
     const { information } = useInformationContext()
     const { data: dishes, isLoading } = useQuery({
         queryKey: ["Recommend-dish"],
-        queryFn: () => DishesApi.getRecommendedDishes(information),
+        queryFn: () => DishesApi.getRecommendedDishes(),
     });
     const { data, isLoading: conditionLoading } = useQuery({ queryKey: ["health-condition"], queryFn: () => AuthsApi.getUserCondition() })
     return (
