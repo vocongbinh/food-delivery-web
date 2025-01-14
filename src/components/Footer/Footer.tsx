@@ -3,9 +3,7 @@ import React from "react";
 import Logo from "@/components/Logo/Logo";
 import SocialsList1 from "@/components/SocialsList1/SocialsList1";
 import { CustomLink } from "@/data/types";
-import MusicPlayer from "../MusicPlayer/MusicPlayer";
 import SocialsList from "../SocialsList/SocialsList";
-import { getPrefetchQuery, useCustomQuery } from "@/hooks/useCustomQuery";
 import { Global } from "@/data/singleTypes";
 import { SocialType } from "../SocialsShare/SocialsShare";
 import { QueryClient } from "@tanstack/react-query";
@@ -85,31 +83,7 @@ export default async function Footer() {
       </div>
     );
   };
-  const queryClient = new QueryClient();
-  const data: Global = await queryClient.fetchQuery(getPrefetchQuery({
-    key: "global", urlParamsObject: {
-      populate: {
-        footer: {
-          populate: {
-            socials: {
-              populate: ["logo"]
-            }
-          }
-        }
-      }
-    }
-  }))
 
-
-  const { footer } = data;
-  const socials: SocialType[] = footer.socials.map((social) => {
-    return {
-      id: social.id.toString(),
-      name: social.name,
-      href: social.url,
-      icon: social.logo.data.attributes.url
-    }
-  })
   return (
     <>
       {/* footer */}
@@ -118,8 +92,8 @@ export default async function Footer() {
           <div className="flex md:flex-row flex-col items-center gap-2 justify-between border-b border-neutral-200 pb-3">
             <Logo />
             <div className="flex gap-4 items-center">
-              <span className="text-sm text-neutral-300">{footer.label}</span>
-              <SocialsList socials={socials} className="flex items-center space-x-6" />
+              <span className="text-sm text-neutral-300">Follow us: </span>
+              <SocialsList className="flex items-center space-x-6" />
             </div>
           </div>
           <p className="text-center text-sm text-neutral-400 mt-2">Copyright © 2024 DFood </p>

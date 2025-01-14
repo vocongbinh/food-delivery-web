@@ -7,8 +7,6 @@ import Profile from './profile';
 import Security from './security';
 import Notification from './notification';
 import { AuthsApi } from '@/apis/auths';
-import { useCustomQuery } from '@/hooks/useCustomQuery';
-import { User } from '@/data/types';
 import { useQuery } from '@tanstack/react-query';
 import { UserInfo } from '@/types';
 

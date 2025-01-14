@@ -2,11 +2,9 @@
 
 import React, { FC } from "react";
 import Heading from "@/components/Heading/Heading";
-import { Application, PostDataType, Token } from "@/data/types";
+import { PostDataType } from "@/data/types";
 import Button from "../Button/Button";
 import { ArrowRightIcon } from "@heroicons/react/24/solid";
-import CardApplication from "../CardApplication/CardApplication";
-import CardApplication2 from "../CardApplication2/CardApplication2";
 import { Dish } from "@/types/dish";
 import MySlider from "../MySlider";
 import DishCard11 from "../DishCard11/DishCard11";

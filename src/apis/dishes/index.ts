@@ -10,6 +10,7 @@ import endpoint from "@/utils/http";
 import { AuthsApi } from "../auths";
 import qs from "qs";
 import { InformationProps } from '@/contexts/information/information-context';
+import { recomposeColor } from "@mui/material";
 
 export class DishesApi {
   static async postDish(request: DishRequest): Promise<Dish> {
@@ -37,41 +38,39 @@ export class DishesApi {
     return await apiDelete(`/dishes/many`, ids);
   }
 
-  static async getByListId(ids: number[]): Promise<Dish[]> {
+  static async getByListName(names: string[]): Promise<Dish[]> {
+    console.log("start")
     const res = await endpoint.get("dishes/recommend", {
       params: {
-        ids,
+        names,
       },
       paramsSerializer: (params) => {
         return qs.stringify(params, { arrayFormat: "repeat" });
       },
     });
+    const recommendedDishes: RecommendedDish[] = JSON.parse(localStorage.getItem("recommendedDishes") || "[]");
+    console.log("recommended dishes", recommendedDishes)
+    recommendedDishes.forEach((recommendedDish: RecommendedDish) => {
+      console.log(recommendedDish.Name)
+      console.log(res.data)
+          const dish:Dish = res.data.find((d: Dish) => d.name === recommendedDish["Name"]);
+          console.log(dish)
+          recommendedDish.imageLink = dish.imageUrl!.split(", ")[0];
+    })
+    console.log(recommendedDishes)
+    localStorage.setItem("recommendedDishes", JSON.stringify(recommendedDishes));
     return res.data;
   }
-  static async getRecommendedDishes(infoData?: InformationProps) {
-    let information: InformationProps;
-    if (infoData) {
-      information = infoData
-    } else {
-      const user = await AuthsApi.getUserProfile();
-      information = {
-        age: user!.age,
-        weight: user!.weight,
-        height: user!.height,
-        activity: user!.activity,
-        weightLoss: user!.weightLoss,
-        mealPerDay: user!.mealPerDay,
-        gender: user.gender
-      }
-    }
-    const res = await RecommendController.generateRecommendations(information);
-    let recommendedDishes: RecommendedDish[] = [];
+  static async getRecommendedDishes() {
+    const user = await AuthsApi.getUserProfile();
+    console.log(user)
+    const res = await RecommendController.generateRecommendations(user);
     localStorage.setItem("recommendedDishes", JSON.stringify(res[0]));
-    const ids = res[0].map((dish: RecommendedDish) => {
-      const id = dish["RecipeId"];
-      return id;
+    const names = res[0].map((dish: RecommendedDish) => {
+      const name = dish["Name"];
+      return name;
     });
-    return await this.getByListId(ids);
+    return await this.getByListName(names);
   }
   static async getDishesByCategory(
     restaurantId: number,

@@ -2,17 +2,9 @@
 
 import SingleCommentForm from "@/app/(singles)/SingleCommentForm";
 import SingleCommentLists from "@/app/(singles)/SingleCommentLists";
-import ButtonPrimary from "@/components/Button/ButtonPrimary";
-import Media from "@/components/Media";
-import MySlider from "@/components/MySlider";
-import { Application, ReviewFormData } from "@/data/types";
 import { useCustomMutation } from "@/hooks/useCustomMutation";
-import { useCustomQuery } from "@/hooks/useCustomQuery";
-import { getStrapiMedia } from "@/utils/apiHelpers";
-import { retrieveDataFromResponse } from "@/utils/retrieveDataFromResponse";
 import Image from "next/image";
-import { useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Rate, Tooltip } from "antd";
 import Nav from "@/components/Nav/Nav";
 import NavItem from "@/components/NavItem/NavItem";
@@ -23,13 +15,11 @@ import { Restaurant } from "@/types/restaurant";
 import { Category } from "@/types/category";
 import { DiscountsApi } from "@/apis/discounts";
 import CardVoucher from "@/components/CardVoucher/CardVoucher";
-import { Alert, CircularProgress, Pagination, Snackbar } from "@mui/material";
 import Link from "next/link";
 
 import { ReviewsApi } from "@/apis/reviews";
 import { ReviewForm } from "@/types/review";
 import { DishesApi } from "@/apis/dishes";
-import DishCard11 from "@/components/DishCard11/DishCard11";
 import DishCardAdmin11 from "@/components/DishCard11/DischCardAdmin11";
 import { LIST_DISH_KEY, LIST_VOUCHER_KEY } from "@/contains/react_query_keys";
 import { Route } from "next";

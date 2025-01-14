@@ -8,6 +8,7 @@ class Http {
       // timeout: 10000,
       headers: {
         "Content-Type": "application/json",
+        'secret_key': process.env.NEXT_PUBLIC_SECRET_KEY
       },
     });
     this.instance.interceptors.request.use((config) => {
@@ -34,6 +35,13 @@ export const coinEndpoint = axios.create({
 
 export const recommendEndpoint = axios.create({
   baseURL: process.env.NEXT_PUBLIC_RECOMMENDATION_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+export const contractEndpoint = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_CONTRACT_URL,
   headers: {
     "Content-Type": "application/json",
   },

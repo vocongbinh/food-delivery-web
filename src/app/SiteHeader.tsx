@@ -3,8 +3,6 @@
 import React, { Fragment, useEffect, useMemo, useState } from "react";
 import { usePathname } from "next/navigation";
 import HeaderLogged from "@/components/Header/HeaderLogged";
-import Header from "@/components/Header/Header";
-import Header2 from "@/components/Header/Header2";
 import {
   ShoppingBagIcon as ShoppingCartIcon,
   Cog8ToothIcon as CogIcon,
@@ -157,10 +155,6 @@ const SiteHeader = () => {
     if (pathname.startsWith("/admin")) {
       HeadComponent = AdminHeaderLogged;
     }
-    if (pathname === "/home-3" || headerSelected === "Header 3") {
-      HeadComponent = Header2;
-    }
-
     return <HeadComponent />;
   }, [pathname, headerSelected]);
 

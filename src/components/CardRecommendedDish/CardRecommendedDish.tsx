@@ -11,16 +11,16 @@ import FoodFeaturedMedia from "../DishFeaturedMedia/FoodFeaturedMedia";
 import { Dish } from "@/types";
 import CategoryBadge from "../CategoryBadge/CategoryBadge";
 import CardRecommendMeta from "../CardRecommendMeta/CardRecommenData";
-
+import { useRouter } from "next/navigation";
 export interface CardRecommendedDishProps {
   className?: string;
   dish: Dish;
 }
 
 const CardRecommendedDish: FC<CardRecommendedDishProps> = ({ className = "h-full", dish }) => {
-  const { id,  } = dish;
+  const { id, name } = dish;
   const [isHover, setIsHover] = useState(false);
-
+  const router = useRouter();
   return (
     <div
       className={`nc-CardRecommendedDish relative flex flex-col ${className}`}
@@ -31,11 +31,13 @@ const CardRecommendedDish: FC<CardRecommendedDishProps> = ({ className = "h-full
         <div>
           <FoodFeaturedMedia dish={dish} isHover={isHover} />
         </div>
-
-        <Link
-          href={"/"}
-          className="absolute inset-0 bg-neutral-900 bg-opacity-20 opacity-0 transition-opacity"
-        ></Link>
+        <div className="group">
+        <div
+          className="absolute inset-0 bg-neutral-900 bg-opacity-0 z-10 group-hover:bg-opacity-50 transition-opacity flex justify-center duration-300 items-center">
+            <button onClick={() => router.push(`/detail-recommended-dish/${name}`)} className="text-white bg-blue-800 opacity-0 group-hover:opacity-100 transition-opacity duration-300 px-5 py-3 rounded-full text-lg">Explore Now</button>
+        </div>
+        </div>
+       
       </div>
       <div className="absolute top-3 inset-x-3 flex justify-between items-start space-x-4 rtl:space-x-reverse">
         <CategoryBadge dishType={dish.dishType} />

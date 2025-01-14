@@ -1,12 +1,9 @@
 "use client"
-import { AuthsApi } from '@/apis/auths'
-import NotificationItem, { NotificationItemProps } from '@/components/NotificationItem/NotificationItem'
+import NotificationItem from '@/components/NotificationItem/NotificationItem'
 import { Setting } from '@/types/setting'
 import { useCustomMutation } from '@/hooks/useCustomMutation'
-import { useCustomQuery } from '@/hooks/useCustomQuery'
 import { UserInfo } from '@/types'
 import { DEFAULT_SETTINGS } from '@/types/setting'
-import { set } from 'lodash'
 import React, { useEffect, useState } from 'react'
 const Notification = ({ user }: { user: UserInfo }) => {
     console.log(user)

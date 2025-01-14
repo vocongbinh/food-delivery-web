@@ -2,18 +2,13 @@
 
 import React, { FC } from "react";
 import PostCardSaveAction from "@/components/PostCardSaveAction/PostCardSaveAction";
-import { PostDataType } from "@/data/types";
-import CategoryBadgeList from "@/components/CategoryBadgeList/CategoryBadgeList";
-import PostCardLikeAndComment from "@/components/PostCardLikeAndComment/PostCardLikeAndComment";
 import musicWave from "@/images/musicWave.png";
 import Link from "next/link";
 import Image from "next/image";
-import ButtonPlayMusicPlayer from "../ButtonPlayMusicPlayer";
 import { PauseIcon, PlayIcon } from "@heroicons/react/24/solid";
 import { Voucher } from "@/types/voucher";
 import VoucherBadge from "./VoucherBadge/VoucherBadge";
 import { formatDate } from "@/utils/apiHelpers";
-import Button from "@mui/material/Button";
 import DialogAlert from "../DialogAlert/DialogAlert";
 import ButtonPrimary from "../Button/ButtonPrimary";
 import { toast } from "react-toastify";
@@ -26,7 +21,6 @@ import {
 } from "@/utils/jetton";
 import { useTonConnect } from "../../../hooks/useTonConnect";
 // import { connector } from "@/utils/tonConnectInstance";
-import { toUserFriendlyAddress } from "@tonconnect/sdk";
 import { VouchersApi } from "@/apis/vouchers";
 import { Route } from "next";
 import { useAuthContext } from "@/contexts/auth/auth-context";

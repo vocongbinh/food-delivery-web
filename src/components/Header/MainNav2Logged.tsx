@@ -4,7 +4,6 @@ import Logo from "@/components/Logo/Logo";
 import MenuBar from "@/components/MenuBar/MenuBar";
 import AvatarDropdown from "./AvatarDropdown";
 import Navigation from "@/components/Navigation/Navigation";
-import SearchModal from "./SearchModal";
 import NotifyDropdown from "./NotifyDropdown";
 import ButtonLogin from "../ButtonLogin/ButtonLogin";
 import { getSession, useSession } from "next-auth/react";

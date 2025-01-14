@@ -1,4 +1,4 @@
-import { getPrefetchQuery } from '@/hooks/useCustomQuery'
+
 import {
     dehydrate,
     HydrationBoundary,
