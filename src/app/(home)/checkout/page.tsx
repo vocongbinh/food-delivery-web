@@ -176,7 +176,7 @@ const CheckoutPage: React.FC = () => {
           address: addressOfContext,
           orderItems: orderContract.orderItems,
           name: userProfile?.username || "Default",
-          phone: "0978754723"
+          phone: form.getValues("phoneNumber") || "0978754723",
         }
         const {contract_address, order_id} = await OrdersApi.deployOrderContract();
         const price = getTONPrice(data.orderItems[0].quantity * data.orderItems[0].dish.price)
@@ -281,8 +281,7 @@ const CheckoutPage: React.FC = () => {
             onChange={(e) =>
               form.setValue("paymentMethod", Number(e.target.value))
             }
-            className="mt-1  w-full"
-            onChange={(e) => setPaymentMethod(Number(e.target.value))}
+            className="mt-1 w-full"
             placeholder="Select payment method"
           >
             <option key={PaymentMethodEnum.CASH} value={1}>
