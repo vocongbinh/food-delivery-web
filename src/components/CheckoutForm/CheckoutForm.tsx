@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 import {
   PaymentElement,
   useStripe,
@@ -9,7 +9,7 @@ import {
 import { StripePaymentElementOptions } from "@stripe/stripe-js";
 import { Spin } from "antd";
 
-export default function CheckoutForm() {
+export default function CheckoutForm({ children }: { children?: ReactNode }) {
   const stripe = useStripe();
   const elements = useElements();
 
@@ -31,7 +31,7 @@ export default function CheckoutForm() {
       elements,
       confirmParams: {
         // Make sure to change this to your payment completion page
-        return_url: "http://localhost:3001/restaurants",
+        return_url: "http://localhost:3000/restaurants",
       },
     });
 
@@ -56,12 +56,13 @@ export default function CheckoutForm() {
   return (
     <div id="payment-div" onSubmit={handleSubmit}>
       <PaymentElement id="payment-element" options={paymentElementOptions} />
+      <div>{children ?? <></>}</div>
       <button
         type="button"
         onClick={handleSubmit}
         disabled={isLoading || !stripe || !elements}
         id="submit"
-        className="w-full"
+        className="w-full pt-4"
       >
         <div
           id="button-text"
