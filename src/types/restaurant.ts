@@ -19,6 +19,18 @@ export interface Restaurant {
   owner: User;
   categories: Category[];
 }
+export interface RestaurantRequest {
+  name: string;
+  description: string;
+  imageUrl: string;
+  mainDish: string;
+  address: string;
+  latitude: string;
+  longitude: string;
+  locationId: number;
+  ownerId: number;
+  categories: { name: string; dishNumber: number }[];
+}
 export enum RestaurantStatus {
   ACTIVATED = "ACTIVATED",
   DELETED = "DELETED",

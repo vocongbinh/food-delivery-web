@@ -1,12 +1,10 @@
 import { getFormData } from "./../../utils/api-request";
-import { Restaurant } from "@/types/restaurant";
+import { Restaurant, RestaurantRequest } from "@/types/restaurant";
 import { apiGet, apiPost, apiDelete, apiPatch } from "@/utils/api-request";
 import endpoint from "@/utils/http";
 
 export class RestaurantsApi {
-  static async postRestaurant(
-    request: Omit<Restaurant, "id">
-  ): Promise<string> {
+  static async postRestaurant(request: RestaurantRequest): Promise<string> {
     return await apiPost("/restaurants", request);
   }
 
@@ -46,8 +44,8 @@ export class RestaurantsApi {
   }
 
   static async putRestaurants(
-    request: Partial<Restaurant & Pick<Restaurant, "id">>
-  ): Promise<number> {
+    request: Partial<RestaurantRequest & Pick<Restaurant, "id">>
+  ): Promise<Restaurant> {
     return await apiPatch(`/restaurants/${request.id}`, request);
   }
 

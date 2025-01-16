@@ -22,7 +22,7 @@ const ChangePass = () => {
         }
         try {
             // await AuthApi.resetPassword({ code: searchParams.get('code') as string, password, passwordConfirmation: confirmedPassword });
-            router.push("/change-pass-success")
+            // router.push("/change-pass-success")
         }
         catch (e: any) {
             alert(e.message);

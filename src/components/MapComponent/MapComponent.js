@@ -5,9 +5,15 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import { Geocoder, SearchBox } from "@mapbox/search-js-react";
 import { useAddressContext } from "@/contexts/address/address-context";
 
-const MapComponent = ({inputValue, setInputValue}) => {
+const MapComponent = ({
+  inputValue,
+  setInputValue,
+  setLongtitude,
+  setLatitute,
+  setLocationId,
+}) => {
   const mapContainerRef = useRef();
-  const {location} = useAddressContext()
+  const { location } = useAddressContext();
   const mapInstanceRef = useRef();
   const [lng, setLng] = useState(location.longitude);
   const [lat, setLat] = useState(location.latitude); // Default latitude
@@ -17,9 +23,12 @@ const MapComponent = ({inputValue, setInputValue}) => {
     setLng(lon);
     setLat(lat);
     setInputValue(event.features[0].properties.full_address);
+    console.log(event.features[0]);
+    setLongtitude(lon);
+    setLatitute(lat);
+    setLocationId(event.features[0].id || "");
     try {
-      new mapboxgl.Marker().setLngLat([lon, lat]).addTo(mapInstanceRef.current)
-
+      new mapboxgl.Marker().setLngLat([lon, lat]).addTo(mapInstanceRef.current);
     } catch (error) {
       console.log("error", error);
     }
@@ -47,6 +56,8 @@ const MapComponent = ({inputValue, setInputValue}) => {
   useEffect(() => {
     if (mapInstanceRef.current) {
       mapInstanceRef.current.setCenter([lng, lat]);
+      setLocation({latitude: lat, longitude: lng})
+
     }
   }, [lng, lat]);
   return (

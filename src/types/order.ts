@@ -1,4 +1,4 @@
-import { Dish } from "./dish";
+import { Dish, DishOfContract } from "./dish";
 import { User } from "./user";
 import { Voucher } from "./voucher";
 
@@ -72,7 +72,7 @@ export type OrderLineItem = {
 };
 
 export type OrderContractItemRequest = {
-  dish: Dish;
+  dish: DishOfContract;
   quantity: number;
 };
 
@@ -81,14 +81,13 @@ export type OrderContractRequest = {
   vouchers: Voucher[];
 };
 export interface OrderItem {
-  dish: Dish;
+  dish: DishOfContract;
   quantity: number;
 }
 
 export interface OrderOfContract {
   id: number;
   orderItems: OrderItem[];
-  image: string;
   name: string;
   address: string;
   phone: string;

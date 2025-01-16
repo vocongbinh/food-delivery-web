@@ -31,7 +31,7 @@ export default function CheckoutForm({ children }: { children?: ReactNode }) {
       elements,
       confirmParams: {
         // Make sure to change this to your payment completion page
-        return_url: "http://localhost:3000/restaurants",
+        return_url: "http://localhost:3000/checkout-success",
       },
     });
 
@@ -66,7 +66,7 @@ export default function CheckoutForm({ children }: { children?: ReactNode }) {
       >
         <div
           id="button-text"
-          className="bg-primary-500 text-white p-4 rounded-xl"
+          className="bg-primary-500 text-white p-4 rounded-full mt-4"
         >
           {isLoading ? <Spin size="default" /> : "Pay now"}
         </div>
