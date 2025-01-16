@@ -75,38 +75,7 @@ const Home = () => {
       </div>
     );
   };
-  const handleCreateOrderContract = async() => {
-    const data: MetaData = {
-      address: "QN",
-      orderItems: [
-        {
-          dish: {
-            id: 1,
-            name: "Ice-cream",
-            imageUrl: "https://images.pexels.com/photos/1407852/pexels-photo-1407852.jpeg",
-            price: 0.2,
-            description: ""
-          },
-          quantity: 1
-        }
-      ],
-      name: "Binh",
-      phone: "0978754723"
-    }
-    const {contract_address, order_id} = await OrdersApi.deployOrderContract();
-    console.log(contract_address, order_id);
-    const message = prepareCreateOrderContractTransfer(contract_address, {
-      owner: Address.parse("0QDREisYb3hWcNevBoAopiS2UubbDp174WF0_v2XSZd9gcwL"),
-      order_id: order_id,
-      name: data.orderItems[0].dish.name,
-      image: data.orderItems[0].dish.imageUrl,
-      quantity: data.orderItems[0].quantity,
-      price: toNano(data.orderItems[0].quantity * data.orderItems[0].dish.price),
-      value: toNano(0.02)
-    })
-    await sender.send(message);
-    await OrdersApi.deployNFT(data, walletAddress, order_id);
-  }
+
   return (
     <>
       <div className="dark bg-neutral-900 dark:bg-black dark:bg-opacity-20 text-neutral-100">
