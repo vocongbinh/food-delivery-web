@@ -117,7 +117,7 @@ const MainNav2Logged: FC<MainNav2LoggedProps> = () => {
   const renderModalContent = () => {
     return (
       <div className="flex flex-col">
-        <MapComponent inputValue={inputValue} setInputValue={setInputValue} />
+        <MapComponent inputValue={inputValue} setInputValue={setInputValue} setLocation={setLocation} />
         <ButtonPrimary onClick={handleConfirm} className="w-full mt-4">
           Confirm
         </ButtonPrimary>

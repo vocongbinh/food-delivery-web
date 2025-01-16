@@ -160,7 +160,7 @@ const CardVoucher: FC<CardVoucherProps> = ({
                 disabled={isExchanged}
                 className={`${isExchanged ? "opacity-25" : "bg-primary-500"}`}
                 onClick={async () => {
-                  exchangeVoucher(exchangeRate);
+                  await exchangeVoucher(exchangeRate);
                   VouchersApi.receiveVoucher({
                     code: couponCode,
                     productDiscountId: id,
