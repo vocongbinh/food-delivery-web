@@ -1,6 +1,6 @@
 "use client"
 import { createContext, Dispatch, ReactNode, SetStateAction, useContext, useState } from "react";
-interface InformationProps {
+export interface InformationProps {
     activity: string;
     age: number;
     height: number;

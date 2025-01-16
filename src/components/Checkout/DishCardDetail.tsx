@@ -9,7 +9,7 @@ import {
   MinusIcon,
 } from "@heroicons/react/24/solid";
 
-import { FC, ReactNode, useState, Fragment } from "react";
+import { FC, ReactNode, useState, Fragment, useEffect } from "react";
 import ButtonPrimary from "../Button/ButtonPrimary";
 import { Dish } from "@/types/dish";
 import FoodFeaturedMedia from "../DishFeaturedMedia/FoodFeaturedMedia";
@@ -18,6 +18,7 @@ import { CartItem } from "@/types/cartItem";
 import { useGetDishGroupOptionsQuery } from "@/react-query/options";
 import { useAuthContext } from "@/contexts/auth/auth-context";
 import { useRouter } from "next/navigation";
+import Utils from "@/utils";
 
 export interface DishOptionItem {
   key: string;
@@ -31,9 +32,14 @@ interface Props {
   cartItem?: CartItem;
 }
 
-const DishCardDetail: FC<Props> = ({ renderTrigger, dish }) => {
+const DishCardDetail: FC<Props> = ({ renderTrigger, dish, cartItem }) => {
   const [open, setOpen] = useState(false);
   const [quantity, setQuantity] = useState(1);
+  useEffect(() => {
+    if (cartItem) {
+      setQuantity(cartItem.quantity);
+    }
+  }, []);
   const [isSubmiting, setIsSubmiting] = useState(false);
 
   // State to manage selected options for each group
@@ -100,7 +106,7 @@ const DishCardDetail: FC<Props> = ({ renderTrigger, dish }) => {
                   <div className="flex flex-col gap-3 border-b-6 p-6 sticky top-0 z-40 bg-white">
                     <Dialog.Title className="flex justify-between items-center font-semibold text-xl">
                       <div>{dish?.name}</div>
-                      <div>{dish?.price}đ</div>
+                      <div>{Utils.formatCurrency(dish?.price)}</div>
                     </Dialog.Title>
                     <div className="flex gap-3 text-sm items-center text-gray-500">
                       <div className="flex gap-1">

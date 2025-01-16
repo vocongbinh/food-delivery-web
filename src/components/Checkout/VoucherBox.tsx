@@ -70,6 +70,7 @@ const VoucherBox: FC<VoucherBoxProps> = ({
           </Radio.Group>
         ) : (
           <ButtonPrimary
+            type="button"
             onClick={() =>
               handleExchangeVoucher({
                 code: voucher.couponCode,
@@ -78,7 +79,9 @@ const VoucherBox: FC<VoucherBoxProps> = ({
             }
             disabled={isSubmiting}
             loading={isSubmiting}
-            className="rounded-md flex-grow"
+            sizeClass="py-1 px-2"
+            fontSize="text-xs font-medium"
+            className="text-xs text-center w-20  h-6 hover:bg-gray-50 flex-shrink-0 font-normal rounded-xl border  py-2"
           >
             Exchange
           </ButtonPrimary>

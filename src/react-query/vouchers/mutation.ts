@@ -35,6 +35,9 @@ export const useExchangeVoucherMutation = () => {
     mutationFn: (voucher: UserVoucherRequest) =>
       VouchersApi.receiveVoucher(voucher),
     onSuccess: (res) => {
+      console.log(res);
+      console.log("hehe");
+      console.log(res.productDiscount.dish.restaurant.id);
       queryClient.invalidateQueries({
         queryKey: [LIST_VOUCHER_KEY, res.productDiscount.dish.restaurant.id],
       });

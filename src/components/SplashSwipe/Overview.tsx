@@ -7,15 +7,17 @@ import { AuthsApi } from '@/apis/auths';
 import { ArrowDown } from 'iconsax-react';
 import ButtonPrimary from '../Button/ButtonPrimary';
 import { useRouter } from "next/navigation";
+import { useInformationContext } from '@/contexts/information/information-context';
 export default function Overview() {
     const router = useRouter()
+    const { information } = useInformationContext()
     const { data: dishes, isLoading } = useQuery({
         queryKey: ["Recommend-dish"],
         queryFn: () => DishesApi.getRecommendedDishes(),
     });
-    const { data } = useQuery({ queryKey: ["health-condition"], queryFn: () => AuthsApi.getUserCondition() })
+    const { data, isLoading: conditionLoading } = useQuery({ queryKey: ["health-condition"], queryFn: () => AuthsApi.getUserCondition() })
     return (
-        isLoading ?
+        (isLoading || conditionLoading) ?
             <div className='h-full w-full flex items-center justify-center gap-4 flex-col'>
                 <RecommendSpinner />
                 <span className='text-xl mx-16 text-center'>We are calculating calories and providing the best choices for you...</span>
@@ -32,7 +34,7 @@ export default function Overview() {
                 </span>
                 <div className="flex gap-2 items-center">
                     {data?.calories.map((item, index) =>
-                    (<div key = {index}>
+                    (<div key={index}>
                         <h2 className='text-xs text-neutral-500'>{item.type}</h2>
                         <h2>
                             {item.calo.toFixed(2)} Calories/day
@@ -41,7 +43,7 @@ export default function Overview() {
                     </div>))}
 
                 </div>
-                <ButtonPrimary onClick={() => router.push("/")} className="self-center">Discover dishes that meet your needs. 👉👉</ButtonPrimary>
+                <ButtonPrimary onClick={() => window.location.href="/"} className="self-center">Discover dishes that meet your needs. 👉👉</ButtonPrimary>
             </div>
     )
 }

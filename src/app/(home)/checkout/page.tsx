@@ -27,6 +27,16 @@ import { loadStripe, StripeElementsOptions } from "@stripe/stripe-js/dist";
 import CompletePage from "@/components/CompletePage/CompletePage";
 import CheckoutForm from "@/components/CheckoutForm/CheckoutForm";
 import { OrderContractItemRequest, OrderContractRequest } from "@/types/order";
+import { MetaData, OrdersApi } from "@/apis/orders";
+import { getTONPrice, prepareCreateOrderContractTransfer } from "@/utils/contract";
+import { Address, toNano } from "ton-core";
+import { useTonConnect } from "../../../../hooks/useTonConnect";
+import { useTonAddress } from "@tonconnect/ui-react";
+import { AuthsApi } from "@/apis/auths";
+import { useQuery } from "@tanstack/react-query";
+import { useAddressContext } from "@/contexts/address/address-context";
+import SpinnerOverlay from "@/components/SpinnerOverlay/SpinnerOverlay";
+import { isCallOrNewExpression } from "typescript";
 const PaymentMethodEnum = {
   CASH: 1,
   STRIPE: 2,
@@ -43,8 +53,13 @@ const CheckoutPage: React.FC = () => {
   const { mutate: createOrderMutation, isPending } = useAddOrderMutation();
   const [clientSecret, setClientSecret] = useState("");
   const [isConfirmed, setIsConfirmed] = useState<boolean>(false);
-
+  const {address: addressOfContext} = useAddressContext()
+  const walletAddress = useTonAddress(true);
+  const {sender} = useTonConnect()
+  const [tonLoading, setTonLoading] = useState(false);
+  const { data: userProfile, isLoading } = useQuery({ queryKey: ["profile"], queryFn: () => AuthsApi.getUserProfile() })
   const router = useRouter();
+  const { address } = useAddressContext();
   const restaurants = useMemo(
     () =>
       Array.from(
@@ -54,7 +69,8 @@ const CheckoutPage: React.FC = () => {
             name: string;
             total: number;
           }>((item) => {
-            let total = item.quantity * item.dish.price;
+            let total =
+              item.quantity * Math.round(item.dish.price / 1000) * 1000;
             return { ...item.dish.restaurant, total };
           })
         )
@@ -64,17 +80,24 @@ const CheckoutPage: React.FC = () => {
   const form = useForm<z.infer<typeof OrderRequestSchema>>({
     resolver: zodResolver(OrderRequestSchema),
     defaultValues: {
-      address: "",
+      address: address ? address : "",
       note: "",
-      paymentMethod: PaymentMethodEnum.STRIPE,
+      phoneNumber: "",
+      paymentMethod: PaymentMethodEnum.CASH,
     },
   });
+
   const {
     register,
     handleSubmit,
     formState: { errors },
     watch,
   } = form;
+  useEffect(() => {
+    console.log(address);
+    form.setValue("address", address);
+  }, []);
+
   const paymentMethod = watch("paymentMethod");
   const handleTest = async () => {
     return fetch("/api/create-payment-intent", {
@@ -114,20 +137,22 @@ const CheckoutPage: React.FC = () => {
   };
 
   useEffect(() => {
-    console.log("ee");
-    console.log(paymentMethod);
-    console.log(PaymentMethodEnum.STRIPE);
-    console.log(Number(paymentMethod) == PaymentMethodEnum.STRIPE);
     if (Number(paymentMethod) == PaymentMethodEnum.STRIPE) {
       handleTest();
     }
   }, [paymentMethod]);
-  const onSubmit = (data: z.infer<typeof OrderRequestSchema>) => {
+  const onSubmit = async(data: z.infer<typeof OrderRequestSchema>) => {
     setIsSubmitting(true);
     if (paymentMethod === PaymentMethodEnum.TON) {
-      handleCreateOrderContract({
+     await handleCreateOrderContract({
         orderItems: selectedItems.map<OrderContractItemRequest>((item) => ({
-          dish: item.dish,
+          dish: {
+            id: item.dish.id,
+            name: item.dish.name,
+            price: item.dish.price * item.quantity,
+            description: item.dish.description,
+            imageUrl: item.dish.imageUrl || "https://saodieu.vn/media/Bai%20Viet%20-%20T62016/Saodieu%20-%2010%20mon%20an%203.jpg"
+          },
           quantity: item.quantity,
         })),
         vouchers: selectedVoucher ? [selectedVoucher] : [],
@@ -137,20 +162,46 @@ const CheckoutPage: React.FC = () => {
         {
           ...data,
           cartItemIds: selectedItems?.map((item) => item.id) ?? [],
-          voucherIds: [],
+          voucherIds: selectedVoucher ? [selectedVoucher.id] : [],
         },
         {
           onSuccess: (res) => {
-            router.back();
+            window.location.href = `/checkout-success`;
           },
-          onSettled: (res) => {},
+          onSettled: (res) => { },
         }
       );
     }
     setIsSubmitting(false);
   };
-  const handleCreateOrderContract = (orderContract: OrderContractRequest) => {
-    //TODO: generate code for create order contract
+  const handleCreateOrderContract = async (orderContract: OrderContractRequest) => {
+    const data: MetaData = {
+          address: addressOfContext,
+          orderItems: orderContract.orderItems,
+          name: userProfile?.username || "Default",
+          phone: form.getValues("phoneNumber") || "0978754723",
+        }
+        const price = getTONPrice(data.orderItems[0].quantity * data.orderItems[0].dish.price)
+        console.log(price)
+        setTonLoading(true);
+        const ownerAddress = "0QDREisYb3hWcNevBoAopiS2UubbDp174WF0_v2XSZd9gcwL"
+        console.log(walletAddress)
+        const {contract_address, order_id} = await OrdersApi.deployOrderContract({
+          owner: ownerAddress,
+          customer: walletAddress,
+          name: data.orderItems[0].dish.name,
+          image: data.orderItems[0].dish.imageUrl.split(", ")[0],
+          quantity: data.orderItems[0].quantity,
+          price: toNano(price),
+        });
+        
+        const message = prepareCreateOrderContractTransfer(contract_address, {
+          owner: Address.parse(ownerAddress),
+          value: toNano(price)
+        })
+        await sender.send(message);
+        await OrdersApi.deployNFT(data, walletAddress, order_id);
+        setTonLoading(false);
   };
   const [activeRestaurant, setActiveRestaurant] = useState<number>(0);
   const [selectedItems, setSelectedItems] = useState<CartItem[]>([]);
@@ -165,9 +216,27 @@ const CheckoutPage: React.FC = () => {
     );
     refetchVoucher();
   }, [activeRestaurant]);
-  let total =
-    restaurants.find((item) => item.id == activeRestaurant)?.total ?? 0;
+  const total = useMemo<{ total: number; discount: number }>(() => {
+    const activeRestaurantTotal =
+      restaurants.find((item) => item.id === activeRestaurant)?.total ?? 0;
 
+    let discountValue = 0;
+
+    if (selectedVoucher) {
+      discountValue =
+        selectedVoucher.discountType === DiscountType.FIXED_AMOUNT
+          ? selectedVoucher.discountValue
+          : (selectedVoucher.discountValue * activeRestaurantTotal) / 100;
+
+      // Ensure discount doesn't exceed the total
+      discountValue = Math.min(discountValue, activeRestaurantTotal);
+    }
+
+    return {
+      total: activeRestaurantTotal - discountValue,
+      discount: discountValue,
+    };
+  }, [activeRestaurant, selectedVoucher, restaurants]);
   const getPaymentCard = () => {
     return (
       <div className=" rounded-xl md:border md:border-neutral-100 dark:border-neutral-800 md:p-6 ">
@@ -190,6 +259,20 @@ const CheckoutPage: React.FC = () => {
           )}
         </label>
         <label className="block md:col-span-2 pb-2">
+          <Label>Phone number</Label>
+          <Input
+            placeholder="Your phone number"
+            type="text"
+            className="mt-1"
+            {...register("phoneNumber")}
+          />
+          {errors.note && (
+            <p className="text-red-500 text-sm mt-2">
+              {errors.phoneNumber?.message}
+            </p>
+          )}
+        </label>
+        <label className="block md:col-span-2 pb-2">
           <Label>Note</Label>
           <Input
             placeholder="Ex: Please wait a minute"
@@ -205,14 +288,20 @@ const CheckoutPage: React.FC = () => {
           <Label>Payment method *</Label>
           <Select
             {...register("paymentMethod")}
-            className="mt-1  w-full"
+            onChange={(e) =>
+              form.setValue("paymentMethod", Number(e.target.value))
+            }
+            className="mt-1 w-full"
             placeholder="Select payment method"
           >
             <option key={PaymentMethodEnum.CASH} value={1}>
               Cash
             </option>
             <option key={PaymentMethodEnum.STRIPE} value={2}>
-              Stripe pay
+              Stripe Payment
+            </option>
+            <option key={PaymentMethodEnum.TON} value={3}>
+              TON Wallet
             </option>
           </Select>
           {errors.paymentMethod && (
@@ -221,65 +310,119 @@ const CheckoutPage: React.FC = () => {
             </p>
           )}
         </label>
-        {clientSecret && (
-          <Elements options={options} stripe={stripePromise}>
-            {isConfirmed ? <CompletePage /> : <CheckoutForm />}
-          </Elements>
+
+        {clientSecret && paymentMethod == PaymentMethodEnum.STRIPE && (
+          <div className="my-5">
+            <Elements options={options} stripe={stripePromise}>
+              {isConfirmed ? (
+                <CompletePage />
+              ) : (
+                <CheckoutForm>
+                  <div className="w-full border-neutral-200 dark:border-neutral-900 my-4">
+                    <dl>
+                      {restaurants
+                        .filter((item) => item.id == activeRestaurant)
+                        ?.map((item, index) => {
+                          return (
+                            <div
+                              key={index}
+                              className={` px-1 py-1 sm:grid sm:grid-cols-3 sm:gap-4 `}
+                            >
+                              <dt className="text-sm font-medium text-neutral-500 dark:text-neutral-300 sm:col-span-2">
+                                Subtotal
+                              </dt>
+                              <dt className="mt-1 text-right text-sm text-neutral-900 dark:text-neutral-200 font-medium sm:mt-0 ">
+                                {Utils.formatCurrency(item.total)}
+                              </dt>
+                            </div>
+                          );
+                        })}
+                      {selectedVoucher && (
+                        <div
+                          className={`${" dark:bg-neutral-900"}   px-1 py-1 sm:grid sm:grid-cols-3 sm:gap-4`}
+                        >
+                          <dt className="text-sm text-neutral-500 dark:text-neutral-300 sm:col-span-2">
+                            Discount
+                          </dt>
+                          <dd className="text-right mt-1 text-sm text-neutral-900 dark:text-neutral-200  sm:mt-0 ">
+                            {Utils.formatCurrency(total.discount)}
+                          </dd>
+                        </div>
+                      )}{" "}
+                      <div
+                        className={`${" dark:bg-neutral-900"}  font-semibold p-1 sm:grid sm:grid-cols-3 sm:gap-4 `}
+                      >
+                        <dt className="text-sm  text-neutral-500 dark:text-neutral-300 sm:col-span-2">
+                          Total price
+                        </dt>
+                        <dd className="text-right mt-1 text-sm text-neutral-900 dark:text-neutral-200  sm:mt-0 ">
+                          {paymentMethod == PaymentMethodEnum.TON? getTONPrice(total.total) + " TON" : Utils.formatCurrency(total.total)}
+                        </dd>
+                      </div>
+                    </dl>
+                  </div>
+                </CheckoutForm>
+              )}
+            </Elements>
+          </div>
         )}
-        <div className=" border-neutral-200 dark:border-neutral-900 ">
-          <dl>
-            {restaurants
-              .filter((item) => item.id == activeRestaurant)
-              ?.map((item, index) => {
-                return (
+        {paymentMethod !== PaymentMethodEnum.STRIPE && (
+          <>
+            <div className=" border-neutral-200 dark:border-neutral-900 ">
+              <dl>
+                {restaurants
+                  .filter((item) => item.id == activeRestaurant)
+                  ?.map((item, index) => {
+                    return (
+                      <div
+                        key={index}
+                        className={` px-1 py-1 sm:grid sm:grid-cols-3 sm:gap-4 `}
+                      >
+                        <dt className="text-sm font-medium text-neutral-500 dark:text-neutral-300 sm:col-span-2">
+                          Subtotal
+                        </dt>
+                        <dd className="mt-1 text-sm text-neutral-900 dark:text-neutral-200 font-medium sm:mt-0 ">
+                          {Utils.formatCurrency(item.total)}
+                        </dd>
+                      </div>
+                    );
+                  })}
+                {selectedVoucher && (
                   <div
-                    key={index}
-                    className={` px-1 py-1 sm:grid sm:grid-cols-3 sm:gap-4 `}
+                    className={`${" dark:bg-neutral-900"}   px-1 py-1 sm:grid sm:grid-cols-3 sm:gap-4`}
                   >
-                    <dt className="text-sm font-medium text-neutral-500 dark:text-neutral-300 sm:col-span-2">
-                      Subtotal
+                    <dt className="text-sm text-neutral-500 dark:text-neutral-300 sm:col-span-2">
+                      Discount
                     </dt>
-                    <dd className="mt-1 text-sm text-neutral-900 dark:text-neutral-200 font-medium sm:mt-0 ">
-                      {item.total}đ
+                    <dd className="mt-1 text-sm text-neutral-900 dark:text-neutral-200  sm:mt-0 ">
+                      {Utils.formatCurrency(total.discount)}
                     </dd>
                   </div>
-                );
-              })}
-            {selectedVoucher && (
-              <div
-                className={`${" dark:bg-neutral-900"}   px-1 py-1 sm:grid sm:grid-cols-3 sm:gap-4`}
-              >
-                <dt className="text-sm text-neutral-500 dark:text-neutral-300 sm:col-span-2">
-                  Discount
-                </dt>
-                <dd className="mt-1 text-sm text-neutral-900 dark:text-neutral-200  sm:mt-0 ">
-                  {selectedVoucher.discountType == DiscountType.FIXED_AMOUNT
-                    ? selectedVoucher.discountValue
-                    : (selectedVoucher.discountValue * total) / 100}
-                  đ
-                </dd>
-              </div>
-            )}{" "}
-            <div
-              className={`${" dark:bg-neutral-900"}  font-semibold p-1 sm:grid sm:grid-cols-3 sm:gap-4 `}
-            >
-              <dt className="text-sm  text-neutral-500 dark:text-neutral-300 sm:col-span-2">
-                Total price
-              </dt>
-              <dd className="mt-1 text-sm text-neutral-900 dark:text-neutral-200  sm:mt-0 ">
-                {restaurants.reduce((acc, item) => acc + item.total, 0)}đ
-              </dd>
+                )}{" "}
+                <div
+                  className={`${" dark:bg-neutral-900"}  font-semibold p-1 sm:grid sm:grid-cols-3 sm:gap-4 `}
+                >
+                  <dt className="text-sm  text-neutral-500 dark:text-neutral-300 sm:col-span-2">
+                    Total price
+                  </dt>
+                  <dd className="mt-1 text-sm text-neutral-900 dark:text-neutral-200  sm:mt-0 ">
+                  {paymentMethod == PaymentMethodEnum.TON? getTONPrice(total.total) + " TON" : Utils.formatCurrency(total.total)}
+
+                  </dd>
+                </div>
+              </dl>
             </div>
-          </dl>
-        </div>
-        <ButtonPrimary
-          loading={isPending}
-          disabled={isPending || selectedItems.length == 0}
-          type="submit"
-          className="w-full"
-        >
-          Order
-        </ButtonPrimary>
+            <ButtonPrimary
+              loading={isPending}
+              disabled={isPending || selectedItems.length == 0}
+              type="submit"
+              className="w-full cursor-pointer mt-4"
+              fontSize="text-sm"
+            >
+              Order
+            </ButtonPrimary>
+          </>
+        )}
       </div>
     );
   };
@@ -416,6 +559,7 @@ const CheckoutPage: React.FC = () => {
       <h1 className="font-semibold text-2xl w-full py-5 pl-20 border-b block col-span-2 bg-white">
         Check out your order
       </h1>
+      {/* <SpinnerOverlay loading={tonLoading} /> */}
       <div className="flex px-10">
         <div className="w-3/5 p-2">
           {restaurants.map((item) => orderDetailCard(item))}

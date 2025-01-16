@@ -1,3 +1,4 @@
+import { Information } from 'iconsax-react';
 import { Restaurant } from "@/types";
 import { apiPut, getFormData } from "../../utils/api-request";
 import { Dish, DishRequest } from "@/types/dish";
@@ -8,6 +9,7 @@ import { RecommendedDish } from "@/types/recommendedDish";
 import endpoint from "@/utils/http";
 import { AuthsApi } from "../auths";
 import qs from "qs";
+import { InformationProps } from '@/contexts/information/information-context';
 import { recomposeColor } from "@mui/material";
 
 export class DishesApi {

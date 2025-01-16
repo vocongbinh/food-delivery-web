@@ -1,7 +1,7 @@
 import { DiscountsApi } from "@/apis/discounts";
 import { VouchersApi } from "@/apis/vouchers";
 import { LIST_VOUCHER_KEY, VOUCHER_KEY } from "@/contains/react_query_keys";
-import { Dish, Restaurant, Voucher } from "@/types";
+import { Restaurant, Voucher } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 
 export const useGetVoucherQuery = (voucherId: Voucher["id"]) => {

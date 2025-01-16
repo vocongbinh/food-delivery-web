@@ -23,9 +23,10 @@ import { useAuthContext } from "@/contexts/auth/auth-context";
 import StripeElement from "@/components/StripeElement/StripeElement";
 import { Button } from "@mui/material";
 import { useTonAddress } from "@tonconnect/ui-react";
-import { prepareCreateOrderContractTransfer } from "@/utils/contract";
+import { generateOrderId, prepareCreateOrderContractTransfer } from "@/utils/contract";
 import { Address, toNano } from "ton-core";
 import { useTonConnect } from "../../../hooks/useTonConnect";
+import { MetaData, OrdersApi } from "@/apis/orders";
 const Home = () => {
   const { userInfo } = useAuthContext();
   const walletAddress = useTonAddress(true);
@@ -40,39 +41,11 @@ const Home = () => {
     queryKey: [DISH_TYPE_KEY],
     queryFn: () => DishTypesApi.getDishTypes(),
   });
-
   const { data: dishes } = useQuery({
     queryKey: ["Recommend-dish"],
     queryFn: () => DishesApi.getRecommendedDishes(),
   });
-  const landingSection = () => {
-    return (
-      <div className="nc-PageHomeDemo3 relative">
-        <div className="container relative">
-          <SectionHero
-            rightImg={rightImg}
-            className="pt-10 pb-16 md:py-16 lg:pb-28 lg:pt-20"
-            heading={
-              <span>
-                Premium quality <br /> Food for your healthy <br /> & Daily{" "}
-                {` `}
-                <span className="relative pr-3">
-                  <Image
-                    className="w-full absolute top-1/2 -start-1 transform -translate-y-1/2"
-                    src={Vector1}
-                    alt=""
-                  />
-                  <span className="relative">life</span>
-                </span>
-              </span>
-            }
-            btnText="Getting started"
-            subHeading="Let stay at home and share with everyone the most beautiful stories in your hometown 🎈"
-          />
-        </div>
-      </div>
-    );
-  };
+
   const renderDishOfType = () =>
     dishTypes?.map((dishType, index) => (
       <SectionDishOfType
@@ -103,30 +76,12 @@ const Home = () => {
     );
   };
 
-  const handleCreateOrderContract = async () => {
-    const message = prepareCreateOrderContractTransfer(
-      "EQB8pKR9zF-cYhx86pCGu6qby-JRFvx4jC48-wDdsjQOJTf5",
-      {
-        owner: Address.parse(
-          "0QDREisYb3hWcNevBoAopiS2UubbDp174WF0_v2XSZd9gcwL"
-        ),
-        order_id: "ORD-1736673211918-355",
-        name: "Ice-cream",
-        image:
-          "https://images.pexels.com/photos/1407852/pexels-photo-1407852.jpeg",
-        quantity: 2,
-        price: toNano(10),
-        value: toNano(0.02),
-      }
-    );
-    await sender.send(message);
-  };
   return (
     <>
       <div className="dark bg-neutral-900 dark:bg-black dark:bg-opacity-20 text-neutral-100">
         {/* <StripeElement/> */}
 
-        <Button onClick={handleCreateOrderContract}>Checkout</Button>
+        {/* <Button onClick={handleCreateOrderContract}>Checkout</Button> */}
         {userInfo && (
           <div className="relative container">
             <SectionRecommendedDish
@@ -153,6 +108,7 @@ const Home = () => {
         )}{" "}
         {/* <Chatbot className="fixed bottom-10 right-10"/> */}
       </div>
+
     </>
   );
 };
