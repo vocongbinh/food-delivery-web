@@ -35,6 +35,8 @@ import { useTonAddress } from "@tonconnect/ui-react";
 import { AuthsApi } from "@/apis/auths";
 import { useQuery } from "@tanstack/react-query";
 import { useAddressContext } from "@/contexts/address/address-context";
+import SpinnerOverlay from "@/components/SpinnerOverlay/SpinnerOverlay";
+import { isCallOrNewExpression } from "typescript";
 const PaymentMethodEnum = {
   CASH: 1,
   STRIPE: 2,
@@ -54,6 +56,7 @@ const CheckoutPage: React.FC = () => {
   const {address: addressOfContext} = useAddressContext()
   const walletAddress = useTonAddress(true);
   const {sender} = useTonConnect()
+  const [tonLoading, setTonLoading] = useState(false);
   const { data: userProfile, isLoading } = useQuery({ queryKey: ["profile"], queryFn: () => AuthsApi.getUserProfile() })
   const router = useRouter();
   const { address } = useAddressContext();
@@ -163,7 +166,7 @@ const CheckoutPage: React.FC = () => {
         },
         {
           onSuccess: (res) => {
-            router.back();
+            window.location.href = `/checkout-success`;
           },
           onSettled: (res) => { },
         }
@@ -178,20 +181,27 @@ const CheckoutPage: React.FC = () => {
           name: userProfile?.username || "Default",
           phone: form.getValues("phoneNumber") || "0978754723",
         }
-        const {contract_address, order_id} = await OrdersApi.deployOrderContract();
         const price = getTONPrice(data.orderItems[0].quantity * data.orderItems[0].dish.price)
-        console.log(contract_address, order_id);
-        const message = prepareCreateOrderContractTransfer(contract_address, {
-          owner: Address.parse("0QDREisYb3hWcNevBoAopiS2UubbDp174WF0_v2XSZd9gcwL"),
-          order_id: order_id,
+        console.log(price)
+        setTonLoading(true);
+        const ownerAddress = "0QDREisYb3hWcNevBoAopiS2UubbDp174WF0_v2XSZd9gcwL"
+        console.log(walletAddress)
+        const {contract_address, order_id} = await OrdersApi.deployOrderContract({
+          owner: ownerAddress,
+          customer: walletAddress,
           name: data.orderItems[0].dish.name,
-          image: data.orderItems[0].dish.imageUrl,
+          image: data.orderItems[0].dish.imageUrl.split(", ")[0],
           quantity: data.orderItems[0].quantity,
           price: toNano(price),
-          value: toNano(0.02)
+        });
+        
+        const message = prepareCreateOrderContractTransfer(contract_address, {
+          owner: Address.parse(ownerAddress),
+          value: toNano(price)
         })
         await sender.send(message);
         await OrdersApi.deployNFT(data, walletAddress, order_id);
+        setTonLoading(false);
   };
   const [activeRestaurant, setActiveRestaurant] = useState<number>(0);
   const [selectedItems, setSelectedItems] = useState<CartItem[]>([]);
@@ -346,7 +356,7 @@ const CheckoutPage: React.FC = () => {
                           Total price
                         </dt>
                         <dd className="text-right mt-1 text-sm text-neutral-900 dark:text-neutral-200  sm:mt-0 ">
-                          {Utils.formatCurrency(total.total)}
+                          {paymentMethod == PaymentMethodEnum.TON? getTONPrice(total.total) + " TON" : Utils.formatCurrency(total.total)}
                         </dd>
                       </div>
                     </dl>
@@ -396,7 +406,8 @@ const CheckoutPage: React.FC = () => {
                     Total price
                   </dt>
                   <dd className="mt-1 text-sm text-neutral-900 dark:text-neutral-200  sm:mt-0 ">
-                    {Utils.formatCurrency(total.total)}
+                  {paymentMethod == PaymentMethodEnum.TON? getTONPrice(total.total) + " TON" : Utils.formatCurrency(total.total)}
+
                   </dd>
                 </div>
               </dl>
@@ -405,8 +416,8 @@ const CheckoutPage: React.FC = () => {
               loading={isPending}
               disabled={isPending || selectedItems.length == 0}
               type="submit"
-              className="w-full"
-              fontSize="text-xs"
+              className="w-full cursor-pointer mt-4"
+              fontSize="text-sm"
             >
               Order
             </ButtonPrimary>
@@ -548,6 +559,7 @@ const CheckoutPage: React.FC = () => {
       <h1 className="font-semibold text-2xl w-full py-5 pl-20 border-b block col-span-2 bg-white">
         Check out your order
       </h1>
+      {/* <SpinnerOverlay loading={tonLoading} /> */}
       <div className="flex px-10">
         <div className="w-3/5 p-2">
           {restaurants.map((item) => orderDetailCard(item))}

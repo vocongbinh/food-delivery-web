@@ -13,8 +13,9 @@ import {
 import axios from "axios";
 import { Jetton } from '@/types/jetton';
 import { contractEndpoint } from '@/utils/http';
+import Paragraph from "antd/es/skeleton/Paragraph";
 
-export type MetaData = Omit<OrderOfContract, "id">; 
+export type MetaData = Omit<OrderOfContract, "id">;
 export class OrdersApi {
   static async postOrder(request: OrderRequest): Promise<Order> {
     return await apiPost("/orders", request);
@@ -65,36 +66,38 @@ export class OrdersApi {
     return data;
   }
 
-  static async deployOrderContract() {
-    const data: OrderOfContract = {
-      id: 0,
-      orderItems: [],
-      name: '',
-      address: '',
-      phone: ''
-    }
-    const res = await contractEndpoint.post("/deploy-order-contract", data)
+  static async deployOrderContract(opts: {
+    owner: string;
+    customer: string;
+    name: string;
+    image: string;
+    quantity: number;
+    price: bigint;
+  }) {
+    const res = await contractEndpoint.post(`/deploy-order-contract`, undefined, {
+      params: opts
+    })
     return res.data
   }
 
 
 
-static async deployNFT(data: MetaData, address: string, orderId: string) {
+  static async deployNFT(data: MetaData, address: string, orderId: string) {
     const metadata = {
-        ...data,
-        image: data.orderItems[0].dish.imageUrl
+      ...data,
+      image: data.orderItems[0].dish.imageUrl
     }
     try {
-        await contractEndpoint.post(`deploy-NFT/${address}`, metadata, {
-          params: {
-            order_id: orderId
-          }
-        });
+      await contractEndpoint.post(`deploy-NFT/${address}`, metadata, {
+        params: {
+          order_id: orderId
+        }
+      });
     }
-    catch(e) {
-        throw new Error("Can not make a transaction!");
+    catch (e) {
+      throw new Error("Can not make a transaction!");
     }
-   
 
-}
+
+  }
 }
