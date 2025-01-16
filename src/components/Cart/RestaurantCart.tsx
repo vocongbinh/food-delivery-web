@@ -6,6 +6,7 @@ import { CartsApi } from "@/apis/carts";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useAuthContext } from "@/contexts/auth/auth-context";
+import { Empty, Typography } from 'antd';
 import {
   ChatBubbleBottomCenterTextIcon,
   ChatBubbleLeftEllipsisIcon,
@@ -51,9 +52,13 @@ const RestaurantCart = () => {
             )}
           </Link>
         ) : (
-          <div className="flex flex-col justify-end items-center h-52">
+          <div className="flex flex-col justify-center items-center h-52">
             {/* <ChatBubbleBottomCenterTextIcon className="w-20 text-black" /> */}
-            <div className="text-center">Your cart is empty</div>
+            <Empty description={
+      <Typography.Text className="text-neutral-500">
+       Your Cart Is Empty!
+      </Typography.Text>
+    } />
           </div>
         )}
       </div>
