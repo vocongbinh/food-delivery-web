@@ -5,7 +5,7 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import { Geocoder, SearchBox } from "@mapbox/search-js-react";
 import { useAddressContext } from "@/contexts/address/address-context";
 
-const MapComponent = ({inputValue, setInputValue}) => {
+const MapComponent = ({inputValue, setInputValue, setLocation}) => {
   const mapContainerRef = useRef();
   const {location} = useAddressContext()
   const mapInstanceRef = useRef();
@@ -47,6 +47,8 @@ const MapComponent = ({inputValue, setInputValue}) => {
   useEffect(() => {
     if (mapInstanceRef.current) {
       mapInstanceRef.current.setCenter([lng, lat]);
+      setLocation({latitude: lat, longitude: lng})
+
     }
   }, [lng, lat]);
   return (
