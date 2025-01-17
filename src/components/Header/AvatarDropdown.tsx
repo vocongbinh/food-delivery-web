@@ -66,7 +66,7 @@ const isBrowser = typeof window !== "undefined" && typeof localStorage !== "unde
                     {user && <div className="flex items-center">
                       <Avatar imgUrl={user.avatarUrl || "/default-avatar.png"} sizeClass="w-12 h-12" />
                       <div className="flex-grow ms-3">
-                        <h4 className="font-semibold">{user.username}</h4>
+                        <h4 className="font-semibold truncate">{user.username}</h4>
                       </div>
                     </div>}
                     <div className="w-full border-b border-neutral-200 dark:border-neutral-700" />
