@@ -23,6 +23,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/supabaseClient.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/supabaseClient.js", "src/components/MapComponent/MapComponent.jsx", "src/components/MapComponent/MapComponent.tsx"],
   "exclude": ["node_modules"]
 }

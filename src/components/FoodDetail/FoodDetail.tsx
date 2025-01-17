@@ -61,7 +61,7 @@ const FoodDetailInfor = ({
       );
     } else {
       addDish.mutate(
-        { ...data },
+        { ...data, restaurantId: restaurantId },
         {
           onSuccess: () => {
             console.log("success");
@@ -95,6 +95,7 @@ const FoodDetailInfor = ({
       price: dish?.price,
       categoryId: dish?.category?.id,
       dishTypeId: dish?.dishType?.id,
+      restaurantId: restaurantId,
     },
   });
   const {
@@ -108,6 +109,9 @@ const FoodDetailInfor = ({
   const addDish = useAddDishMutation();
   return (
     <div className="bg-white max-w-2xl w-full p-4 mx-auto">
+      <h1 className="gap-5 text-2xl pb-5 font-bold">
+        {dish ? `Update dish: ${dish.name}` : "Add new dish"}
+      </h1>
       <form
         className="grid md:grid-cols-2 gap-6"
         onSubmit={handleSubmit(onSubmit)}
