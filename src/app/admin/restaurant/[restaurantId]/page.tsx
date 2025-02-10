@@ -25,7 +25,7 @@ import { LIST_DISH_KEY, LIST_VOUCHER_KEY } from "@/contains/react_query_keys";
 import { Route } from "next";
 import { SalesSummary } from "@/components/SaleComponent/SaleComponent";
 import { TopProducts } from "@/components/TopProducts/TopProducts";
-import LevelChart from "@/components/LevelChart/LevelChart";
+import { LevelChart } from "@/components/LevelChart/LevelChart";
 import FulfilmentChart from "@/components/FulfilmentChart/FulfilmentChart";
 import Spinner from "@/components/Spinner/Spinner";
 export interface TabProps {
@@ -132,13 +132,14 @@ const RestaurantPage = ({ params }: { params: { restaurantId: number } }) => {
                   className="w-full self-stretch"
                   title="Today's Sales"
                   subtitle="Sales Summary"
+                  restaurantId={restaurantId}
                 />
-                <div className="flex flex-col w-[35%] py-5 items-start rounded-xl bg-neutral-100 dark:bg-zinc-800">
+                <div className="flex flex-col w-[50%] py-5 items-start rounded-xl bg-neutral-100 dark:bg-zinc-800">
                   <h2 className="px-3 text-black dark:text-white text-lg font-semibold">
                     Level
                   </h2>
-                  <div className="w-full h-[200px]">
-                    <LevelChart />
+                  <div className="w-full h-[350px]">
+                    <LevelChart restaurantId={restaurantId} />
                   </div>
                 </div>
               </div>
@@ -148,7 +149,10 @@ const RestaurantPage = ({ params }: { params: { restaurantId: number } }) => {
                   <h2 className="px-3 text-black dark:text-white text-lg font-semibold">
                     Level
                   </h2>
-                  <FulfilmentChart className="w-full h-[240px]" />
+                  <FulfilmentChart
+                    restaurantId={restaurantId}
+                    className="w-full h-[240px]"
+                  />
                 </div>
               </div>
             </div>

@@ -1,66 +1,51 @@
-"use client"
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+"use client";
+import { useGetCategoryStatistic } from "@/react-query/statistics";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+} from "recharts";
 
-const data = [
-    {
-        name: 'Page A',
-        service: 4000,
-        volume: 2400,
-        amt: 2400,
-    },
-    {
-        name: 'Page B',
-        service: 3000,
-        volume: 1398,
-        amt: 2210,
-    },
-    {
-        name: 'Page C',
-        service: 2000,
-        volume: 9800,
-        amt: 2290,
-    },
-    {
-        name: 'Page D',
-        service: 2780,
-        volume: 3908,
-        amt: 2000,
-    },
-    {
-        name: 'Page E',
-        service: 1890,
-        volume: 4800,
-        amt: 2181,
-    },
-    {
-        name: 'Page F',
-        service: 2390,
-        volume: 3800,
-        amt: 2500,
-    },
-];
-export default function LevelChart() {
+const COLORS = ["#4F46E5", "#F97316", "#F43F5E", "#EC4899"];
 
-    return (
-        <ResponsiveContainer width="100%" height="100%">
-            <BarChart
-                width={100}
-                height={300}
-                barSize={20}
-                data={data}
-                margin={{
-                    top: 20,
-                    right: 10,
-                    left: 10,
-                    bottom: 5,
-                }}
-            >
-                {/* <CartesianGrid strokeDasharray="3 3" /> */}
-                <Tooltip />
-                <Legend />
-                <Bar dataKey="volume" stackId="a" fill="#A9DFD8" />
-                <Bar dataKey="service" stackId="a" fill="#2B2B36" />
-            </BarChart>
-        </ResponsiveContainer>
-    )
-}
+export const LevelChart: React.FC<{ restaurantId: number }> = ({
+  restaurantId,
+}) => {
+  const { data: pieData } = useGetCategoryStatistic(restaurantId);
+  return (
+    <ResponsiveContainer width="100%" height="100%">
+      <PieChart width={400} height={340}>
+        {pieData && (
+          <Pie
+            data={pieData}
+            cx={150}
+            cy={150}
+            innerRadius={60}
+            outerRadius={80}
+            fill="#8884d8"
+            paddingAngle={5}
+            dataKey="value"
+          >
+            {pieData.map((entry, index) => (
+              <Cell
+                className="text-xs "
+                key={`cell-${index}`}
+                fill={COLORS[index % COLORS.length]}
+              />
+            ))}
+          </Pie>
+        )}
+        <Tooltip />
+        <Legend />
+      </PieChart>
+    </ResponsiveContainer>
+  );
+};
