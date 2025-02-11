@@ -1,7 +1,7 @@
 "use client";
 
 import React, { Fragment, useEffect, useMemo, useState } from "react";
-import { usePathname } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 import HeaderLogged from "@/components/Header/HeaderLogged";
 import {
   ShoppingBagIcon as ShoppingCartIcon,

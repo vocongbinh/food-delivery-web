@@ -7,7 +7,7 @@ export const useGetOrdersOfRestaurantQuery = (
   restaurantId: Restaurant["id"]
 ) => {
   return useQuery({
-    queryKey: [LIST_ORDER_KEY],
+    queryKey: [LIST_ORDER_KEY, restaurantId],
     queryFn: () => OrdersApi.getOrdersByRestaurant(restaurantId),
   });
 };

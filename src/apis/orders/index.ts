@@ -8,11 +8,12 @@ import {
   OrderNFT,
   OrderOfContract,
   OrderRequest,
+  orderStatusToString,
   PutOrderRequest,
 } from "@/types/order";
 import axios from "axios";
-import { Jetton } from '@/types/jetton';
-import { contractEndpoint } from '@/utils/http';
+import { Jetton } from "@/types/jetton";
+import { contractEndpoint } from "@/utils/http";
 import Paragraph from "antd/es/skeleton/Paragraph";
 
 export type MetaData = Omit<OrderOfContract, "id">;
@@ -37,7 +38,12 @@ export class OrdersApi {
   }
 
   static async changeOrderStatus(request: PutOrderRequest): Promise<Order> {
-    return await apiPut(`/orders/${request.orderId}`, request);
+    return await apiPut(
+      `/orders/${request.orderId}?orderStatus=${orderStatusToString(
+        request.orderStatus
+      )}`,
+      request
+    );
   }
   static async retrieveOrderNFT(walletAddress: string): Promise<OrderNFT[]> {
     const res = await axios.get(
@@ -74,30 +80,29 @@ export class OrdersApi {
     quantity: number;
     price: bigint;
   }) {
-    const res = await contractEndpoint.post(`/deploy-order-contract`, undefined, {
-      params: opts
-    })
-    return res.data
+    const res = await contractEndpoint.post(
+      `/deploy-order-contract`,
+      undefined,
+      {
+        params: opts,
+      }
+    );
+    return res.data;
   }
-
-
 
   static async deployNFT(data: MetaData, address: string, orderId: string) {
     const metadata = {
       ...data,
-      image: data.orderItems[0].dish.imageUrl
-    }
+      image: data.orderItems[0].dish.imageUrl,
+    };
     try {
       await contractEndpoint.post(`deploy-NFT/${address}`, metadata, {
         params: {
-          order_id: orderId
-        }
+          order_id: orderId,
+        },
       });
-    }
-    catch (e) {
+    } catch (e) {
       throw new Error("Can not make a transaction!");
     }
-
-
   }
 }

@@ -16,6 +16,13 @@ export enum OrderStatus {
   DELIVERING = 4,
   DELIVERED = 5,
 }
+export function orderStatusToString(status: OrderStatus) {
+  if (status == OrderStatus.PENDING) return "PENDING";
+  if (status == OrderStatus.PROCESSING) return "PROCESSING";
+  if (status == OrderStatus.DELIVERING) return "DELIVERING";
+  if (status == OrderStatus.CANCELED) return "CANCELED";
+  if (status == OrderStatus.DELIVERED) return "DELIVERED";
+}
 export type PutOrderRequest = {
   orderId: number;
   orderStatus: OrderStatus;
@@ -26,7 +33,7 @@ export type OrderLineItem_OptionItem = {
 };
 export type Order = {
   id: number;
-  orderStatus: OrderStatus;
+  orderStatus: string;
   deliveryStatus: string;
   failureMessages: string;
   price: number;

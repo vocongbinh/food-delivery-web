@@ -28,7 +28,7 @@ const RestaurantsPage = () => {
       <div className="flex items-center justify-between">
         <Heading1
           isCenter={false}
-          desc="Choose a restaurant and find the dish you need"
+          desc="Choose a restaurant and view statistic information"
         >
           Restaurants
         </Heading1>

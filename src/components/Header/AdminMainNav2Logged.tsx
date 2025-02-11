@@ -3,21 +3,18 @@ import React, { FC, useEffect, useState } from "react";
 import Logo from "@/components/Logo/Logo";
 import MenuBar from "@/components/MenuBar/MenuBar";
 import AvatarDropdown from "./AvatarDropdown";
-import Navigation from "@/components/Navigation/Navigation";
 import NotifyDropdown from "./NotifyDropdown";
 import ButtonLogin from "../ButtonLogin/ButtonLogin";
-import { getSession, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { useAuthContext } from "@/contexts/auth/auth-context";
 import { TonConnectButton } from "@tonconnect/ui-react";
-import { getCookie } from "cookies-next";
-import { MapApi } from "@/apis/map";
-import { MapPinIcon } from "@heroicons/react/24/solid";
-import { useAddressContext } from "@/contexts/address/address-context";
-import ModalChangeAddress from "../ModalChangeAddress/ModalChangeAddress";
-import Button from "../Button/Button";
-import ButtonPrimary from "../Button/ButtonPrimary";
-import MapComponent from "../MapComponent/MapComponent";
-import { ADMIN_NAVIGATION } from "@/data/navigation";
+import Link from "next/link";
+import { Route } from "next";
+import { useParams } from "next/navigation";
+import { OWN_RESTAURANTS } from "@/contains/react_query_keys";
+import { useQuery } from "@tanstack/react-query";
+import { RestaurantsApi } from "@/apis/restaurants";
+import LogoSvg from "../Logo/LogoSvg";
 export interface AdminMainNav2LoggedProps {}
 
 interface Location {
@@ -29,39 +26,20 @@ const AdminMainNav2Logged: FC<AdminMainNav2LoggedProps> = () => {
   const { token } = useAuthContext();
   const { data } = useSession();
   const session = data as any;
-  const { address, setAddress, setLocation } = useAddressContext();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState<string>("");
-  React.useEffect(() => {
-    // Function to get the user's location
-    const getLocation = async () => {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          async (position) => {
-            setLocation({
-              latitude: position.coords.latitude,
-              longitude: position.coords.longitude,
-            });
-
-            const address = await MapApi.getAddress(
-              position.coords.longitude,
-              position.coords.latitude
-            );
-            setAddress(address);
-          },
-          (error) => {}
-        );
-      }
-    };
-
-    // Request permission to access location when component mounts
-    getLocation();
-  }, []);
-  const handleConfirm = () => {
-    setIsOpen(false);
-    setAddress(inputValue);
-  };
-
+  const { restaurantId } = useParams();
+  const { data: restaurants } = useQuery({
+    queryKey: [OWN_RESTAURANTS],
+    queryFn: () => RestaurantsApi.getOwnRestaurants(),
+  });
+  const [restaurantName, setRestaurantName] = useState("");
+  useEffect(() => {
+    setRestaurantName(
+      restaurants?.find((item) => item.id == Number(restaurantId))?.name ??
+        "Manage your restaurants"
+    );
+  }, [restaurantId]);
   const renderContent = () => {
     return (
       <div className="h-20 flex justify-between">
@@ -70,28 +48,50 @@ const AdminMainNav2Logged: FC<AdminMainNav2LoggedProps> = () => {
         </div>
 
         <div className="lg:flex-1 flex items-center gap-4">
-          <Logo />
-          <ModalChangeAddress
-            isOpen={isOpen}
-            setIsOpen={setIsOpen}
-            renderTrigger={(openModal) => (
-              <div
-                onClick={openModal}
-                className=" cursor-pointer px-2 max-w-[300px] rounded-3xl border border-gray-400 flex gap-2 items-center"
-              >
-                <MapPinIcon className="w-7 h-7 text-primary-500" />
-                <span className="overflow-hidden text-ellipsis whitespace-nowrap text-sm">
-                  {address}
-                </span>
-              </div>
-            )}
-            modalTitle="Change Address"
-            renderContent={renderModalContent}
-          />
+          <Link
+            href="/admin/restaurant"
+            className="ttnc-logo inline-block text-primary-6000 flex-shrink-0"
+          >
+            {/* THIS USE FOR MY MULTI DEMO */}
+            {/* IF YOU ARE MY CLIENT. PLESE DELETE THIS CODE AND YOU YOUR IMAGE PNG BY BELLOW CODE */}
+            <LogoSvg />
+          </Link>
+          <div>{restaurantName}</div>
         </div>
 
         <div className="flex-[2] hidden lg:flex justify-center mx-4">
-          <Navigation navigations={ADMIN_NAVIGATION} />
+          <div className="h-20 flex-shrink-0 flex items-center">
+            <Link
+              className="inline-flex items-center text-sm lg:text-[15px] font-medium text-slate-700 dark:text-slate-300 py-2.5 px-4 xl:px-5 rounded-full hover:text-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 dark:hover:text-slate-200"
+              href={
+                `/admin/restaurant/${
+                  restaurantId ? restaurantId : restaurants?.[0].id
+                }/detail` as Route
+              }
+            >
+              Information
+            </Link>
+            <Link
+              className="inline-flex items-center text-sm lg:text-[15px] font-medium text-slate-700 dark:text-slate-300 py-2.5 px-4 xl:px-5 rounded-full hover:text-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 dark:hover:text-slate-200"
+              href={
+                `/admin/restaurant/${
+                  restaurantId ? restaurantId : restaurants?.[0].id
+                }/statistic` as Route
+              }
+            >
+              Statistic
+            </Link>
+            <Link
+              className="inline-flex items-center text-sm lg:text-[15px] font-medium text-slate-700 dark:text-slate-300 py-2.5 px-4 xl:px-5 rounded-full hover:text-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 dark:hover:text-slate-200"
+              href={
+                `/admin/restaurant/${
+                  restaurantId ? restaurantId : restaurants?.[0].id
+                }/order` as Route
+              }
+            >
+              Orders
+            </Link>
+          </div>
         </div>
 
         <div className="flex-1 flex items-center justify-end text-slate-700 dark:text-slate-100">
@@ -105,22 +105,6 @@ const AdminMainNav2Logged: FC<AdminMainNav2LoggedProps> = () => {
           )}
           <TonConnectButton className="ml-4" />
         </div>
-      </div>
-    );
-  };
-  const renderModalContent = () => {
-    return (
-      <div className="flex flex-col">
-        <MapComponent
-          setLatitute={() => {}}
-          setLocationId={() => {}}
-          setLongtitude={() => {}}
-          inputValue={inputValue}
-          setInputValue={setInputValue}
-        />
-        <ButtonPrimary onClick={handleConfirm} className="w-full mt-4">
-          Confirm
-        </ButtonPrimary>
       </div>
     );
   };
