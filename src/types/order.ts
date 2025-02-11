@@ -16,6 +16,12 @@ export enum OrderStatus {
   DELIVERING = 4,
   DELIVERED = 5,
 }
+export enum OrderNFTStatus {
+  PENDING = 0,
+  DELIVERING = 1,
+  DELIVERED = 2,
+  CANCELED = 3
+}
 export type PutOrderRequest = {
   orderId: number;
   orderStatus: OrderStatus;

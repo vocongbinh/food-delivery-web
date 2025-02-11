@@ -82,7 +82,7 @@ export class OrdersApi {
 
 
 
-  static async deployNFT(data: MetaData, address: string, orderId: string) {
+  static async deployNFT(data: MetaData, address: string, orderId: string, contractAddress: string) {
     const metadata = {
       ...data,
       image: data.orderItems[0].dish.imageUrl
@@ -90,7 +90,8 @@ export class OrdersApi {
     try {
       await contractEndpoint.post(`deploy-NFT/${address}`, metadata, {
         params: {
-          order_id: orderId
+          order_id: orderId,
+          contract_address: contractAddress
         }
       });
     }

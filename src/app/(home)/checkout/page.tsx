@@ -177,7 +177,13 @@ const CheckoutPage: React.FC = () => {
   const handleCreateOrderContract = async (orderContract: OrderContractRequest) => {
     const data: MetaData = {
           address: addressOfContext,
-          orderItems: orderContract.orderItems,
+          orderItems: orderContract.orderItems.map(item => ({
+            ...item,
+            dish: {
+              ...item.dish,
+              price: getTONPrice(item.dish.price)
+            }
+          })),
           name: userProfile?.username || "Default",
           phone: form.getValues("phoneNumber") || "0978754723",
         }
@@ -200,7 +206,7 @@ const CheckoutPage: React.FC = () => {
           value: toNano(price)
         })
         await sender.send(message);
-        await OrdersApi.deployNFT(data, walletAddress, order_id);
+        await OrdersApi.deployNFT(data, walletAddress, order_id, contract_address);
         setTonLoading(false);
   };
   const [activeRestaurant, setActiveRestaurant] = useState<number>(0);
