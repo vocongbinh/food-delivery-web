@@ -23,23 +23,23 @@ export const SalesSummary: React.FC<SalesSummaryProps> = ({
     setSales([
       {
         icon: "/icons/sales.svg",
-        amount: data?.totalPrice,
+        amount: data?.totalPrice ?? "0",
         label: "This month sales",
-        change: data?.totalPricePercentChange,
+        change: data?.totalPricePercentChange ?? "No data",
         changeColor: "text-orange-300",
       },
       {
         icon: "/icons/total.svg",
-        amount: data?.totalQuantity,
-        label: "Total Order Quantity",
-        change: data?.totalQuantityPercentChange,
+        amount: data?.totalQuantity ?? "0",
+        label: "Delivered Order ",
+        change: data?.totalQuantityPercentChange ?? "No data",
         changeColor: "text-emerald-200",
       },
       {
         icon: "/icons/product.svg",
-        amount: data?.cancelQuantity,
-        label: "Total Canceled Order Quantity",
-        change: data?.cancelQuantityPercentChange,
+        amount: data?.cancelQuantity ?? "0",
+        label: " Canceled Order ",
+        change: data?.cancelQuantityPercentChange ?? "No data",
         changeColor: "text-pink-200",
       },
       // {
@@ -65,11 +65,11 @@ export const SalesSummary: React.FC<SalesSummaryProps> = ({
         >
           {title}
         </h2>
-        <p className="mt-1.5 text-xs font-medium dark:text-neutral-400 text-neutral-800">
+        <p className="mt-1.5 text-base font-medium dark:text-neutral-400 text-neutral-800">
           {subtitle}
         </p>
       </div>
-      <div className="flex gap-5 items-start mt-5 font-medium max-md:max-w-full">
+      <div className="grid grid-cols-3 gap-5 items-start mt-5 font-medium max-md:max-w-full">
         {sales.map((card, index) => (
           <SaleCard key={index} {...card} />
         ))}

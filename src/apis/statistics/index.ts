@@ -4,6 +4,7 @@ import {
   StatisticCategoryItem,
   OrderStatistic,
   StatisticDateRangeRequest,
+  TopDishStatistic,
 } from "@/types/statistic";
 import { Restaurant } from "@/types";
 
@@ -18,6 +19,11 @@ export class StatisticsApi {
     restaurantId: Restaurant["id"]
   ): Promise<OrderStatistic> {
     return await apiGet(`/statistics/order/${restaurantId}`);
+  }
+  static async getTopDishStatistic(
+    restaurantId: Restaurant["id"]
+  ): Promise<TopDishStatistic[]> {
+    return await apiGet(`/statistics/top_dish/${restaurantId}`);
   }
 
   static async getDateRangeStatistics(

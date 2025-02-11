@@ -23,3 +23,9 @@ export type OrderStatistic = {
   totalQuantityPercentChange: string;
   cancelQuantityPercentChange: string;
 };
+export type TopDishStatistic = {
+  dishId: string;
+  dishName: string;
+  totalQuantity: string;
+  salePercentage: number;
+};

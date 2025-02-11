@@ -16,6 +16,13 @@ export const useGetOrderStatistic = (restaurantId: Restaurant["id"]) => {
     enabled: restaurantId != null,
   });
 };
+export const useGetTopDishStatistic = (restaurantId: Restaurant["id"]) => {
+  return useQuery({
+    queryKey: ["topdishstatistic", restaurantId],
+    queryFn: () => StatisticsApi.getTopDishStatistic(restaurantId),
+    enabled: restaurantId != null,
+  });
+};
 export const useGetDateRangeStatistic = (restaurantId: Restaurant["id"]) => {
   return useQuery({
     queryKey: ["daterangestatistic", restaurantId],

@@ -66,9 +66,9 @@ const RestaurantPage = ({ params }: { params: { restaurantId: number } }) => {
     queryFn: () => DiscountsApi.getDiscounts(restaurantId),
   });
   const { data: dishes, isLoading: dishesLoading } = useQuery({
-    queryKey: [LIST_DISH_KEY, restaurantId, tabActive?.id],
+    queryKey: [LIST_DISH_KEY, restaurantId, tabActive?.id || 1],
     queryFn: () =>
-      DishesApi.getDishesByCategory(restaurantId, tabActive?.id || 1, 1, 10),
+      DishesApi.getDishesByCategory(restaurantId, tabActive?.id || 1, 0, 10),
   });
 
   const handleClickTab = (tab: Category) => {
@@ -126,8 +126,8 @@ const RestaurantPage = ({ params }: { params: { restaurantId: number } }) => {
                 </div>
               </div>
             </div>
-            <div className="container py-10 flex flex-col gap-4">
-              <div className="flex gap-4 items-start">
+            <div className=" flex flex-col gap-4">
+              <div className="flex gap-4 items-start w-full">
                 <SalesSummary
                   className="w-full self-stretch"
                   title="Today's Sales"
@@ -136,18 +136,21 @@ const RestaurantPage = ({ params }: { params: { restaurantId: number } }) => {
                 />
                 <div className="flex flex-col w-[50%] py-5 items-start rounded-xl bg-neutral-100 dark:bg-zinc-800">
                   <h2 className="px-3 text-black dark:text-white text-lg font-semibold">
-                    Level
+                    Dish categories
                   </h2>
-                  <div className="w-full h-[350px]">
+                  <div className="w-full h-[300px]">
                     <LevelChart restaurantId={restaurantId} />
                   </div>
                 </div>
               </div>
               <div className="flex gap-4 items-start w-full">
-                <TopProducts className="w-[65%] self-stretch" />
+                <TopProducts
+                  restaurantId={restaurantId}
+                  className="w-[65%] self-stretch"
+                />
                 <div className="flex flex-col w-full py-5 items-start rounded-xl bg-neutral-100 dark:bg-zinc-800">
                   <h2 className="px-3 text-black dark:text-white text-lg font-semibold">
-                    Level
+                    Orders
                   </h2>
                   <FulfilmentChart
                     restaurantId={restaurantId}
