@@ -1,7 +1,12 @@
 "use client";
 import Nav from "@/components/Nav/Nav";
 import NavItem from "@/components/NavItem/NavItem";
-import { Order, OrderNFT, OrderStatus } from "@/types/order";
+import {
+  Order,
+  OrderNFT,
+  OrderStatus,
+  orderStatusToString,
+} from "@/types/order";
 import { Breadcrumb } from "antd";
 import React, { useMemo, useState } from "react";
 import { useTonAddress, useTonConnectUI } from "@tonconnect/ui-react";
@@ -31,7 +36,7 @@ const categories: CategoryOrder[] = [
   { name: "All", value: 0 },
   { name: "Pending", value: OrderStatus.PENDING },
   { name: "Processing", value: OrderStatus.PROCESSING },
-  { name: "Delivering", value: OrderStatus.DELIVERING },
+  { name: "Canceled", value: OrderStatus.CANCELED },
   { name: "Delivered", value: OrderStatus.DELIVERED },
 ];
 export default function MyOrdersDefault() {
@@ -86,7 +91,9 @@ export default function MyOrdersDefault() {
   const { data: myOrders } = useGetMyOrder();
   const filterOrders = (): Order[] | undefined => {
     if (selectedOrderType !== 0) {
-      return myOrders?.filter((item) => item.orderStatus == selectedOrderType);
+      return myOrders?.filter(
+        (item) => item.orderStatus == orderStatusToString(selectedOrderType)
+      );
     } else return myOrders;
   };
   return (

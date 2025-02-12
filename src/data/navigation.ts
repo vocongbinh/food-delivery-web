@@ -371,8 +371,13 @@ export const ADMIN_NAVIGATION: NavItemType[] = [
   // single pages ----------------
   {
     id: randomId(),
-    href: "/categories" as Route,
-    name: "Categories",
+    href: "/admin/restaurant/{id}/detail" as Route,
+    name: "Information",
+  },
+  {
+    id: randomId(),
+    href: "/admin/restaurant/{id}/statistic" as Route,
+    name: "Statistic",
     // type: "dropdown",
     // children: [
     //   {
@@ -389,13 +394,8 @@ export const ADMIN_NAVIGATION: NavItemType[] = [
   },
   {
     id: randomId(),
-    href: "/admin/restaurants" as Route,
-    name: "Restaurants",
-  },
-  {
-    id: randomId(),
-    href: "/about" as Route,
-    name: "About Us",
+    href: "/admin/restaurant/{id}/order" as Route,
+    name: "Orders",
   },
   // {
   //   id: randomId(),

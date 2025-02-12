@@ -11,6 +11,12 @@ export const useUpdateDishMutation = () => {
       queryClient.invalidateQueries({
         queryKey: [DISH_KEY, dish.id],
       });
+      queryClient.invalidateQueries({
+        queryKey: [LIST_DISH_KEY, dish.restaurant.id, dish.category.id],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [LIST_DISH_KEY],
+      });
     },
   });
 };
@@ -18,9 +24,12 @@ export const useAddDishMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (dish: DishRequest) => DishesApi.postDish(dish),
-    onSuccess: () => {
+    onSuccess: (dish: Dish) => {
       queryClient.invalidateQueries({
         queryKey: [LIST_DISH_KEY],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [LIST_DISH_KEY, dish.restaurant.id, dish.category.id],
       });
     },
   });

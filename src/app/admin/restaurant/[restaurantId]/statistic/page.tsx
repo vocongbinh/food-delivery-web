@@ -126,7 +126,7 @@ const RestaurantPage = ({ params }: { params: { restaurantId: number } }) => {
                 </div>
               </div>
             </div>
-            <div className=" flex flex-col gap-4">
+            <div className=" flex flex-col gap-4 mb-10">
               <div className="flex gap-4 items-start w-full">
                 <SalesSummary
                   className="w-full self-stretch"
@@ -154,53 +154,11 @@ const RestaurantPage = ({ params }: { params: { restaurantId: number } }) => {
                   </h2>
                   <FulfilmentChart
                     restaurantId={restaurantId}
-                    className="w-full h-[240px]"
+                    className="w-full h-[240px] "
                   />
                 </div>
               </div>
             </div>
-
-            <Nav
-              className="sm:space-x-2 my-5 rtl:space-x-reverse"
-              containerClassName="relative flex w-full overflow-x-auto text-sm md:text-base"
-            >
-              {categories.map((item, index) => (
-                <NavItem
-                  key={index}
-                  isActive={tabActive === item}
-                  onClick={() => handleClickTab(item)}
-                >
-                  {item.name}
-                </NavItem>
-              ))}
-            </Nav>
-            {dishesLoading ? (
-              <Spinner />
-            ) : (
-              <div>
-                <div className="flex justify-between items-center w-full">
-                  <h2 className="text-lg font-semibold">Dishes</h2>
-                  <Link
-                    href={`/admin/restaurant/${restaurantId}/food/add` as Route}
-                    onClick={() => {}}
-                    className="text-sm text-center hover:bg-gray-50 bg-white px-2 flex-shrink-0 font-normal rounded-xl border  py-2"
-                  >
-                    Add dish
-                  </Link>
-                </div>
-                <div className="grid gap-6 sm:grid-cols-2 sm:py-2 md:gap-8 md:grid-cols-3 lg:grid-cols-4 xl:md:grid-cols-5">
-                  {dishes && dishes.length > 0 ? (
-                    dishes.map((dish, index) => (
-                      <DishCardAdmin11 key={index} dish={dish} />
-                    ))
-                  ) : (
-                    <div className="relative col-span-5 w-full text-center h-[100px]   rounded-full overflow-hidden">
-                      Add new food to restaurant
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
 
             {/* {tabActive.id === 0 ? <>
                         <MySlider
@@ -233,55 +191,6 @@ const RestaurantPage = ({ params }: { params: { restaurantId: number } }) => {
                             </div>
                         </div>
                     </> : tabActive.id === 1 ? <SectionAppNews blogs={blogs} heading="News" /> : <div className="p-4 bg-white rounded-3xl"><BlocksRenderer content={app.updatedInformation || []} /></div>} */}
-            <div className="mt-10">
-              <div className="flex justify-between items-center">
-                <h2 className="text-lg font-semibold">Vouchers</h2>
-                <Link
-                  href={
-                    `/admin/restaurant/${restaurantId}/discount/add` as Route
-                  }
-                  onClick={() => {}}
-                  className="text-sm text-center hover:bg-gray-50 bg-white px-2 flex-shrink-0 font-normal rounded-xl border  py-2"
-                >
-                  Add voucher
-                </Link>
-              </div>
-              <div className="mt-8 lg:mt-10 grid md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-                {vouchers?.map((voucher, index) => (
-                  <CardVoucher
-                    isExchanged={isExchanged(voucher.id)}
-                    isAdmin={true}
-                    key={index}
-                    voucher={voucher}
-                  />
-                ))}
-                {vouchers?.length == 0 && (
-                  <div className="relative col-span-5 w-full text-center h-[100px]   rounded-full overflow-hidden">
-                    Add new discount to restaurant
-                  </div>
-                )}
-              </div>
-            </div>
-            <div
-              id="comments"
-              className="scroll-mt-20 mt-10 p-4 bg-white rounded-3xl mb-4"
-            >
-              <h3 className="text-xl font-semibold  text-center text-neutral-800 dark:text-neutral-200">
-                Reviews ({reviews?.length || 0})
-              </h3>
-              {/* <SingleCommentForm
-                rating={rate}
-                setRating={setRate}
-                textareaRef={textareaRef}
-                onClickSubmit={handleSubmit}
-              /> */}
-              <div className="max-w-screen py-10">
-                <SingleCommentLists
-                  reviews={reviews}
-                  restaurantId={restaurantId}
-                />
-              </div>
-            </div>
           </div>
         </div>
       </>

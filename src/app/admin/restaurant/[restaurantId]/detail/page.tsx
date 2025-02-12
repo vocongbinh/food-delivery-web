@@ -126,40 +126,6 @@ const RestaurantPage = ({ params }: { params: { restaurantId: number } }) => {
                 </div>
               </div>
             </div>
-            <div className=" flex flex-col gap-4">
-              <div className="flex gap-4 items-start w-full">
-                <SalesSummary
-                  className="w-full self-stretch"
-                  title="Today's Sales"
-                  subtitle="Sales Summary"
-                  restaurantId={restaurantId}
-                />
-                <div className="flex flex-col w-[50%] py-5 items-start rounded-xl bg-neutral-100 dark:bg-zinc-800">
-                  <h2 className="px-3 text-black dark:text-white text-lg font-semibold">
-                    Dish categories
-                  </h2>
-                  <div className="w-full h-[300px]">
-                    <LevelChart restaurantId={restaurantId} />
-                  </div>
-                </div>
-              </div>
-              <div className="flex gap-4 items-start w-full">
-                <TopProducts
-                  restaurantId={restaurantId}
-                  className="w-[65%] self-stretch"
-                />
-                <div className="flex flex-col w-full py-5 items-start rounded-xl bg-neutral-100 dark:bg-zinc-800">
-                  <h2 className="px-3 text-black dark:text-white text-lg font-semibold">
-                    Orders
-                  </h2>
-                  <FulfilmentChart
-                    restaurantId={restaurantId}
-                    className="w-full h-[240px]"
-                  />
-                </div>
-              </div>
-            </div>
-
             <Nav
               className="sm:space-x-2 my-5 rtl:space-x-reverse"
               containerClassName="relative flex w-full overflow-x-auto text-sm md:text-base"
