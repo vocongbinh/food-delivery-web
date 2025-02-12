@@ -1,9 +1,9 @@
 "use client";
 import Nav from "@/components/Nav/Nav";
 import NavItem from "@/components/NavItem/NavItem";
-import { OrderNFT, OrderStatus } from "@/types/order";
+import { OrderNFT, OrderNFTStatus, OrderStatus } from "@/types/order";
 import { Breadcrumb } from "antd";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useTonAddress, useTonConnectUI } from "@tonconnect/ui-react";
 import { useQuery } from "@tanstack/react-query";
 import { OrdersApi } from "@/apis/orders";
@@ -14,6 +14,8 @@ import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { parse } from "date-fns";
 import MyOrdersDefault from "../my-orders-default/page";
+import { client } from "@/utils/jetton";
+import { Address } from "ton-core";
 
 dayjs.extend(customParseFormat);
 const CardOrderNFT = lazy(
@@ -24,17 +26,19 @@ const { RangePicker } = DatePicker;
 const dateFormat = "DD/MM/YYYY";
 interface CategoryOrder {
   name: string;
-  value: OrderStatus | number;
+  value: OrderNFTStatus | number;
 }
 const categories: CategoryOrder[] = [
   { name: "All", value: 0 },
-  { name: "Pending", value: OrderStatus.PENDING },
-  { name: "Processing", value: OrderStatus.PROCESSING },
-  { name: "Delivering", value: OrderStatus.DELIVERING },
-  { name: "Delivered", value: OrderStatus.DELIVERED },
+  { name: "Pending", value: OrderNFTStatus.PENDING },
+  { name: "Delivering", value: OrderNFTStatus.DELIVERING },
+  { name: "Delivered", value: OrderNFTStatus.DELIVERED },
+  { name: "Canceled", value: OrderStatus.CANCELED },
+
 ];
 export default function MyOrders() {
   const [tabActive, setTabActive] = useState<CategoryOrder>(categories[0]);
+  const [orderNFTs, setOrderNFTs] = useState<OrderNFT[]>([]);
   const currentDate = new Date().toLocaleDateString("en-GB", {
     day: "2-digit",
     month: "2-digit",
@@ -50,31 +54,62 @@ export default function MyOrders() {
     queryFn: () => OrdersApi.retrieveOrderNFT(userFriendlyAddress),
     enabled: tonConnectUI.connected,
   });
-  const orderNFTs = useMemo(() => {
-    const result = ((data || []) as OrderNFT[]).filter((order) => {
-      console.log(order.attributes);
-      const createdAt = order.attributes.find(
-        (e) => e.trait_type == "Created At"
-      )?.value;
-      console.log(createdAt);
-      const createdAtDate = createdAt
-        ? parse(createdAt as string, "MMMM d, yyyy", new Date())
-        : new Date();
-      const createdFormatted = createdAtDate.toLocaleDateString("en-GB", {
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric",
-      });
-      console.log(createdFormatted);
-      const date = dayjs(createdFormatted, dateFormat);
-      console.log(date);
-      console.log(rangeValue[0], rangeValue[1]);
+  useEffect(() => {
+    console.log(tabActive)
+    const getOrderNFTs = async () => {
+      let result: OrderNFT[] = []
+      if (data)
+        for (let i = 0; i < data.length; i++) {
+          const order = data[i] as OrderNFT
+          const createdAt = order.attributes.find(
+            (e) => e.trait_type == "Created At"
+          )?.value;
+          let status: OrderNFTStatus = OrderNFTStatus.PENDING
+          const contractAddress = order.attributes.find(
+            (e) => e.trait_type == "Contract Address"
+          )?.value;
+          if (!contractAddress) {
+            status = OrderNFTStatus.PENDING
+          }
+          else {
+            let { stack } = await client.callGetMethod(
+              Address.parse(contractAddress as string),
+              'get_order_info'
+            );
+            const statusNum = stack.skip(7).readNumber();
+            switch (statusNum) {
+              case 0:
+                status = OrderNFTStatus.PENDING;
+                break;
+              case 1:
+                status = OrderNFTStatus.DELIVERING;
+                break;
+              case 2:
+                status = OrderNFTStatus.DELIVERED;
+                break;
+              case 3:
+                status = OrderNFTStatus.CANCELED;
+                break;
+            }
+          }
+          const createdAtDate = createdAt
+            ? parse(createdAt as string, "MMMM d, yyyy", new Date())
+            : new Date();
+          const createdFormatted = createdAtDate.toLocaleDateString("en-GB", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+          });
+          const date = dayjs(createdFormatted, dateFormat);
+          if (rangeValue?.[0]?.isBefore(date) && rangeValue?.[1]?.isAfter(date) && status === tabActive.value as OrderNFTStatus) {
+            result.push(order)
+          }
+        }
+      setOrderNFTs(result);
+    }
+    getOrderNFTs()
+  }, [data, rangeValue, tabActive]);
 
-      return rangeValue?.[0]?.isBefore(date) && rangeValue?.[1]?.isAfter(date);
-    });
-    return result;
-  }, [data, rangeValue]);
-  console.log(rangeValue);
   const handleClickTab = (tab: CategoryOrder) => {
     setTabActive(tab);
   };

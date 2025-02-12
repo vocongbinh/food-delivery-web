@@ -23,6 +23,12 @@ export function orderStatusToString(status: OrderStatus) {
   if (status == OrderStatus.CANCELED) return "CANCELED";
   if (status == OrderStatus.DELIVERED) return "DELIVERED";
 }
+export enum OrderNFTStatus {
+  PENDING = 0,
+  DELIVERING = 1,
+  DELIVERED = 2,
+  CANCELED = 3
+}
 export type PutOrderRequest = {
   orderId: number;
   orderStatus: OrderStatus;
